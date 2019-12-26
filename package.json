@@ -1,0 +1,35 @@
+{
+  "name": "pimpim",
+  "version": "1.0.0",
+  "description": "Personal Information Manager for CouchDB",
+  "main": "main.js",
+  "scripts": {
+    "build": "node src/main.js",
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "css-build": "node-sass --omit-source-map-url src/sass/main.scss src/components/main.css",
+    "css-build-dark": "node-sass --omit-source-map-url src/sass/dark.scss src/components/dark.css",
+    "css-watch": "npm run css-build -- --watch",
+    "css-start": "npm run css-watch"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/lybekk/pimpim.git"
+  },
+  "keywords": [
+    "pim",
+    "couchdb"
+  ],
+  "author": "Christoffer Lybekk",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/lybekk/pimpim/issues"
+  },
+  "homepage": "https://github.com/lybekk/pimpim#readme",
+  "dependencies": {
+    "nano": "^8.1.0"
+  },
+  "devDependencies": {
+    "bulma": "^0.8.0",
+    "node-sass": "^4.13.0"
+  }
+}

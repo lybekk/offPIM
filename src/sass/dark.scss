@@ -1,0 +1,44 @@
+@charset "utf-8";
+
+// Import a Google Font
+//@import url('https://fonts.googleapis.com/css?family=Nunito:400,700');
+
+
+$gold: goldenrod;
+$gold-dark: DarkGoldenrod;
+$grey: #aaa;
+$cyan: cyan;
+$green: lime;
+$yellow: gold;
+$red: salmon;
+$grey-dark: dimgray;
+$grey-darker: #323232;
+
+$primary: $gold;
+$link: $gold-dark;
+$info: $cyan;
+$success: $green;
+$warning: $yellow;
+$danger: $red;
+$dark: $grey-dark;
+$text: $gold;
+$background: $grey-darker;
+$body-background-color: $grey-darker;
+$input-color: $gold;
+$input-background-color: $grey-dark;
+
+// Import all modules
+@import "../../node_modules/bulma/bulma.sass";
+// OR
+// Import only what you need from Bulma
+/*
+@import "../node_modules/bulma/sass/utilities/_all.sass";
+@import "../node_modules/bulma/sass/base/_all.sass";
+@import "../node_modules/bulma/sass/elements/button.sass";
+@import "../node_modules/bulma/sass/elements/container.sass";
+@import "../node_modules/bulma/sass/elements/title.sass";
+@import "../node_modules/bulma/sass/form/_all.sass";
+@import "../node_modules/bulma/sass/components/navbar.sass";
+@import "../node_modules/bulma/sass/layout/hero.sass";
+@import "../node_modules/bulma/sass/layout/section.sass";
+*/
