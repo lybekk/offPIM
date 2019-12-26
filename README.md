@@ -1,25 +1,21 @@
 # pimpim
-Pretty Impressive
-Pretty & Impressive
-Synonym til pretty på p
 Pretty Insecure Modular Personal Information Management
 A CouchDB PIM
 
 ## Description
 Quick and dirty personal information management system (PIM).
-In an age where everything is about collaboration and sharing.
-This is a counterweight to that. Not eveything needs to be shared.
+In an age where everything is about collaboration and sharing. This is a counterweight to that. Not eveything needs to be shared.
 Semi-opinionated with a few customization options.
 Some drawbacks to doing it this way:
 	poor/no syntax highlighting for html
 For tasks, notes, projects, journalling/logging. It includes a messaging module as well. Used for general purpose information between devices and such.
 
 ## Table of Contents
-Optionally, include a table of contents in order to allow other people to quickly navigate especially long or detailed READMEs.
+WIP. Use githubs TOC markdown
 
 ## Installation
 
-Can be done complicated, or easy.
+Can be done complicated, or easy. Installation/deployment options coming.
 
 ### Requirements
 If no customization needed:
@@ -38,13 +34,9 @@ If need for customizattion:
 Use 'pusher.py'.
 See [Customization](#cust) for details.
 
-Installation is the next section in an effective README. Tell other users how to install your project locally. Optionally, include a gif to make the process even more clear for other people.
-
 ## Usage
-Litt lenger ned:
+refine:
     You also get this sexy/handy view filtered open tasks and such.
-
-The next section is usage, in which you instruct other people on how to use your project after they’ve installed it. This would also be a good place to include screenshots of your project in action.
 
 Tested with 30 000 documents and seems to work fine. Optmization tips are welcome.
 
@@ -55,6 +47,10 @@ If you want to use another database, change settings in pusher.py and run it on 
 $ python3 pusher.py
 ```
 
+```Shell
+$ npm run build
+```
+
 The user needs write permission.
 either put these in .profile, on Linux
 export pimpim_user="yourUsername"
@@ -62,23 +58,28 @@ export pimpim_pass="yourPassword"
 
 *Or*
 
-Put credentials directly in pusher.py:
+Put credentials directly in main.js:
 
 ```Python
 USERNAME="youruser"
 PASSWORD="cleverSecretP455w0rd"
 ```
 
+```Javascript
+USERNAME="youruser"
+PASSWORD="cleverSecretP455w0rd"
+```
+
+Old:
 pusher.py struggles somewhat with single quotes <code>'</code> and <code>//</code> when pushing "_shows"/html-files. CouchDB treats these as escapes and such.
 
 ### Modules
 
-Drop an html-file in the "shows" folder, run pusher.py and the world's your oyster.
-Limitations: Can't use single quote ' in the html-files. pusher.py isn't that clever. Gets easily confused and starts misbehaving.
+Drop a js-file in the "shows" folder, run <code>npm run build</code> and the world's your oyster.
+Limitations: Can't use single quote ' in the html-files. CouchDB gets easily confused and starts misbehaving.
 
 ### Security
 This tool has no in-built security (i.e. authentication). Anyone with read-access to the database can access it.
-
 
 ## Contributing
 Contributions, ideas, suggestions and feedback is welcomed and always appreciated.
@@ -101,8 +102,9 @@ print(donation * thanks)
 ## Credits
 Creators of:
 * CouchDB
-* Cloudant library from IBM (link til github for cloudant)
+* Nano - NPM library for CouchDB
 * Bulma CSS
+* Cloudant library from IBM
 
 ## License
 MIT
