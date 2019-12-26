@@ -146,6 +146,8 @@ methods: {
         let txt = btn.path[0].textContent;
         let value = txt.trim().toLowerCase();
         this.task.status = value;
+        let result = update_document(this.task, true);
+        notify( "Task: " + this.task._id + " changed status to: " + this.task.status,"is-success",4000);
     },
     rescheduleModal_toggle: function () {
         this.$refs.rescheduleInputDueDate.value = this.task.due.slice(0, 10);
@@ -235,6 +237,24 @@ computed: {
         }
     },
     */
+   statusColors: function () {
+       return app.statusColors
+   },
+    statusColor: function () {
+    /*
+    return app.statusColors[this.task.status] unsurprisingly returns tasks current status color
+    let statusColors = {
+        wait:"is-light",
+        plan:"is-dark",
+        todo:"is-primary",
+        next:"is-warning",
+        doing:"is-info",
+        done:"is-success",
+        cancelled:"is-danger"
+    };
+    */
+        return app.statusColors[this.task.status]
+    },
     overdue: function () {
         let d = new Date();
         d.setDate(d.getDate() - 1);
@@ -261,20 +281,6 @@ computed: {
             danger = "";
         };
         return tag_overdue
-    },
-    statusColor: function () {
-        /*
-        let statusColors = {
-            wait:"is-light",
-            plan:"is-dark",
-            todo:"is-primary",
-            next:"is-warning",
-            doing:"is-info",
-            done:"is-success",
-            cancelled:"is-danger"
-        };
-        */
-        return app.statusColors[this.task.status]
     },
     taskDescription: function () {
         let description = this.task.description;
@@ -303,7 +309,7 @@ template: `
                     <div class="dropdown is-hoverable is-up is-right">
                     <div class="dropdown-trigger">
                         <div class="" aria-haspopup="true" aria-controls="dropdown-menu4">
-                            <span class="tags has-addons">
+                            <span ref="tags" class="tags has-addons">
                                 <span :class="[statusColor, \'tag is-light is-capitalized\']">{{ task.status }}</span>
                                 <span v-if="overdue" class="tag is-danger">Overdue</span>
                             </span>
@@ -314,29 +320,27 @@ template: `
                             <div class="dropdown-item">
                                 <div class="field has-addons">
                                     <p class="control">
-                                        <button @click="setStatus" class="button is-small is-light">
-                                            Wait 
-                                            
-                                            return app.statusColors[this.task.status]
+                                        <button @click="setStatus" :class="[statusColors.wait, 'button is-small']">
+                                            Wait
                                         </button>
                                     </p>
                                     <p class="control">
-                                        <button @click="setStatus" class="button is-small is-light">
+                                        <button @click="setStatus" :class="[statusColors.plan, 'button is-small']">
                                             Plan
                                         </button>
                                     </p>
                                     <p class="control">
-                                        <button @click="setStatus" class="button is-small is-light">
+                                        <button @click="setStatus" :class="[statusColors.todo, 'button is-small']">
                                             Todo
                                         </button>
                                     </p>
                                     <p class="control">
-                                        <button @click="setStatus" class="button is-small is-light">
+                                        <button @click="setStatus" :class="[statusColors.next, 'button is-small']">
                                             Next
                                         </button>
                                     </p>
                                     <p class="control">
-                                        <button @click="setStatus" class="button is-small is-light">
+                                        <button @click="setStatus" :class="[statusColors.doing, 'button is-small']">
                                             Doing
                                         </button>
                                     </p>
@@ -681,8 +685,11 @@ function new_entry_form() {
 }
 
 async function submit_form() {
-    console.log("Work in progress");
+    /* 
     let form = modal.querySelector("form");
+    */
+    let formcontainer = document.querySelector('#formNewEntry');
+    let form = formcontainer.querySelector("form");
 
     var date = new Date();
     let doc = {
@@ -720,6 +727,7 @@ async function submit_form() {
         });
         const json = await response.json();
         notify("Success:" + JSON.stringify(json),"is-success",4000);
+        removeForm()
     } catch (error) {
         errorHandler("Error:" + error,"is-danger");
     }

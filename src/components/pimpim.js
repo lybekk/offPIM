@@ -166,13 +166,18 @@ function errorHandler(error) {
     loader_toggle(false)
 }
 
-async function update_document(doc) {
+async function update_document(doc, revisionOverride = false) {
     /*
     if rev-error
     const response = await fetch(`${window.location.origin}/${database}/${id}`);
     const doc = await response.json();
      */
     try {
+        if (revisionOverride) {
+            const getRevDoc = await fetch(url_database + "/" + doc._id);
+            const revDoc = await getRevDoc.json();
+            doc._rev = revDoc._rev;
+        }
         const response = await fetch(url_database + "/" + doc._id, {
             method: "PUT",
             body: JSON.stringify(doc), 
