@@ -5,7 +5,7 @@ module.exports = (DATABASE, appName, APPS) => `
 <script type="text/javascript" charset="utf8" src="pimpim.js"></script>
 <script type="text/javascript" charset="utf8" src="vue.js"></script>
 <link rel="stylesheet" type="text/css" href="main.css/">
-<title>pimpim</title>
+<title>pimpim - ${appName}</title>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="Keywords" content="pim,couchdb,pouchdb,database,personal information management">
@@ -37,7 +37,7 @@ module.exports = (DATABASE, appName, APPS) => `
 <nav class="navbar is-fixed-top header" role="navigation" aria-label="main navigation">
     <div class="container">
         <div class="navbar-brand">
-            <a id="page_name" class="navbar-item" href="../index/">PIMPIM</a>
+            <a id="page_name" class="navbar-item is-capitalized" href="../index/">PIMPIM</a>
             <a role="button" class="navbar-burger" aria-label="menu" aria-expanded="false" onclick="toggleNavBarMenu(this)">
                 <span aria-hidden="true"></span>
                 <span aria-hidden="true"></span>

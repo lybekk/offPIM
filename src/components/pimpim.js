@@ -23,7 +23,7 @@ function loader_toggle(status=true) {
     }
 }
 
-async function delete_document(doc_id) {
+async function deleteDocument(doc_id) {
     const response = await fetch(`${window.location.origin}/${database}/${doc_id}`);
     const doc = await response.json();
     let result;
@@ -32,6 +32,7 @@ async function delete_document(doc_id) {
         let url = `${window.location.origin}/${database}/${doc._id}?rev=${doc._rev}`;
         const data = await delete_request(url);
         result = JSON.stringify(data);
+        notify(result,"is-info",6000)
     } catch (error) {
         result = error;
     }
@@ -85,6 +86,8 @@ function get_alias() {
     let pn = document.querySelector("#page_name");
     if (aliases[moduleName]) {
         pn.textContent = aliases[moduleName];
+    } else {
+        pn.textContent = moduleName;
     }
     render_navbar(aliases);
 }
@@ -166,7 +169,7 @@ function errorHandler(error) {
     loader_toggle(false)
 }
 
-async function update_document(doc, revisionOverride = false) {
+async function updateDocument(doc, revisionOverride = false) {
     /*
     if rev-error
     const response = await fetch(`${window.location.origin}/${database}/${id}`);
@@ -192,3 +195,37 @@ async function update_document(doc, revisionOverride = false) {
         errorHandler(error);
     }
 }
+
+function removeForm() {
+    let form = document.querySelector('#formNewEntry');
+    form.remove();
+};
+
+async function postForm(doc) {
+    try {
+        const response = await fetch(url_database, {
+            method: "POST",
+            body: JSON.stringify(doc), 
+            headers: {
+            "Content-Type": "application/json"
+            }
+        });
+        const json = await response.json();
+        notify("Success:" + JSON.stringify(json),"is-success",4000);
+        removeForm()
+    } catch (error) {
+        errorHandler("Error:" + error,"is-danger");
+    }
+};
+
+function parseTags(tagString) {
+    let tags = [];
+    if (tagString.length > 0) {
+        var arr = tagString.split(",");
+        for (x in arr) {
+            y = arr[x].trim();
+            tags.push(y);
+        };
+    }
+    return tags
+};

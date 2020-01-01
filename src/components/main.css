@@ -7120,6 +7120,35 @@ label.panel-block {
   background-color: #fafafa;
   padding: 3rem 1.5rem 6rem; }
 
+.testing123 {
+  background-color: red; }
+
+.tasks-item {
+  margin-right: 10px;
+  transition: all 0.5s;
+  /*display: inline-block*/ }
+
+.tasks-enter-active {
+  transition: all 0.5s; }
+
+.tasks-leave-active {
+  transition: all 0.5s;
+  position: absolute; }
+
+.tasks-enter {
+  opacity: 0;
+  transform: translateY(30px); }
+
+.tasks-leave-to {
+  opacity: 0;
+  transform: translatex(30px); }
+
+.tasks-move {
+  transition: transform 0.5s; }
+
+.tasks-item-move {
+  transition: transform 0.5s; }
+
 /*
 @import "../node_modules/bulma/sass/utilities/_all.sass";
 @import "../node_modules/bulma/sass/base/_all.sass";

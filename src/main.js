@@ -128,7 +128,7 @@ const storeData = (data, path) => {
     console.error(err)
     }
 };
-storeData(doc, './dist/pimpim_design_document_ready_for_inserting_to_database.json');
+storeData(doc, './dist/easy_insert/pimpim_main_design_document.json');
 
 
 /*

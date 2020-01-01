@@ -1,11 +1,8 @@
-/* old
-var main_container = document.querySelector("#view_container");
-let modal = document.querySelector("#modal");
-*/
-
 var app = new Vue({
     el: "#app",
     data: {
+        showHelp: false,
+        todayCount: 0,
         taskStatuses: {
             "plan":0,
             "wait":0,
@@ -30,14 +27,15 @@ var app = new Vue({
     <div>
         <div class="section container">
             <div class="columns">
-                <div class="column is-one-quarter">
+                <div class="column is-narrow">
                     <aside class="menu">
                         <p class="menu-label">
                             TASKS
                         </p>
                         <ul class="menu-list">
                             <li onclick="new_entry_form()"><a>New task</a></li>
-                            <li v-on:click="getTasks('today')"><a>Today & overdue</a></li>
+                            <li v-on:click="getTasks('today')">
+                                <a>Today & overdue <span class="tag">{{ todayCount }}</span></a></li>
                         </ul>
                         <p class="menu-label">
                             By status
@@ -62,9 +60,18 @@ var app = new Vue({
                                 </ul>
                             </li>
                         </ul>
+                        <p class="menu-label">
+                            Misc
+                        </p>
+                        <ul class="menu-list">
+                            <li><a @click="help">Help</a></li>
+                        </ul>
                     </aside>
                 </div>
                 <div class="column">
+                    <productivity-help
+                        v-if="showHelp"
+                    ></productivity-help>
                     <article class="message is-primary">
                         <div class="message-body">
                             Task management
@@ -73,11 +80,15 @@ var app = new Vue({
                         </div>
                     </article>
                     <div id="view_container">
-                        <productivity-task
-                            v-for="task in tasks" 
-                            v-bind:key="task._id" 
-                            v-bind:task="task"
-                        ></productivity-task>
+                        <transition-group name="tasks" tag="div">
+                            <productivity-task
+                                v-for="(task, index) in tasks" 
+                                v-bind:key="task._id" 
+                                v-bind:task="task" 
+                                v-bind:index="index" 
+                                class="tasks-item"
+                            ></productivity-task>
+                        </transition-group>
                     </div>
                 </div>
             </div>
@@ -85,6 +96,12 @@ var app = new Vue({
     </div>
     `,
     methods: {
+        removeTask: function(index) {
+            this.tasks.splice(index, 1);
+        },
+        help: function () {
+            this.showHelp = !this.showHelp;
+        },
         renderStatusList: function () {
             fetch(`${window.location.origin}/${database}/_design/pimpim/_view/task-status-count?group=true`)
             .then((resp) => resp.json())
@@ -131,12 +148,22 @@ var app = new Vue({
                     if (index + 1 == dbData.docs.length) {loader_toggle(false)}
                 });
                 if (dbData.docs.length == 0) {loader_toggle(false)};
+                if (list == "today") {
+                    app.todayCount = dbData.docs.length;
+                }
             })
             .catch(function(error) {
                 errorHandler(error);
             });
         }
     }
+});
+
+Vue.component("productivity-help", {
+    template: `
+    <p>Hover status tags to change status</p>
+    example for tags
+    `
 });
 
 Vue.component("productivity-task", {
@@ -146,7 +173,7 @@ methods: {
         let txt = btn.path[0].textContent;
         let value = txt.trim().toLowerCase();
         this.task.status = value;
-        let result = update_document(this.task, true);
+        let result = updateDocument(this.task, true);
         notify( "Task: " + this.task._id + " changed status to: " + this.task.status,"is-success",4000);
     },
     rescheduleModal_toggle: function () {
@@ -158,8 +185,9 @@ methods: {
         let d = this.$refs.rescheduleInputDueDate.value;
         let t = this.$refs.rescheduleInputDueTime.value;
         this.task.due = new Date(d + " " + t).toISOString();
-        let result = await update_document(this.task);
+        let result = await updateDocument(this.task);
         this.rescheduleModal_toggle();
+        this.$refs.card.style.filter = "saturate(0.6) opacity(0.2)";
     },
     postpone1Day: async function () {
         let datetime_no_timezone = this.task.due.replace("Z","");
@@ -171,34 +199,42 @@ methods: {
         new_d.setHours(old_due_hour, old_due_mins, old_due_secs);
         new_d.setDate(new_d.getDate() + 1);
         this.task.due = new_d.toISOString();
-        let result = await update_document(this.task);
+        let result = await updateDocument(this.task);
         notify("Postponed task: " + this.task._id,"is-info",4000);
         this.$refs.tags.innerHTML = `<span class="tag is-warning">Due tomorrow</span>`;
         this.$refs.card.style.filter = "saturate(0.6) opacity(0.2)";
+        /*this.$delete(this.task, index);
+        this.$delete(this.task);
+        Vue.delete(this.tasks, index)
+        Vue.delete(this.tasks, this.task.key);
+        */
+       let index = this.$attrs.index;
+       app.removeTask(index);
     },
     clearDueDate: function () {
         this.task.due = null;
-        let result = update_document(this.task);
+        let result = updateDocument(this.task, true);
     },
     completeTask: async function() {
         this.task.status = "done";
         this.task.end = new Date().toISOString();
-        let result = update_document(this.task);
+        let result = updateDocument(this.task);
         notify("Completed task:" + this.task._id,"is-success",4000);
         this.$refs.tags.innerHTML = `<span class="tag is-success">Done</span>`;
         this.$refs.card.style.filter = "saturate(0.6) opacity(0.25)";
+        this.$refs.card.style.transform = "scale(0.9);";
     },
     cancelTask: async function() {
         this.task.status = "cancelled";
         this.task.end = new Date().toISOString();
-        let result = update_document(this.task);
+        let result = updateDocument(this.task);
         notify("Cancelled task:" + this.task._id,"is-success",4000);
         this.$refs.tags.innerHTML = `<span class="tag is-danger is-light">Cancelled</span>`;
         this.$refs.card.style.filter = "blur(1px) saturate(0.6) opacity(0.4)";
     },
     deleteTask: async function() {
             if (this.$refs.deletebtn.textContent == "Sure?") {
-                let result = await delete_document(this.task._id);
+                let result = await deleteDocument(this.task._id);
                 let result_parsed = JSON.parse(result);
                 if(!result_parsed.ok) {
                     errorHandler("Deleting task failed");
@@ -210,7 +246,14 @@ methods: {
             } else {
                 this.$refs.deletebtn.textContent = "Sure?";
             }
-        }
+    },
+    datePurdifier: function(dateIn) {
+        let d = new Date(dateIn);
+        let date = d.toDateString();
+        let time = d.toLocaleTimeString();
+        let dateOut = `${date} ${time}`;
+        return dateOut
+    }
 },
 computed: {
     /*
@@ -237,22 +280,28 @@ computed: {
         }
     },
     */
+   dueFormatted: function() {
+       if (this.task.due == null) {
+           return "-"
+       }
+        return this.datePurdifier(this.task.due)
+   },
+   startFormatted: function() {
+       return this.datePurdifier(this.task.start);
+   },
+   endFormatted: function() {
+        let end = this.task.end;
+        if (end == this.task.start || end == null) {
+            end = "-";
+        } else {
+            end = this.datePurdifier(end);
+        }
+        return end
+   },
    statusColors: function () {
        return app.statusColors
    },
     statusColor: function () {
-    /*
-    return app.statusColors[this.task.status] unsurprisingly returns tasks current status color
-    let statusColors = {
-        wait:"is-light",
-        plan:"is-dark",
-        todo:"is-primary",
-        next:"is-warning",
-        doing:"is-info",
-        done:"is-success",
-        cancelled:"is-danger"
-    };
-    */
         return app.statusColors[this.task.status]
     },
     overdue: function () {
@@ -288,13 +337,6 @@ computed: {
             description = "No description";
         };
         return description
-    },
-    taskEnd: function () {
-        let end = this.task.end;
-        if (end == this.task.start || end == null) {
-            end = "-";
-        };
-        return end
     }
 },
 template: `
@@ -303,6 +345,7 @@ template: `
             ref="card" 
             :data-id="task._id" 
             :data-rev="task._rev" 
+            :data-indxz="this.index" 
             style="width: 100%; transition: all 0.5s ease-in-out;">
             <div class="card-content">
                 <div class="is-pulled-right">
@@ -310,7 +353,8 @@ template: `
                     <div class="dropdown-trigger">
                         <div class="" aria-haspopup="true" aria-controls="dropdown-menu4">
                             <span ref="tags" class="tags has-addons">
-                                <span :class="[statusColor, \'tag is-light is-capitalized\']">{{ task.status }}</span>
+                            {{ this.index }}
+                                <span :class="[statusColor, 'tag is-capitalized']">{{ task.status }}</span>
                                 <span v-if="overdue" class="tag is-danger">Overdue</span>
                             </span>
                         </div>
@@ -354,14 +398,22 @@ template: `
                     <p class="title is-5">
                         {{ task.title }}
                     </p>
-                    <p class="subtitle is-6">
+                    <p class="subtitle is-6" style="max-height: 25vh;overflow: auto;">
                         {{ taskDescription }}
                     </p>
                     <nav class="level">
                         <div class="level-left">
-                            <div class="tags has-addons">
-                                <span class="tag">Project</span>
-                                <span class="tag is-primary">{{ task.project }}</span>
+                            <div class="level-item">
+                                <div class="tags has-addons">
+                                    <span class="tag">Project</span>
+                                    <span class="tag is-primary">{{ task.project }}</span>
+                                </div>
+                            </div>
+                            <div class="level-item">
+                                <div class="tags has-addons">
+                                    <span class="tag">Project</span>
+                                    <span class="tag is-primary">{{ task.project }}</span>
+                                </div>
                             </div>
                         </div>
                         <div class="level-right">
@@ -372,7 +424,7 @@ template: `
                                             Due
                                         </td>
                                         <td v-bind:class="[ overdue ? \'is-danger\' : \'\' ]" data-key="due">
-                                            <time>{{ task.due }}</time>
+                                            <time>{{ dueFormatted }}</time>
                                         </td>
                                     </tr>
                                     <tr>
@@ -380,7 +432,7 @@ template: `
                                             Start
                                         </td>
                                         <td>
-                                            <time>{{ task.start }}</time>
+                                            <time>{{ startFormatted }}</time>
                                         </td>
                                     </tr>
                                     <tr>
@@ -388,7 +440,7 @@ template: `
                                             End
                                         </td>
                                         <td>
-                                            <time>{{ task.end }}</time>
+                                            <time>{{ endFormatted }}</time>
                                         </td>
                                     </tr>
                                 </tbody>
@@ -459,6 +511,10 @@ template: `
                                 </div>
                             </div>
                             <a class="level-item">
+                                <span class="icon is-small has-text-dark" 
+                                    @click="postpone1Day" title="Postpone to tomorrow">
+                                    ⌚
+                                </span>
                             </a>
                         </div>
                         <div class="level-right">
@@ -500,7 +556,6 @@ template: `
 });
 
 function new_entry_form() {
-    /* <template id="templateFormNewEntry"> */
     var template = `
     <div class="modal">
         <div class="modal-background" onclick="removeForm()"></div>
@@ -508,7 +563,7 @@ function new_entry_form() {
 
         <div class="card" style="margin-bottom: 1.8rem;">
             <div class="card-content">
-                <form class="" name="FormNewEntry" >
+                <form name="FormNewEntry" >
                     <p class="subtitle">
                         New object
                     </p>
@@ -643,7 +698,7 @@ function new_entry_form() {
                         </div>
                     </details>
                 </form>
-            </div> <!-- Weirdly placed div because card footer items will look great -->
+            </div>
             <footer class="card-footer">
                 <button class="card-footer-item button is-inverted is-link is-paddingless" onclick="submit_form()">Submit</button>
                 <button class="card-footer-item button is-inverted is-link is-paddingless" onclick="removeForm()">Cancel</button>
@@ -653,11 +708,6 @@ function new_entry_form() {
     <button class="modal-close is-large" aria-label="close" onclick="removeForm()"></button>
 </div>
 `;
-    /* 
-    template = document.querySelector("#templateFormNewEntry");
-    template = document.querySelector("#templateFormNewEntry");
-    clone = document.importNode(template.content, true);
-    */
     let clone = document.createElement('DIV');
     clone.id = 'formNewEntry';
     clone.innerHTML = template;
@@ -673,23 +723,19 @@ function new_entry_form() {
     clone.querySelector("input[name=start_time]").value = time_iso;
     clone.querySelector("input[name=end_date]").value = date_iso;
     clone.querySelector("input[name=end_time]").value = time_iso;
-    /*
-    let modal_content = modal.querySelector(".modal-content");
-    modal_content.textContent = "";
-    modal_content.appendChild(clone);
-    modal_toggle();
-    */
     document.body.appendChild(clone);
     let modal = clone.querySelector(".modal");
     modal.classList.add('is-active');
 }
 
 async function submit_form() {
-    /* 
-    let form = modal.querySelector("form");
-    */
     let formcontainer = document.querySelector('#formNewEntry');
     let form = formcontainer.querySelector("form");
+
+    let dueDate = null;
+    if (form.due_date.value != "") {
+        dueDate = new Date(form.due_date.value + " " + form.due_time.value).toISOString();
+    };
 
     var date = new Date();
     let doc = {
@@ -702,40 +748,14 @@ async function submit_form() {
         status:form.status.value,
         project:form.project.value,
         context:form.context.value,
-        tags:[],
         priority:parseInt(form.priority.value),
-        due:new Date(form.due_date.value + " " + form.due_time.value).toISOString(),
+        due:dueDate,
         start:new Date(form.start_date.value + " " + form.start_time.value).toISOString(),
         end:new Date(form.end_date.value + " " + form.end_time.value).toISOString()
     };
 
-    if (form.tags.value.length > 0) {
-        var tags_arr = form.tags.value.split(",");
-        for (x in tags_arr) {
-            y = tags_arr[x].trim();
-            doc.tags.push(y)
-        };
-    }
-
-    try {
-        const response = await fetch(url_database, {
-            method: "POST",
-            body: JSON.stringify(doc), 
-            headers: {
-            "Content-Type": "application/json"
-            }
-        });
-        const json = await response.json();
-        notify("Success:" + JSON.stringify(json),"is-success",4000);
-        removeForm()
-    } catch (error) {
-        errorHandler("Error:" + error,"is-danger");
-    }
-};
-
-function removeForm() {
-    let form = document.querySelector('#formNewEntry');
-    form.remove();
+    doc.tags = parseTags(form.tags.value);
+    postForm(doc);
 };
 
 app.renderStatusList();

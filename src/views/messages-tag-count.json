@@ -1,0 +1,4 @@
+{
+	"reduce": "_count",
+	"map": "function (doc) {\n  if (doc.realm == \"messages\") {\n    function emitTag(tag) {\n        emit(tag, 1);\n    }\n    doc.tags.forEach(emitTag);\n    if (doc.tags.length == 0) {\n      emit(\"untagged\", 1);\n    }\n  }\n}"
+}

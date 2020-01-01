@@ -1,6 +1,6 @@
 {
     "_id": "_design/pimpim_mango_indexes",
-    "_rev": "2-8f806453de1bd7cd9b9f9b6e69732332",
+    "_rev": "4-109d0783bb257e8c730291c053657a6d",
     "language": "query",
     "views": {
       "journalcreated-json-index": {
@@ -19,10 +19,11 @@
           }
         }
       },
-      "fis-json-index": {
+      "realmTags-json-index": {
         "map": {
           "fields": {
-            "start": "asc"
+            "realm": "asc",
+            "tags": "asc"
           },
           "partial_filter_selector": {}
         },
@@ -30,23 +31,8 @@
         "options": {
           "def": {
             "fields": [
-              "created"
-            ]
-          }
-        }
-      },
-      "fjert-json-index": {
-        "map": {
-          "fields": {
-            "created": "desc"
-          },
-          "partial_filter_selector": {}
-        },
-        "reduce": "_count",
-        "options": {
-          "def": {
-            "fields": [
-              "created"
+              "realm",
+              "tags"
             ]
           }
         }
