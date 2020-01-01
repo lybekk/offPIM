@@ -9,7 +9,9 @@
     "css-build": "node-sass --omit-source-map-url src/sass/main.scss src/components/main.css",
     "css-build-dark": "node-sass --omit-source-map-url src/sass/dark.scss src/components/dark.css",
     "css-watch": "npm run css-build -- --watch",
-    "css-start": "npm run css-watch"
+    "css-start": "npm run css-watch",
+    "docs:dev": "vuepress dev docs",
+    "docs:build": "vuepress build docs"
   },
   "repository": {
     "type": "git",
@@ -17,7 +19,8 @@
   },
   "keywords": [
     "pim",
-    "couchdb"
+    "couchdb",
+    "nosql"
   ],
   "author": "Christoffer Lybekk",
   "license": "MIT",
@@ -30,6 +33,7 @@
   },
   "devDependencies": {
     "bulma": "^0.8.0",
-    "node-sass": "^4.13.0"
+    "node-sass": "^4.13.0",
+    "vuepress": "^1.2.0"
   }
 }

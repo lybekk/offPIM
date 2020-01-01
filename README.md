@@ -17,6 +17,8 @@ WIP. Use githubs TOC markdown
 
 Can be done complicated, or easy. Installation/deployment options coming.
 
+See documentation (URL) for more information
+
 ### Requirements
 If no customization needed:
 * CouchDB or PouchDB server.
@@ -60,11 +62,6 @@ export pimpim_pass="yourPassword"
 
 Put credentials directly in main.js:
 
-```Python
-USERNAME="youruser"
-PASSWORD="cleverSecretP455w0rd"
-```
-
 ```Javascript
 USERNAME="youruser"
 PASSWORD="cleverSecretP455w0rd"
@@ -83,15 +80,6 @@ This tool has no in-built security (i.e. authentication). Anyone with read-acces
 
 ## Contributing
 Contributions, ideas, suggestions and feedback is welcomed and always appreciated.
-
-```Python
-import sys
-
-donation = sys.argv(1)
-thanks = "aaawyiss"
-
-print(donation * thanks)
-```
 
 ## Roadmap
 * User created modules (drop in module-folder, run pusher, and et voila).

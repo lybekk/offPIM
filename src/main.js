@@ -5,7 +5,7 @@ const base = require('./components/base.js'); // HTML base template
 console.log("Building CouchDB document");
 
 // Settings
-let DESIGN_DOC = '_design/pimpim_test42';
+let DESIGN_DOC = '_design/pimpim';
 let DATABASE = 'vault';
 
 let USERNAME, PASSWORD;
@@ -27,6 +27,7 @@ let doc = {
     _id: DESIGN_DOC,
     files: {},
     shows: {},
+    views: {},
     language: "javascript"
 };
 
@@ -52,6 +53,7 @@ jsComponents.forEach(file => {
     setJavascript(file, componentsFolder);
 });
 
+// CSS
 const css = fs.readFileSync(componentsFolder + "main.css", 'utf8');
 doc.files["main.css"] = css;
 doc.shows["main.css"] = `function(doc, req) { 
@@ -63,6 +65,16 @@ doc.shows["main.css"] = `function(doc, req) {
     }
 }`;
 
+// Views
+const viewsFolder = './src/views/';
+let viewsList = fs.readdirSync(viewsFolder);
+viewsList.forEach( (file) => {
+    let viewName = file.replace('.json', '');
+    let content = fs.readFileSync(viewsFolder + file, 'utf8');
+    doc.views[viewName] = JSON.parse(content);
+});
+
+// Apps
 const appsFolder = './src/shows/';
 let appList = fs.readdirSync(appsFolder);
 
@@ -108,6 +120,17 @@ async function uploadDesignDocument(doc) {
         asyncCall();
 };
 
+// Save JSON to disk
+const storeData = (data, path) => {
+    try {
+    fs.writeFileSync(path, JSON.stringify(data, null, 4))
+    } catch (err) {
+    console.error(err)
+    }
+};
+storeData(doc, './dist/pimpim_design_document_ready_for_inserting_to_database.json');
+
+
 /*
 
 ###########
@@ -122,21 +145,6 @@ doc["updates"]["postmessage"] = postmessage_raw.read()
 doc["updates"]["postjournal"] = postjournal_raw.read()
 doc["updates"]["postnote"] = postnote_raw.read()
 
-#########
-# Views #
-#########
-
-doc["views"] = {}
-
-location = 'views/'
-
-for file in os.listdir(location):
-    if file.endswith(".json"):
-        file_loc = os.path.join(location, file)
-        file_content = open(file_loc, "r")
-        file_json = json.loads(file_content.read())
-        name = os.path.splitext(file)[0]
-        doc["views"][name] = file_json
 
 postmessage_raw = open("updates/postmessage.js", "r")
 doc["updates"]["postmessage"] = postmessage_raw.read()
