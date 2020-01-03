@@ -1,10 +1,6 @@
 # pimpim
 PIMPIM - A PIM - A Personal information management system
 
-## Table of Contents
-
-[[toc]]
-
 ## Description
 A PIM served directly from CouchDB.
 In an age where everything is about collaboration and sharing. This is a counterweight to that. Not eveything needs to be shared. Something is just personal.
@@ -31,6 +27,21 @@ If need for customizattion:
 
 ## Usage
 Tested with 30 000+ documents and seems to work fine. Optmization tips are welcome.
+
+### Build and push design document to CouchDB
+```
+npm run push:designdoc
+```
+
+### Compiles and hot-reloads for development
+```
+npm run serve
+```
+
+### Compiles and minifies for production
+```
+npm run build
+```
 
 ## Customization
 

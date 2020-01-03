@@ -1,39 +1,61 @@
 {
   "name": "pimpim",
-  "version": "1.0.0",
+  "version": "0.1.0",
+  "private": true,
   "description": "Personal Information Manager for CouchDB",
-  "main": "main.js",
+  "author": "Christoffer Lybekk",
   "scripts": {
-    "build": "node src/main.js",
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "css-build": "node-sass --omit-source-map-url src/sass/main.scss src/components/main.css",
-    "css-build-dark": "node-sass --omit-source-map-url src/sass/dark.scss src/components/dark.css",
-    "css-watch": "npm run css-build -- --watch",
+    "serve": "vue-cli-service serve",
+    "build": "vue-cli-service build",
+    "lint": "vue-cli-service lint",
+    "css-build": "node-sass --omit-source-map-url src/sass/main.scss designdoc_builder/components/main.css",
+    "css-build-dark": "node-sass --omit-source-map-url src/sass/dark.scss designdoc_builder/components/dark.css",
     "css-start": "npm run css-watch",
+    "css-watch": "npm run css-build -- --watch",
+    "docs:build": "vuepress build docs",
     "docs:dev": "vuepress dev docs",
-    "docs:build": "vuepress build docs"
+    "push:designdoc": "node designdoc_builder/main.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/lybekk/pimpim.git"
+  "main": "main.js",
+  "dependencies": {
+    "core-js": "^3.4.4",
+    "nano": "^8.1.0",
+    "vue": "^2.6.10",
+    "vue-router": "^3.1.3",
+    "vuetify": "^2.1.0",
+    "vuex": "^3.1.2"
   },
+  "devDependencies": {
+    "@vue/cli-plugin-babel": "^4.1.0",
+    "@vue/cli-plugin-eslint": "^4.1.0",
+    "@vue/cli-plugin-router": "^4.1.0",
+    "@vue/cli-plugin-vuex": "^4.1.0",
+    "@vue/cli-service": "^4.1.0",
+    "babel-eslint": "^10.0.3",
+    "bulma": "^0.8.0",
+    "eslint": "^5.16.0",
+    "eslint-plugin-vue": "^5.0.0",
+    "node-sass": "^4.13.0",
+    "sass": "^1.19.0",
+    "sass-loader": "^8.0.0",
+    "vue-cli-plugin-vuetify": "^2.0.3",
+    "vue-template-compiler": "^2.6.10",
+    "vuepress": "^1.2.0",
+    "vuetify-loader": "^1.3.0"
+  },
+  "bugs": {
+    "url": "https://github.com/lybekk/pimpim/issues"
+  },
+  "homepage": "https://github.com/lybekk/pimpim#readme",
   "keywords": [
     "pim",
     "couchdb",
     "nosql"
   ],
-  "author": "Christoffer Lybekk",
   "license": "MIT",
-  "bugs": {
-    "url": "https://github.com/lybekk/pimpim/issues"
-  },
-  "homepage": "https://github.com/lybekk/pimpim#readme",
-  "dependencies": {
-    "nano": "^8.1.0"
-  },
-  "devDependencies": {
-    "bulma": "^0.8.0",
-    "node-sass": "^4.13.0",
-    "vuepress": "^1.2.0"
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/lybekk/pimpim.git"
   }
 }

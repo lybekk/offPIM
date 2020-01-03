@@ -143,8 +143,11 @@ function render_navbar(aliases) {
     modules.forEach(element => {
         let a = document.createElement("A");
         a.classList.add("navbar-item", "is-capitalized");
+        /*
         a.href = element + ".html";
-        /*a.href = "../" + element + "/";*/
+        a.href = "../" + element + "/";
+        */
+        a.href = element;
         if (aliases.hasOwnProperty(element)) {
             element = aliases[element];
         };

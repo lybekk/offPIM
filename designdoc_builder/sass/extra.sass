@@ -26,3 +26,18 @@
 
 .tasks-item-move
     transition: transform 0.5s
+
+/* For notes */
+
+.tile.is-child 
+    transition: transform .1s
+
+.tile.is-child:hover
+    transform: scale(1.2)
+
+.tile.is-child:hover:after
+    content: "🖉"
+    float: right
+    position: absolute
+    top: 10%
+    right: 10%

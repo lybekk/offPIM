@@ -363,25 +363,9 @@ function formNewMessage() {
     </div>
     <button class="modal-close is-large" aria-label="close" onclick="removeForm()"></button>
         `;
-    /*
-    reader.innerHTML = form;
-    */
     let clone = document.createElement('DIV');
     clone.id = 'formNewEntry';
     clone.innerHTML = template;
-    /*
-    var d = new Date();
-    var datetime_iso = d.toISOString();
-    var date_iso = datetime_iso.slice(0, 10);
-    var time_iso = datetime_iso.slice(11, 16);
-    clone.querySelector("input[name=_id]").value = _id;
-    clone.querySelector("input[name=due_date]").value = date_iso;
-    clone.querySelector("input[name=due_time]").value = time_iso;
-    clone.querySelector("input[name=start_date]").value = date_iso;
-    clone.querySelector("input[name=start_time]").value = time_iso;
-    clone.querySelector("input[name=end_date]").value = date_iso;
-    clone.querySelector("input[name=end_time]").value = time_iso;
-    */
     document.body.appendChild(clone);
     let modal = clone.querySelector(".modal");
     modal.classList.add('is-active');

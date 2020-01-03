@@ -423,7 +423,7 @@ template: `
                                         <td>
                                             Due
                                         </td>
-                                        <td v-bind:class="[ overdue ? \'is-danger\' : \'\' ]" data-key="due">
+                                        <td v-bind:class="[ overdue ? 'is-danger' : '' ]" data-key="due">
                                             <time>{{ dueFormatted }}</time>
                                         </td>
                                     </tr>
