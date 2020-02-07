@@ -1,0 +1,106 @@
+{
+  "_id": "_design/pimpim_mango_indexes",
+  "version": 20200123,
+  "language": "query",
+  "views": {
+    "tasksStatus-json-index": {
+      "map": {
+        "fields": {
+          "realm": "asc",
+          "type": "asc",
+          "status": "asc",
+          "due": "asc",
+          "priority": "asc"
+        }
+      },
+      "reduce": "_count",
+      "options": {
+        "def": {
+          "fields": [
+            "realm",
+            "type",
+            "status",
+            "title",
+            "due",
+            "priority"
+          ]
+        }
+      }
+    },
+    "tasksDuePriority-json-index": {
+      "map": {
+        "fields": {
+          "due": "asc",
+          "priority": "asc"
+        }
+      },
+      "reduce": "_count",
+      "options": {
+        "def": {
+          "fields": [
+            "due",
+            "priority"
+          ]
+        }
+      }
+    },
+    "tasksProjects-json-index": {
+      "map": {
+        "fields": {
+          "realm": "asc",
+          "type": "asc",
+          "project": "asc"
+        },
+        "partial_filter_selector": {}
+      },
+      "reduce": "_count",
+      "options": {
+        "def": {
+          "fields": [
+            "realm",
+            "type",
+            "project"
+          ]
+        }
+      }
+    },
+    "logsDates-json-index": {
+      "map": {
+        "fields": {
+          "created": "asc",
+          "start": "asc",
+          "end": "asc"
+        },
+        "partial_filter_selector": {}
+      },
+      "reduce": "_count",
+      "options": {
+        "def": {
+          "fields": [
+            "created",
+            "start",
+            "end"
+          ]
+        }
+      }
+    },
+    "realmTags-json-index": {
+      "map": {
+        "fields": {
+          "realm": "asc",
+          "tags": "asc"
+        },
+        "partial_filter_selector": {}
+      },
+      "reduce": "_count",
+      "options": {
+        "def": {
+          "fields": [
+            "realm",
+            "tags"
+          ]
+        }
+      }
+    }
+  }
+}

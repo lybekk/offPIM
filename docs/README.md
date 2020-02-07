@@ -2,7 +2,7 @@
 home: true
 heroImage: /pimpim-banner.png
 heroText: PIMPIM
-tagline: A quick and dirty Personal Information Manager
+tagline: A quick and dirty Personal Information Manager ((Documentation is being rewritten due to a major revamp of PIMPIM))
 actionText: Get Started →
 actionLink: /introduction/
 features:

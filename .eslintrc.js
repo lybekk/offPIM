@@ -8,8 +8,13 @@ module.exports = {
     'eslint:recommended'
   ],
   rules: {
-    'no-console': process.env.NODE_ENV === 'production' ? 'error' : 'off',
-    'no-debugger': process.env.NODE_ENV === 'production' ? 'error' : 'off'
+    'no-console': 'off',
+    'no-debugger': 'off',
+    'vue/attribute-hyphenation': 1,
+    'vue/attributes-order': 1,
+    'vue/no-confusing-v-for-v-if': 1,
+    'vue/order-in-components': 1
+    //'vue/order-in-components': 'warning'
   },
   parserOptions: {
     parser: 'babel-eslint'

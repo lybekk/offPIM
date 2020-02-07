@@ -2,13 +2,6 @@
 
 [[toc]]
 
-## Make your own
-
-PIMPIM is designed in a way that it can be easily expanded by your own vue apps, drop-in style.
-Make a standalone vue app in a `.js` file. Put the file in `src/shows/` and run `npm run build`.
-
-It will then attach to `<div id="app">` in base.js (html base template).
-
 ## Standard
 
 Included apps in PIMPIM:
@@ -34,6 +27,13 @@ Uses the same document model as `Tasks`.
 General purpose messaging central.
 Email is best kept in files, it is said. While that is said. Does it replicate? Does it work offline? Oh.. Right. Anyway, this may come in handy anyway (for machines sending to a common place or something)
 
-### Journal
+Untagged messages, either when <code>tag:[]</code> or when tag field missing from document, will be show in 'Inbox'.
+
+### Logbook
 
 Work in progress
+
+## Make your own
+
+Work in progress. 
+The goal is designing PIMPIM in a way that it can be easily expanded by your own vue apps, drop-in style.
