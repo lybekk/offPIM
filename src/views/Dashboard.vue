@@ -36,41 +36,51 @@ v-content
         v-card
           v-card-title Tasks
           v-card-text
-            v-row
-              v-col
-                v-skeleton-loader(
-                  :loading="sparklineLoading"
-                  transition="scale-transition"
-                  type="image"
+            v-container(fluid)
+              v-row
+                v-col(
+                  cols="12"
+                  sm="6"
                 )
-                  v-sheet(elevation="6")
-                    v-sparkline(
-                      :value="tasksStatuSparklineValues"
-                      smooth="2"
-                      padding="2"
-                      type="bar"
-                      auto-line-width
-                      auto-draw
-                      auto-draw-easing
-                      :auto-draw-duration=500
-                      show-labels
-                    )
-                      template(v-slot:label="item") {{ taskStatuses[item.index] }} {{ item.value }}
-              v-col
-                div(v-if="taskProgress.visible")
-                  p(
-                    v-if="this.$store.getters.getTasksAggregate.doneToday != 0"
-                  ) Tasks done today: 
-                    span(
-                      v-text="this.$store.getters.getTasksAggregate.doneToday"
-                      class="success--text"
-                    )
-                  v-progress-linear(
-                    :color="taskProgress.color"
-                    :buffer-value="taskProgress.buffer"
-                    :value="taskProgress.value"
-                    stream
+                  v-skeleton-loader(
+                    :loading="sparklineLoading"
+                    transition="scale-transition"
+                    type="image"
                   )
+                    v-sheet(elevation="6")
+                      v-sparkline(
+                        :value="tasksStatuSparklineValues"
+                        smooth="2"
+                        padding="2"
+                        type="bar"
+                        auto-line-width
+                        auto-draw
+                        auto-draw-easing
+                        :auto-draw-duration=500
+                        show-labels
+                      )
+                        template(v-slot:label="item") {{ taskStatuses[item.index] }} {{ item.value }}
+                v-col(
+                  cols="12"
+                  sm="6"
+                )
+                  div
+                    //-div(v-if="taskProgress.visible")
+                    p(v-if="!taskProgress.visible") Retrieving aggregates
+                    p(
+                      v-if="this.$store.getters.getTasksAggregate.doneToday != 0"
+                    ) Tasks done today: 
+                      span(
+                        v-text="this.$store.getters.getTasksAggregate.doneToday"
+                        class="success--text"
+                      )
+                    v-progress-linear(
+                      :color="taskProgress.color"
+                      :buffer-value="taskProgress.buffer"
+                      :value="taskProgress.value"
+                      stream
+                    )
+                      //-:indeterminate="taskProgress.visible"
   v-footer 
     v-container
       v-simple-table
@@ -164,17 +174,18 @@ export default {
   created () {
   },
   mounted () {
+    //this.$store.commit('loaderActive');
     this.$store.dispatch('setMessagesUnreadCount');
     this.$store.dispatch('tasksDueAggregation');
     this.fillTasksSparkline();
-
     this.dataTable.push(
       { key:'Database server URL' ,value:this.$store.getters.urlDBRoot}
     )
     this.dataTable.push(
       { key:'Database name' ,value:this.$store.getters.dbName}
     )
-    this.fillDataTable()
+    this.fillDataTable();
+    //this.$store.commit('loaderInactive');
   },
   methods: {
     fillTasksSparkline: async function() {

@@ -13,6 +13,8 @@ Semi-opinionated, but customizable.
 
 ## Installation
 
+Download [the latest version](https://github.com/lybekk/pimpim/raw/master/docs/.vuepress/public/downloadpimpim/pimpim_20200207.zip) and unzip contents in a sub-directory named pimpim on any HTTP-server.
+
 See the [documentation](https://lybekk.tech/pimpim/gettingstarted.html#installation) for more details and options.
 
 ### Requirements
