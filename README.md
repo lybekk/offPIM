@@ -27,6 +27,9 @@ If need for customization:
 * NPM
 
 ## Usage
+
+node_modules have been removed from repository. For local customization and development, run <code>npm install</code> first
+
 Tested with 30 000+ documents and seems to work fine. Optmization tips are welcome.
 
 ### Compiles and hot-reloads for development
