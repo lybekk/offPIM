@@ -30,7 +30,7 @@ Contributions in any form will be wildly appreciated
   <img src="brave-lion-logo.png" alt="Brave Browser logo" style="height: auto;width: 5vw;">
 </a>
 
-Using Chrome? Consider using a privacy oriented one, like [Brave](https://brave.com/lyb569), and sponsor this project without spending a dime.
+Using Chrome? Consider using a privacy oriented one, like [Brave](https://brave.com/lyb569) instead, and sponsor this project without spending a dime.
 :::
 
 

@@ -1,11 +1,18 @@
 # pimpim
 PIMPIM - A PIM - A Personal information management system
 
+![Dashboard screenshot](https://lybekk.tech/pimpim/screenshots/dashboard.png)
+
 ## Description
 An easily deployable PIM made for the CouchDB ecosystem.
 In an age where everything is about collaboration and sharing. This is a counterweight to that. Not eveything needs to be shared. Something is just personal.
 
-It currently has apps for task management, notes, journalling/logging and a messaging app(Used for general purpose information between devices and such, or whatever you feel like)
+It currently has apps for: 
+* Task management
+* Notes
+* Journalling/logging 
+* Messaging (Used for general purpose information between devices and such, or whatever you feel like)
+* Personal Finances (Under development)
 
 Semi-opinionated, but customizable.
 
