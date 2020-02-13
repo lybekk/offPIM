@@ -10,7 +10,7 @@ Getting PIMPIM up and running can be done in several ways.
 
 1. If not installed already, [Install CouchDB](https://docs.couchdb.org/en/latest/install/index.html)
 2. Create a database named `vault`.
-3. [Download PIMPIM](https://lybekk.tech/pimpim/downloadpimpim/pimpim_20200207.zip)
+3. [Download PIMPIM](https://github.com/lybekk/pimpim/releases/download/v0.1/pimpim_20200213.zip)
 4. Copy contents of the zip-file to an HTTP-server of your choosing. Preferably in a sub-directory named /pimpim. If another sub-directory is wanted, see instructions below.
 
 ### The still-easy-but-requires-a-few-more-steps way
