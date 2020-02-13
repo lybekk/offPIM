@@ -1,53 +1,51 @@
-<template>
-  <v-tabs fixed-tabs
+<template lang="pug">
+  v-tabs(
+    fixed-tabs
     background-color="transparent"
     show-arrows
-  >
-    <v-tab to="/dashboard">Dashboard</v-tab>
-    <v-tab to="/tasks">
-      Tasks
-      <v-badge
+  ) 
+    v-tab(to="/dashboard") Dashboard
+    v-tab(to="/tasks") Tasks
+      v-badge(
         :content="this.$store.getters.getTasksAggregate.today"
         :value="this.$store.getters.getTasksAggregate.today != 0"
         bordered
-      >
-      </v-badge>
-    </v-tab>
-    <v-tab to="/notes">Notes</v-tab>
-    <v-tab to="/logbook">Logbook</v-tab>
-    <v-tab to="/messages">
-      Messages
-      <v-badge
+      )
+    v-tab(to="/notes") Notes
+    v-tab(to="/logbook") Logbook
+    v-tab(to="/messages") Messages
+      v-badge(
         :content="badgeMessagesUnread"
         :value="badgeMessagesUnread != 0"
         bordered
-      >
-      </v-badge>
-    </v-tab>
-    <v-menu
+      )
+    v-menu(
       bottom
       left
-    >
-      <template v-slot:activator="{ on }">
-        <v-btn
+    )
+      template(v-slot:activator="{ on }")
+        v-btn(
           text
           class="align-self-center mr-4"
           v-on="on"
-        >
-          more
-          <v-icon right>mdi-menu-down</v-icon>
-        </v-btn>
-      </template>
-      <v-list class="grey lighten-3">
-        <v-list-item
-           to="/tools"
-        >
-          Tools
-        </v-list-item>
-      </v-list>
-    </v-menu>
-
-  </v-tabs>
+        ) More
+          v-icon(right) mdi-menu-down
+      v-list(class="grey lighten-3")
+        v-list-item(to="/tools") Tools
+        //-v-list-item Work in progress
+        v-menu(
+          bottom
+          left
+        )
+          template(v-slot:activator="{ on }")
+            v-btn(
+              text
+              class="align-self-center mr-4"
+              v-on="on"
+            ) Work in progress
+              v-icon(right) mdi-menu-down
+          v-list(class="grey lighten-3")
+            v-list-item(to="/finances") Finances
 
 </template>
 

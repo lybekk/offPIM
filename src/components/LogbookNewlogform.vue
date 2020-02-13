@@ -201,8 +201,7 @@ export default {
         },
         pickerStartDate: {
             get () {
-                let d = this.newEntry.start.substring(0,10);
-                return d
+                return this.newEntry.start.substring(0,10);
             },
             set (pickerValue) {
                 let old = this.newEntry.start.substring(0,10);
@@ -212,8 +211,7 @@ export default {
         },
         pickerStartTime: {
             get () {
-                let hhmm = this.newEntry.start.substring(11,16);
-                return hhmm
+                return this.newEntry.start.substring(11,16); //hhmm
             },
             set (pickerValue) {
                 let old = this.newEntry.start.substring(11,16);
@@ -223,8 +221,7 @@ export default {
         },
         pickerEndDate: {
             get () {
-                let d = this.newEntry.end.substring(0,10);
-                return d
+                return this.newEntry.end.substring(0,10);
             },
             set (pickerValue) {
                 let old = this.newEntry.end.substring(0,10);
@@ -234,8 +231,7 @@ export default {
         },
         pickerEndTime: {
             get () {
-                let hhmm = this.newEntry.end.substring(11,16);
-                return hhmm
+                return this.newEntry.end.substring(11,16);
             },
             set (pickerValue) {
                 let old = this.newEntry.end.substring(11,16);

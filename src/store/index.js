@@ -4,11 +4,13 @@ import notes from './notes'
 import tasks from './tasks'
 import logs from './logs'
 import messages from './messages'
+import finances from './finances'
 
 Vue.use(Vuex)
 
 export default new Vuex.Store({
   state: {
+    data: [],
     loaderActive: false,
     database: null, //default. Set value in settings.json
     dbBasePath: null, //default. Set value in settings.json
@@ -69,6 +71,12 @@ export default new Vuex.Store({
     },
     addError (state, error) {
       state.errors.push(error)
+    },
+    addDataArray (state, arr) {
+      state.data = arr;
+    },
+    flushData (state) {
+      state.data = []
     },
     toggleLoader (state) {
       state.loaderActive = !state.loaderActive;
@@ -217,12 +225,16 @@ export default new Vuex.Store({
     },
     getTagList: state => {
       return state.tagList
+    },
+    getData: state => {
+      return state.data
     }
   },
   modules: {
     notes,
     tasks,
     logs,
-    messages
+    messages,
+    finances
   }
 })

@@ -1,134 +1,113 @@
-<template>
-<v-content>
-  <v-container fluid>
-
-    <v-navigation-drawer
+<template lang="pug">
+v-content
+  v-container(fluid)
+    v-navigation-drawer(
       v-model="drawer"
       app
-    >
-      <v-list
-          nav
-          dense
-      >
-        <tasks-newtaskform />
-        <v-list-item link v-on:click="todaysTasks">
-            <v-list-item-icon>
-            <v-icon>mdi-timer-sand-empty</v-icon>
-            </v-list-item-icon>
-            <v-list-item-title>Today & Overdue</v-list-item-title>
-            <v-list-item-action>
-              <v-list-item-action-text v-text="this.$store.getters.getTasksAggregate.today"></v-list-item-action-text>
-            </v-list-item-action>
-        </v-list-item>
-        <v-list-item link v-on:click="tomorrowsTasks">
-            <v-list-item-icon>
-            <v-icon>mdi-timer-sand</v-icon>
-            </v-list-item-icon>
-            <v-list-item-title>Tomorrow</v-list-item-title>
-            <v-list-item-action>
-              <v-list-item-action-text v-text="this.$store.getters.getTasksAggregate.tomorrow"></v-list-item-action-text>
-            </v-list-item-action>
-        </v-list-item>
-        <v-list-item link v-on:click="postponedTasks">
-            <v-list-item-icon>
-            <v-icon>mdi-calendar-arrow-right</v-icon>
-            </v-list-item-icon>
-            <v-list-item-title>Postponed > 5x</v-list-item-title>
-        </v-list-item>
-        <v-divider inset></v-divider>
+    )
+      v-list(
+        nav
+        dense
+      )
+        tasks-newtaskform
+        v-list-item(link v-on:click="todaysTasks")
+            v-list-item-icon
+              v-icon mdi-timer-sand-empty
+            v-list-item-title Today & Overdue
+            v-list-item-action
+              v-list-item-action-text(v-text="this.$store.getters.getTasksAggregate.today")
+        v-list-item(link v-on:click="tomorrowsTasks")
+            v-list-item-icon
+              v-icon mdi-timer-sand
+            v-list-item-title Tomorrow
+            v-list-item-action
+              v-list-item-action-text(v-text="this.$store.getters.getTasksAggregate.tomorrow")
+        v-list-item(link v-on:click="postponedTasks")
+            v-list-item-icon
+              v-icon mdi-calendar-arrow-right
+            v-list-item-title Postponed > 5x
+        v-divider(inset)
 
-        <v-list-group
-          no-action
-        >
-        <template v-slot:activator>
-          <v-list-item-title title="Open projects">Projects</v-list-item-title>
-        </template>
-          <v-list-item 
+        v-list-group(no-action)
+          template(v-slot:activator)
+            v-list-item-title(title="Open projects") Projects
+          v-list-item(
             v-for="proj in openProjects" 
             :key="proj._id"
             dense
             link
             @click="getTasks('project' + proj.project)"
-          >
-            <v-list-item-content :title="proj.project">
-                <v-list-item-title v-text="proj.project"></v-list-item-title>
-                <v-list-item-subtitle 
-                  class="text-capitalize"
-                  v-text="proj.status" 
-                ></v-list-item-subtitle>
-            </v-list-item-content>
-          </v-list-item>
-        </v-list-group>
-
-      </v-list>
-    </v-navigation-drawer>
-
-    <v-row>
-      <v-col>
-          <v-card>
-              <v-card-text>
-                  Displaying {{ this.$store.getters.countDisplayedTasks }} tasks
-              </v-card-text>
-          </v-card>
-      </v-col>
-    </v-row>
-
-    <v-row>
-      <v-col>
-        <v-toolbar>
-
-          <v-toolbar-title>Get by status</v-toolbar-title>
-          <v-btn-toggle
-          v-model="icon"
-          rounded
-          dense
-          >
-              <v-btn v-for="status in ['wait','plan','todo','next','doing']"
-                  :key="status"
-                  :value="status" @click="getTasks('status' + status)"
-              >
-                  <v-badge
-                  v-if="statusCount(status) != 0"
-                  :content="statusCount(status)"
-                  inline
-                  >
-                      <span class="hidden-sm-and-down" v-text="status"></span>
-                  </v-badge>
-                  <span v-else class="hidden-sm-and-down" v-text="status"></span>
-              </v-btn>
-          </v-btn-toggle>          
-          <v-spacer></v-spacer>
-          <v-toolbar-title>By priority</v-toolbar-title>
-          <v-badge
+          )
+            v-list-item-content(:title="proj.project")
+              v-list-item-title(v-text="proj.project")
+              v-list-item-subtitle(
+                class="text-capitalize"
+                v-text="proj.status" 
+              )
+    v-bottom-navigation(
+      app
+      :input-value="showBottomNav"
+      grow
+    )
+      v-menu(top offset-y)
+        //- open-on-hover removed
+        template(v-slot:activator="{ on }")
+          v-btn(
+            text
+            color="primary"
+            v-on="on"
+          ) 
+            span By status
+            v-icon mdi-progress-check
+        v-list
+          v-list-item(
+            v-for="status in ['wait','plan','todo','next','doing']"
+            :key="status"
+            @click="getTasks('status' + status)"
+          )
+            v-list-item-content
+              v-list-item-title(
+                v-text="status"
+                class="text-capitalize"
+              )
+            v-list-item-action
+              v-list-item-action-text(
+                v-if="statusCount(status) != 0"
+                v-text="statusCount(status)"
+              )
+      v-menu(top offset-y)
+        //-open-on-hover removed
+        template(v-slot:activator="{ on }")
+          v-btn(
+            text
+            color="primary"
+            v-on="on"
+          )
+            span By priority
+            v-icon mdi-star
+        v-list
+          v-list-item(
             v-for="btn in priorityButtons"
             :key="btn.pri"
-            :content="priorityCount(btn.pri)"
-            :value="priorityCount(btn.pri) != 0"
-            bordered
-            overlap
-          >
-            <v-btn
-              :title="btn.title"
-              class="ma-2"
-              small 
-              v-text="btn.pri"
-              @click="getTasksByPriority(btn.pri)"
-            >
-            </v-btn>
-          </v-badge>
-
-        </v-toolbar>
-      </v-col>
-    </v-row>
-
-    <v-row>
-      <v-col>
-          <TasksItems />
-      </v-col>
-    </v-row>
-
-  </v-container>
-</v-content>
+            @click="getTasksByPriority(btn.pri)"
+          )
+            v-list-item-content
+              v-list-item-title(
+                :title="btn.title"
+                v-text="btn.pri"
+              )
+            v-list-item-action
+              v-list-item-action-text(
+                v-if="priorityCount(btn.pri) != 0"
+                v-text="priorityCount(btn.pri)"
+              )
+    v-row
+      v-col
+        v-card
+            v-card-text Displaying {{ this.$store.getters.countDisplayedTasks }} tasks
+    v-row
+      v-col
+        TasksItems
 </template>
 
 <script>
@@ -146,6 +125,7 @@ export default {
   },
   data: () => ({
     drawer: false,
+    showBottomNav: false,
     icon: 'justify',
     priorityButtons: [
       { pri: 1, title:'Important and urgent'},
@@ -175,6 +155,7 @@ export default {
     this.$store.commit('flushTasks');
     setTimeout(()=>{
       this.drawer = true; 
+      this.showBottomNav = true;
       this.$store.dispatch('getTaskStatuses');
       this.$store.dispatch('getTaskPriorities');
     }, 300);
@@ -187,7 +168,8 @@ export default {
     }, 800);
   },
   beforeDestroy() {
-    this.drawer = false; 
+    this.drawer = false;
+    this.showBottomNav = true;
   },
   methods: {
     todaysTasks: function() {

@@ -34,7 +34,6 @@
                                             filled
                                             dense
                                         )
-
                                     v-col(cols="12")
                                         v-combobox(
                                             v-model="newTask.tags"

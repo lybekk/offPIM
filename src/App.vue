@@ -41,9 +41,9 @@
 
     <AlertBox/>
 
-    <v-slide-y-transition mode="out-in">
+    <v-scroll-x-transition mode="out-in">
       <router-view></router-view>
-    </v-slide-y-transition>
+    </v-scroll-x-transition>
 
     <v-snackbar
       v-model="snackbar.visible"

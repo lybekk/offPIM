@@ -44,6 +44,39 @@ const routes = [
     path: '/tools',
     name: 'tools',
     component: () => import(/* webpackChunkName: "tools" */ '../views/Tools.vue')
+  },
+  {
+    path: '/finances',
+    redirect: { name: 'financesOverview' },
+    name: 'finances',
+    component: () => import(/* webpackChunkName: "finances" */ '../views/Finances.vue'),
+    children: [
+      {
+        path: 'overview',
+        name: 'financesOverview',
+        component: () => import('../views/finances/Overview.vue'),
+      },
+      {
+        path: 'budget',
+        name: 'budget',
+        component: () => import('../views/finances/Budget.vue'),
+      },
+      {
+        path: 'transactions',
+        name: 'transactions',
+        component: () => import('../views/finances/Transactions.vue'),
+      },
+      {
+        path: 'accounts',
+        name: 'accounts',
+        component: () => import('../views/finances/Accounts.vue'),
+      },
+      {
+        path: 'assets',
+        name: 'assets',
+        component: () => import('../views/finances/Assets.vue'),
+      }
+    ]
   }
 ]
 
