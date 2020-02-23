@@ -1,56 +1,73 @@
 <template lang="pug">
 v-content
   v-container(fluid)
-    span Under construction
-    p Budgeting and cash flow forecasting
-    p recurring expenses
-    p historical (archived)
-    p delete or archive (in data table)
-    pre(v-text="budgetStructureTemporary")
-    //      Assets (hente inn fra inventory?)
+    //-span Under construction
+    //h3 Budgeting and cash flow forecasting
+    h3 Income
+    v-card
+      v-card-title <!-- data.length? -->
+        v-spacer
+        v-text-field(
+          v-model="searchIncome"
+          append-icon="mdi-magnify"
+          label="Search"
+          single-line
+          hide-details
+        )
+      v-data-table(
+        :headers="headers"
+        :items="this.$store.getters.getBudget('income')"
+        :items-per-page="10"
+        :search="searchIncome"
+        class="elevation-1"
+        :loading="this.$store.getters.loaderState"
+        loading-text="Looking for transactions"
+        no-data-text="No transactions matching request"
+      )
+        //-template(v-slot:item.description="{ item }")
+          v-btn(
+            text
+            @click="openDoc(item)"
+          )
+            v-icon mdi-text
+          span(v-text="item.description")
+    h3 Expenses (grouped)
+    v-card
+      v-card-title <!-- data.length? -->
+        v-spacer
+        v-text-field(
+          v-model="searchExpense"
+          append-icon="mdi-magnify"
+          label="Search"
+          single-line
+          hide-details
+        )
+      v-data-table(
+        :headers="headers"
+        :items="this.$store.getters.getBudget('expense')"
+        :items-per-page="10"
+        :search="searchExpense"
+        class="elevation-1"
+        :loading="this.$store.getters.loaderState"
+        loading-text="Looking for transactions"
+        no-data-text="No transactions matching request"
+      )
+        //-template(v-slot:item.description="{ item }")
+          v-btn(
+            text
+            @click="openDoc(item)"
+          )
+            v-icon mdi-text
+          span(v-text="item.description")
+    h3 Contracts/Subscriptions/Memberships
+    //p recurring expenses
+    //p historical (archived)
+    //p delete or archive (in data table)
+    //-pre(v-text="budgetStructureTemporary")
+    //
       Liabilities??
       budget
-        dining out
-        clothing
-        Cable or streaming packages
-      Clothing, jewelry, etc.
-      Dining out
-      Special meals at home
-      Alcohol
-      Movie, concert and event tickets
-      Gym or club memberships
-      Travel expenses
-      Cable or streaming packages
-      Home decor items
-      Furniture
-      Gardener/pool/alarm service
-      Other
-    //budget
-      income
-      expenses
-    // income
-      salary
-    // Expenses
-      insurance
-      Rent/Mortgage
-      Electric
-      Natural Gas
-      Water
-      Sewer
-      Waste Disposal
-      Car Payment
-      Car Repairs
-      Car Insurance
-      Gas
-      Phone
-      Cell Phone
-      Internet
-      Clothes
-      Entertainment
-      School Expenses
-      Bank Charges
-      Misc.
-      //type for accounts (subscriptions/memberships? services?)
+      type for accounts (subscriptions/memberships? services?)
 
 </template>
 <script>
@@ -63,6 +80,18 @@ export default {
     source: String,
   },
   data: () => ({
+    searchIncome: null,
+    searchExpense: null,
+    headers: [
+      { text: 'Label', value: 'name' },
+      { text: 'Institution', value: 'institution' },
+      { text: 'Amount', value: 'amount' },
+      { text: 'Category', value: 'category' },
+      { text: 'Description', value: 'description' },
+    ]
+  }),
+  computed: {
+    /*
     budgetStructureTemporary: function () {
       const j = {
         _id: '1234-5678-91011-121314',
@@ -72,18 +101,53 @@ export default {
       };
       return JSON.stringify(j, null, 2)
     }
-  }),
-  computed: {
+    */
   },
   created: function () {
   },
   mounted () {
+    this.$store.dispatch('getFinancialData', 'income');
+    this.$store.dispatch('getFinancialData', 'expense');
   },
   beforeDestroy() {
   },
   methods: {
   }
 }
+
+
+/*
+                    "Bank Charges",
+                    "Cable or streaming packages",
+                    "Car Insurance",
+                    "Car Payment",
+                    "Car Repairs",
+                    "Cell Phone",
+                    "Clothes",
+                    "Clothing, jewelry, etc.",
+                    "Dining out",
+                    "Electric",
+                    "Entertainment",
+                    "Furniture",
+                    "Gardener/pool/alarm service",
+                    "Gas",
+                    "Gym or club memberships",
+                    "Home decor items",
+                    "Insurance",
+                    "Internet",
+                    "Misc.",
+                    "Movie, concert and event tickets",
+                    "Natural Gas",
+                    "Other",
+                    "Phone",
+                    "Rent/Mortgage",
+                    "School Expenses",
+                    "Sewer",
+                    "Special meals at home",
+                    "Travel expenses",
+                    "Waste Disposal",
+                    "Water",
+*/
 
 </script>
 

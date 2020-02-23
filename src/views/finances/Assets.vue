@@ -1,17 +1,40 @@
 <template lang="pug">
 v-content
   v-container(fluid)
-    span Under construction
-    p Assets
+    h3 Total value
+    v-container
+      v-simple-table
+        template(v-slot:default)
+          thead
+            tr
+              th(class="text-left") Metric
+              th(class="text-left") Value
+          tbody
+            tr
+              td
+                v-btn(to="/finances/accounts" text) Accounts value
+              td
+                v-btn(
+                  v-text="accAgg.valueAccounts"
+                  :color="getColor(accAgg.valueAccounts)"
+                  text
+                  to="/finances/accounts" 
+                )
+                //class="error--text"
+    p Counting account, fixed assets, and inventory
+    p Assume inventory as fixed assets
+    h3 Assets
     p Assets.(fixed assets?)
-    v-data-table(
+    p Work in progress. Assets (Fixed or otherwise) not applicable as an account or inventory. I.e. groups of something, like a stack of collecting cards
+    //v-data-table(
       :headers="headers"
       :items="desserts"
       :items-per-page="5"
       class="elevation-1"
-    )
+      )
     pre(v-text="assetsStructureTemporary")
-    p inventory
+    h3 Inventory
+    p Arriving soon. Will fetch stats from inventory app/module
     //TODO Assets (get items from inventory(if marked as asset?)?)
     //assets
     // accounts
@@ -20,6 +43,8 @@ v-content
     //assets
       accounts
       inventory (fixed assets)
+    //assets not inventoryable. 
+    //Other assets.
 
 </template>
 <script>
@@ -47,6 +72,10 @@ export default {
         // category?
       };
       return JSON.stringify(j, null, 2)
+    },
+    accAgg: function() {
+      //return this.$store.getters.getFinancialAggregates.valueAccounts
+      return this.$store.getters.getFinancialAggregates
     }
   },
   created: function () {
@@ -56,6 +85,9 @@ export default {
   beforeDestroy() {
   },
   methods: {
+    getColor: function(number) {
+      return (number >= 0) ? "success" : "error";
+    },
   }
 }
 

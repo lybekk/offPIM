@@ -12,6 +12,7 @@ v-container(fluid)
           @click="refreshData"
           color="primary"
         ) Refresh
+        v-spacer
         form-new
       //v-scale-transition(mode="out-in")
       v-scroll-y-transition(mode="out-in")
@@ -67,6 +68,7 @@ export default {
     setTimeout(()=>{
       this.showNav = true;
     }, 300);
+    this.$store.dispatch('getFinancialAggregates')
   },
   beforeDestroy() {
     this.showNav = false; 
@@ -74,14 +76,20 @@ export default {
   methods: {
     refreshData: function() {
       let r = this.routeName;
-      let q;
+      //let q = r;
       if (r=='accounts') {
-        q = 'account'
+        r = 'account'
       }
       if (r=='transactions') {
-        q = 'transaction'
+        r = 'transaction'
       }
-      this.$store.dispatch('getFinancialData', q);
+
+      if (r == 'budget') {
+        this.$store.dispatch('getFinancialData', 'income')
+        this.$store.dispatch('getFinancialData', 'expense')
+      } else {
+        this.$store.dispatch('getFinancialData', r)
+      }
       //this.$store.dispatch('getFinancialData', 'account');
     }
   }

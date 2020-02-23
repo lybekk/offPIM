@@ -74,6 +74,9 @@ v-content
                         v-text="this.$store.getters.getTasksAggregate.doneToday"
                         class="success--text"
                       )
+                    p(
+                      v-else
+                    ) No tasks done today so far
                     v-progress-linear(
                       :color="taskProgress.color"
                       :buffer-value="taskProgress.buffer"

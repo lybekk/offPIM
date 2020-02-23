@@ -20,20 +20,14 @@
                         v-card-text
                             v-container
                                 v-row(dense)
-                                    v-col(cols="12")
-                                        v-text-field(
-                                            v-model="newTask.title"
-                                            label="Title"
-                                            dense
-                                        )
-                                    v-col(cols="12")
-                                        v-textarea(
-                                            v-model="newTask.description"
-                                            label="Description"
-                                            rows="3"
-                                            filled
-                                            dense
-                                        )
+                                    form-textfield(
+                                        v-model="newTask.title"
+                                        label="Title"
+                                    )
+                                    form-textfield(
+                                        v-model="newTask.description"
+                                        label="Description"
+                                    )
                                     v-col(cols="12")
                                         v-combobox(
                                             v-model="newTask.tags"
@@ -59,12 +53,10 @@
                                             editable
                                             item-value="text"
                                         )
-                                    v-col(cols="auto")
-                                        v-spacer
-                                        v-text-field(
-                                            v-model="newTask.context"
-                                            label="Context"
-                                        )
+                                    form-textfield(
+                                        v-model="newTask.context"
+                                        label="Context"
+                                    )
                                     v-col(cols="12")
                                         v-radio-group(v-model="newTaskPriority" label="Priority" dense)
                                             v-radio(label="1. Important - Urgent" value="1")
@@ -124,9 +116,13 @@
 
 <script>
 import newDocumentMixin from '@/mixins/newDocumentMixin'
+import formTextfield from '@/components/form/text'
 
 export default {
     name: 'TasksNewtaskform',
+    components: {
+        formTextfield
+    },
     mixins: [newDocumentMixin],
     data: () => ({
         dialog: false,
@@ -143,13 +139,7 @@ export default {
              due: '2020-01-01T01:01:01',
              project:null,
              context:null
-        },
-        projectList: [
-            /*
-            { text: '100%' },
-            { text: '0%' },
-            */
-        ]
+        }
     }),
     computed: {
         tagsListItems: function () {
@@ -185,23 +175,23 @@ export default {
         },
         newTaskPriority: {
             get () {
-                //this.newTask.priority;
                 return this.newTask.priority.toString()
             },
             set (radioValue) {
                 this.newTask.priority = parseInt(radioValue);
             }
+        },
+        projectList: function () {
+            let pl = this.$store.getters.getOpenProjects;
+            let a = pl.map(obj => {
+                return obj.project
+            })
+            return a.sort();
         }
     },
     watch: {
         dialog: function (d) {
             if (d) {
-                let pl = this.$store.getters.getOpenProjects;
-                let a = pl.map(obj => {
-                    return obj.project
-                })
-                this.projectList = a;
-
                 let dt = new Date();
                 let n = this.newTask;
                 n.type = 'task';
@@ -224,6 +214,11 @@ export default {
             n.created = now;
             n.start = now;
             n.end = null;
+            //["title","context"].forEach(p => {
+            //    n[p] = this.$store.getters.getFormProperty(p) 
+            //});
+            //n.title = this.$store.getters.getFormProperty('title')
+            //n.context = this.$store.getters.getFormProperty('context')
             n.priority = parseInt(this.newTask.priority);
 
             if (n.type == 'project') {

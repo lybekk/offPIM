@@ -17,6 +17,9 @@ v-container(fluid)
       :items-per-page="10"
       :search="search"
       class="elevation-1"
+      :loading="this.$store.getters.loaderState"
+      loading-text="Looking for accounts"
+      no-data-text="No accounts matching request"
     )
       template(v-slot:item.active="{ item }")
         v-icon(
@@ -32,6 +35,7 @@ v-container(fluid)
       template(v-slot:item.description="{ item }")
         v-btn(
           text
+          @click="openDoc(item)"
         )
           v-icon mdi-text
     //- details/note: show icon for details-dialog/popup
@@ -62,6 +66,7 @@ export default {
       { text: 'Institution', value: 'institution' },
       { text: 'Account number', value: 'number' },
       { text: 'Balance', value: 'balance' },
+      { text: 'Currency', value: 'currency' },
       { text: 'Type', value: 'type' },
       { text: 'Category', value: 'category' },
       { text: 'Description', value: 'description' },
@@ -79,6 +84,9 @@ export default {
   methods: {
     getColor: function(number) {
       return (number >= 0) ? "success" : "error";
+    },
+    openDoc: function(item) {
+      console.log(item)
     }
   }
 }

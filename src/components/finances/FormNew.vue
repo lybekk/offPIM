@@ -54,29 +54,44 @@ v-content(fluid)
                     v-row
                         v-col(cols="12")
                     v-row
-                        // Transaction specific
+                        //- Budget specific
+                        v-row(v-if="formType == 'budget'")
+                            v-col(cols="6")
+                                v-row
+                                    form-textfield(
+                                        v-model="newEntry.name"
+                                        hint="Label distinguishing it from the rest"
+                                        :label="`${newEntry.type} label`"
+                                    )
+                                    form-textfield(
+                                        v-model="newEntry.institution"
+                                        hint="If entry relates to an institution"
+                                        label="Institution"
+                                    )
+                                    form-numberfield(
+                                        v-model="newEntry.amount"
+                                        hint="Enter a positive value in your local currency"
+                                        label="Amount"
+                                    )
+                        //- Transaction specific
                         v-row(v-if="formType == 'transaction'")
                             v-col(cols="6")
                                 v-row
-                                    v-col(cols="6")
-                                        v-text-field(
-                                            v-model="newEntry.sender"
-                                            label="Sender"
-                                            hint="What account sent the dough"
-                                        )
-                                    v-col(cols="6")
-                                        v-text-field(
-                                            v-model="newEntry.recipient"
-                                            label="Recipient"
-                                            hint="What account received the dough"
-                                        )
-                                    v-col(cols="4")
-                                        v-text-field(
-                                            v-model="amountParser"
-                                            label="Amount transferred"
-                                            hint="Enter a positive value in your local currency"
-                                            type="number"
-                                        )
+                                    form-textfield(
+                                        v-model="newEntry.sender"
+                                        hint="What account sent the dough"
+                                        label="Sender"
+                                    )
+                                    form-textfield(
+                                        v-model="newEntry.recipient"
+                                        hint="What account received the dough"
+                                        label="Recipient"
+                                    )
+                                    form-numberfield(
+                                        v-model="newEntry.amount"
+                                        hint="Enter a positive value in your local currency"
+                                        label="Amount"
+                                    )
                             v-col(cols="12" md="6")
                                 p Transaction date
                                 v-date-picker(
@@ -84,32 +99,27 @@ v-content(fluid)
                                     full-width
                                     landscape
                                 )
-                        // Account specific
+                        //- Account specific
                         v-row(v-if="formType == 'account'")
-                            v-col(cols="4")
-                                v-text-field(
-                                    v-model="newEntry.name"
-                                    label="Account name"
-                                    hint="Label distinguishing this account from the rest"
-                                )
-                            v-col(cols="4")
-                                v-text-field(
-                                    v-model="newEntry.number"
-                                    label="Account number"
-                                    hint="Unique account identifier given by the institution"
-                                )
-                            v-col(cols="4")
-                                v-text-field(
-                                    v-model="newEntry.institution"
-                                    label="Institution/Company"
-                                    hint="The financial institution name the bank account belongs to"
-                                )
-                            v-col(cols="3")
-                                v-text-field(
-                                    v-model="balanceParser"
-                                    label="Balance"
-                                    type="number"
-                                )
+                            form-textfield(
+                                v-model="newEntry.name"
+                                hint="Name distinguishing this account from the rest"
+                                label="Name"
+                            )
+                            form-textfield(
+                                v-model="newEntry.number"
+                                hint="Unique account identifier given by the institution. May contain letters"
+                                label="Account number"
+                            )
+                            form-textfield(
+                                v-model="newEntry.institution"
+                                hint="The financial institution/company name the bank account belongs to"
+                                label="Institution/Company"
+                            )
+                            form-numberfield(
+                                v-model="newEntry.balance"
+                                label="Balance"
+                            )
                             v-col(cols="3")
                                 //-:filter="customFilter"
                                 v-autocomplete(
@@ -135,12 +145,11 @@ v-content(fluid)
                                     return-object
                                     single-line
                                     )
-                            v-col(cols="3")
-                                v-text-field(
-                                    v-model="newEntry.balanceUpdatedDate"
-                                    label="Balance updated date"
-                                    hint="When was balance updated? Format: YYYY-MM-DD"
-                                )
+                            form-textfield(
+                                v-model="newEntry.balanceUpdatedDate"
+                                hint="When was balance updated? Format: YYYY-MM-DD"
+                                label="Balance updated date"
+                            )
                             v-col(cols="3")
                                 v-switch(v-model="newEntry.active" label="Active")
                         // Common properties
@@ -151,8 +160,9 @@ v-content(fluid)
                             )
                                 v-select(
                                     v-model="newEntry.type"
-                                    :items="accountTypeList"
-                                    label="Account type"
+                                    :items="financeTypeList"
+                                    :label="`${formType} type`"
+                                    class="text-capitalize"
                                 )
                             v-col(cols="6")
                                 v-select(
@@ -160,14 +170,10 @@ v-content(fluid)
                                     :items="categoryList"
                                     label="Category"
                                 )
-                            v-col(cols="12")
-                                v-textarea(
-                                    v-model="newEntry.description"
-                                    label="Description"
-                                    rows="3"
-                                    filled
-                                    dense
-                                )
+                            form-textareafield(
+                                v-model="newEntry.description"
+                                label="Description"
+                            )
             v-card-actions
                 v-container
                     v-btn(color="error" text @click="dialog = false") Close
@@ -177,9 +183,17 @@ v-content(fluid)
 
 <script>
 import newDocumentMixin from '@/mixins/newDocumentMixin'
+import formNumberfield from '@/components/form/number'
+import formTextfield from '@/components/form/text'
+import formTextareafield from '@/components/form/textarea'
 
 export default {
     name: 'formNew',
+    components: {
+        formNumberfield,
+        formTextfield,
+        formTextareafield
+    },
     mixins: [newDocumentMixin],
     data: () => ({
         fab: false,
@@ -189,31 +203,22 @@ export default {
         formTypes: [
             { type: 'account', icon: 'mdi-bank' },
             { type: 'transaction', icon: 'mdi-transfer' },
+            { type: 'income/expense', icon: 'mdi-finance' },
         ],
         newEntry: {
         },
         currencies: []
     }),
     computed: {
-        amountParser: {
-            get () {
-                return this.newEntry.amount
-            },
-            set (val) {
-                this.newEntry.amount = Number(val);
-            }
-        },
-        balanceParser: {
-            get () {
-                return this.newEntry.balance
-            },
-            set (val) {
-                this.newEntry.balance = Number(val);
-            }
-        },
-        accountTypeList: function () {
+        financeTypeList: function () {
             const x = this.$store.getters.financeTypes;
-            return Object.keys(x["account"])
+            //return Object.keys(x["account"])
+            let f = this.formType;
+            if (this.formType == 'income/expense') {
+                f = 'budget'
+            }
+            return Object.keys(x[f])
+            //return Object.keys(x[ this.formType ])
         },
         categoryList: function () {
             const x = this.$store.getters.financeTypes;
@@ -261,6 +266,10 @@ export default {
                     this.getCurrencies()
                 }
             }
+            if (this.formType == 'budget' || this.formType == 'income/expense') {
+                n.type = 'expense'
+                this.formType = 'budget'
+            }
             this.dialog = true
         },
         getCurrencies: async function () {
@@ -276,45 +285,9 @@ export default {
         insertNewEntry: async function () {
             var now = new Date().toISOString();
             let n = this.newEntry;
-            /*
-            class Base {
-                constructor(id) {
-                    this._id = id;
-                    this.realm = 'finance';
-                    this.created = now;
-                    this.description = n.description;
-                    this.type = n.type; // type: {string} - The account type in the list ['none', 'bank', 'cash', 'asset', 'credit card', 'liability'] //savings?
-                    this.category = n.category;
-                }
-            }
 
-            class Account extends Base {
-                constructor(id) {
-                    super(id); // call the super class constructor and pass in the name parameter
-                    this.name = n.name;
-                    this.institution = n.institution;
-                    this.number = n.number; //account number
-                    this.balance = n.balance; // balance: {number} - The current account balance //may be calculated from currency
-                    this.active = n.active;
-                }
-            }
-
-            class Transaction extends Base {
-                constructor(id) {
-                    super(id); // call the super class constructor and pass in the name parameter
-                    this.sender = n.sender;
-                    this.recipient = n.recipient;
-                    this.amount = n.amount;
-                    //this.date = n.date;
-                    this.date = new Date( n.date );
-                }
-            }
-
-            const p = new Account(newID); // ReferenceError
-            */
-
-            let j = {
-                _id: this.generateUUID(),
+           let j = {
+               _id: this.generateUUID(),
                 realm: 'finance',
                 type: n.type, // type: {string} - The account type in the list ['none', 'bank', 'cash', 'asset', 'credit card', 'liability'] //savings?
                 created: now,
@@ -322,41 +295,54 @@ export default {
                 category: n.category
             };
 
+            const propertyArray = [];
+
+            if ( ["income","expense"].includes(n.type) ) {
+                propertyArray.push(
+                    "active",
+                    "currency",
+                    "amount",
+                    "name",
+                    "institution"
+                );
+            }
+
             if (this.formType == 'account') {
-                const accArr = [
+                propertyArray.push(
+                    "active",
+                    "currency",
+                    "balance",
                     "name",
                     "institution",
                     "number",
-                    "balance",
-                    "active",
-                    "balanceUpdatedDate",
-                    "currency"
-                ];
-                accArr.forEach(x => {
-                    j[x] = n[x]
-                });
+                    "balanceUpdatedDate"
+                );
             }
 
             if (n.type == 'transaction') {
-                j.sender = n.sender;
-                j.recipient = n.recipient;
-                j.amount = n.amount;
+                propertyArray.push(
+                    "amount",
+                    "sender",
+                    "recipient"
+                );
                 j.date = new Date( n.date );
             }
+
+            propertyArray.forEach(x => {
+                j[x] = n[x]
+            });
 
             let result = await this.$store.dispatch(
                 'insertDocument', { doc: j, snackbarText:`Added ${j.type} entry`}
                 );
             if (result.ok) {
                 this.dialog = false;
-                //this.$store.dispatch('getFinancialData', this.formType);
                 if (this.saveAndInsert) {
                     this.saveAndInsert = false
                     setTimeout(()=>{
                         this.openForm(this.formType)
                     }, 600);
                 }
-
             }
         }
     }

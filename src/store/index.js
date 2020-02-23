@@ -5,6 +5,9 @@ import tasks from './tasks'
 import logs from './logs'
 import messages from './messages'
 import finances from './finances'
+import inventory from './inventory'
+import themes from './themes'
+//import form from './form' /* not in use */
 
 Vue.use(Vuex)
 
@@ -86,6 +89,11 @@ export default new Vuex.Store({
     },
     loaderActive (state) {
       state.loaderActive = true;
+      /*
+      if (!state.loaderActive) {
+        state.loaderActive = true;
+      }
+      */
     },
     addAlert (state, payload) {
       let p = payload;
@@ -181,6 +189,7 @@ export default new Vuex.Store({
       }
     },
     postData: async function (state, payload) {
+      this.commit('loaderActive')
       const response = await fetch(payload.url, {
         method: 'POST',
         headers: {
@@ -188,7 +197,9 @@ export default new Vuex.Store({
         },
         body: JSON.stringify(payload.data)
       });
-      return await response.json(); 
+      let data = await response.json();
+      this.commit('loaderInactive')
+      return data; 
     }
   },
   getters: {
@@ -235,6 +246,9 @@ export default new Vuex.Store({
     tasks,
     logs,
     messages,
-    finances
+    finances,
+    inventory,
+    themes
+    //form
   }
 })

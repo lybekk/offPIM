@@ -27,7 +27,7 @@
         <v-icon>mdi-open-in-new</v-icon>
       </v-btn>
 
-      <v-switch v-model="$vuetify.theme.dark" class="ma-2" label="Dark mode" dense color="black"></v-switch>
+      <v-switch v-model="isDarkMode" class="ma-2" label="Dark mode" dense color="black"></v-switch>
 
       <v-progress-linear
         :active="loading"
@@ -76,17 +76,20 @@ export default {
     },
     loading() {
       return this.$store.getters.loaderState
+    },
+    isDarkMode: {
+      get() {
+        return this.$vuetify.theme.dark
+      },
+      set(state) {
+        if (state) {
+          localStorage.setItem('darkMode', true);
+        } else {
+          localStorage.removeItem('darkMode');
+        }
+        this.$vuetify.theme.dark = state
+      }
     }
-    //darkMode: {
-    //  get() {
-    //    var m = localStorage.getItem('darkMode');
-    //    return m
-    //    //$vuetify.theme.dark
-    //  },
-    //  set(state) {
-    //    localStorage.setItem('darkMode', state);
-    //  }
-    //}
   },
   created () {
     // get settings
@@ -94,9 +97,17 @@ export default {
     this.$store.dispatch('setTotals');      
   },
   mounted () {
+    /*
+    let m = localStorage.getItem('darkMode');
+    if (m) {
+      this.$vuetify.theme.dark = true
+    }
+    */
+    this.$vuetify.theme.dark = localStorage.getItem('darkMode');
     this.indexCheck('pimpimMain');
     this.indexCheck('mango');
     this.$store.dispatch('setMessagesUnreadCount');
+    this.$store.dispatch('checkThemeSettings'); //store/themes.js
   },
   methods: {
     indexCheck: async function(dDoc) {

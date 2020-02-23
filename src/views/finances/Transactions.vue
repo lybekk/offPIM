@@ -17,7 +17,17 @@ v-container(fluid)
       :items-per-page="10"
       :search="search"
       class="elevation-1"
+      :loading="this.$store.getters.loaderState"
+      loading-text="Looking for transactions"
+      no-data-text="No transactions matching request"
     )
+      template(v-slot:item.description="{ item }")
+        v-btn(
+          text
+          @click="openDoc(item)"
+        )
+          v-icon mdi-text
+        span(v-text="item.description")
 </template>
 <script>
 
@@ -49,6 +59,9 @@ export default {
   beforeDestroy() {
   },
   methods: {
+    openDoc: function(item) {
+      console.log(item)
+    }
   }
 }
 

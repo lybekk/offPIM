@@ -41,6 +41,16 @@ const routes = [
     component: () => import(/* webpackChunkName: "setup" */ '../views/Setup.vue')
   },
   {
+    path: '/inventory',
+    name: 'inventory',
+    component: () => import(/* webpackChunkName: "inventory" */ '../views/Inventory.vue')
+  },
+  {
+    path: '/themes',
+    name: 'themes',
+    component: () => import(/* webpackChunkName: "tools" */ '../views/Themes.vue')
+  },
+  {
     path: '/tools',
     name: 'tools',
     component: () => import(/* webpackChunkName: "tools" */ '../views/Tools.vue')

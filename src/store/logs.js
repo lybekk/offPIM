@@ -61,7 +61,7 @@ const logs = {
         },
         getLogEntriesByTag: async function (context, tag) {
             let url = context.getters.urlMango;
-            context.commit('toggleLoader');
+            context.commit('loaderActive'); 
             context.commit('flushLogs');
             let mango = {
                 "selector": {
@@ -76,7 +76,7 @@ const logs = {
 
             let data = await context.dispatch('postData', {url:url, data:mango} );
             context.commit('addLogEntries', data.docs);
-            context.commit('toggleLoader');
+            context.commit('loaderInactive');
         }
     },
     getters: {

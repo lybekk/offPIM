@@ -41,7 +41,8 @@ const messages = {
                 "limit": 25,
                 "fields": [
                     "_id"
-                ]
+                ],
+                "use_index": "pimpim_mango_indexes"
             };
             let data = await context.dispatch('postData', {url:url, data:mango} );
             context.commit('setMessagesUnreadCount', data.docs.length);
@@ -49,7 +50,7 @@ const messages = {
         getMessagesByTag: async function (context, payload) {
             let tag = payload;
             let url = context.getters.urlMango;
-            context.commit('toggleLoader');
+            context.commit('loaderActive')
             context.commit('flushMessages');
             let mango = {
                 "selector": {
@@ -64,7 +65,7 @@ const messages = {
 
             let data = await context.dispatch('postData', {url:url, data:mango} );
             context.commit('addMessageEntries', data.docs);
-            context.commit('toggleLoader');
+            context.commit('loaderInactive')
         },
         getMessagesTagList: async function (context) {
             let url = context.getters.urlDB;

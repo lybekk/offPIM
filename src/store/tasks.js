@@ -132,8 +132,9 @@ const tasks = {
                         {"due": null}
                     ],
                 },
+                "limit": 1000,
                 "fields": ["due"],
-                "limit": 1000
+                "use_index": "pimpim_mango_indexes"
             };
             let url = context.getters.urlMango;
             let data = await context.dispatch('postData', {url:url, data:mango} );
@@ -199,9 +200,11 @@ const tasks = {
                     ]
                     },
                 "limit": 100,
+                /*
                 "sort": [
                     { "project": "asc" }
                 ]
+                */
             };
 
             try {
@@ -247,10 +250,13 @@ const tasks = {
                         "type": "task",
                         },
                     "limit": 50,
+                    "use_index": "pimpim_mango_indexes"
+                    /*
                     "sort": [
                         { "due": "asc" },
                         { "priority": "asc" }
                     ]
+                    */
                     };
             if (list.slice(0,6) == "status") {
                 mango.selector.status = list.slice(6);

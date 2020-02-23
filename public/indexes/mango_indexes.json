@@ -3,53 +3,10 @@
   "version": 20200123,
   "language": "query",
   "views": {
-    "tasksStatus-json-index": {
+    "created-json-index": {
       "map": {
         "fields": {
-          "realm": "asc",
-          "type": "asc",
-          "status": "asc",
-          "due": "asc",
-          "priority": "asc"
-        }
-      },
-      "reduce": "_count",
-      "options": {
-        "def": {
-          "fields": [
-            "realm",
-            "type",
-            "status",
-            "title",
-            "due",
-            "priority"
-          ]
-        }
-      }
-    },
-    "tasksDuePriority-json-index": {
-      "map": {
-        "fields": {
-          "due": "asc",
-          "priority": "asc"
-        }
-      },
-      "reduce": "_count",
-      "options": {
-        "def": {
-          "fields": [
-            "due",
-            "priority"
-          ]
-        }
-      }
-    },
-    "tasksProjects-json-index": {
-      "map": {
-        "fields": {
-          "realm": "asc",
-          "type": "asc",
-          "project": "asc"
+          "created": "asc"
         },
         "partial_filter_selector": {}
       },
@@ -57,19 +14,15 @@
       "options": {
         "def": {
           "fields": [
-            "realm",
-            "type",
-            "project"
+            "created"
           ]
         }
       }
     },
-    "logsDates-json-index": {
+    "start-json-index": {
       "map": {
         "fields": {
-          "created": "asc",
-          "start": "asc",
-          "end": "asc"
+          "start": "asc"
         },
         "partial_filter_selector": {}
       },
@@ -77,9 +30,7 @@
       "options": {
         "def": {
           "fields": [
-            "created",
-            "start",
-            "end"
+            "start"
           ]
         }
       }
@@ -98,6 +49,54 @@
           "fields": [
             "realm",
             "tags"
+          ]
+        }
+      }
+    },
+    "messages-json-index": {
+      "map": {
+        "fields": {
+          "realm": "asc"
+        },
+        "partial_filter_selector": {
+          "realm": "messages"
+        }
+      },
+      "reduce": "_count",
+      "options": {
+        "def": {
+          "fields": [
+            "realm"
+          ]
+        }
+      }
+    },
+    "productivityOpenStatus-json-index": {
+      "map": {
+        "fields": {
+          "realm": "asc",
+          "type": "asc",
+          "status": "asc"
+        },
+        "partial_filter_selector": {
+          "realm": "productivity",
+          "$nor": [
+            {
+              "status": "cancelled"
+            },
+            {
+              "status": "done"
+            }
+          ]
+        }
+      },
+      "reduce": "_count",
+      "options": {
+        "def": {
+          "fields": [
+            "realm",
+            "type",
+            "status"
           ]
         }
       }

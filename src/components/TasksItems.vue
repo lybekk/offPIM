@@ -22,45 +22,48 @@ v-container(fluid)
             v-card-title(
               class="subheading"
             )
-              tasks-items-title(v-bind:task='task')
-              v-spacer
-              v-speed-dial(
-                right
-                direction='left'
-                open-on-hover
-                transition='scale-transition'
-              )
-                template(v-slot:activator)
-                  v-btn(
-                    color='primary'
-                    fab
-                    small
+              v-row
+                v-col
+                  tasks-items-title(v-bind:task='task')
+                v-col(cols="1")
+                  v-speed-dial(
+                    right
+                    direction='left'
+                    transition='scale-transition'
                   )
-                    v-icon(v-if="fab") mdi-close
-                    v-icon(v-else) mdi-menu
-                v-tooltip(top)
-                  template(v-slot:activator='{ on }')
-                    v-btn(
-                      fab
-                      small
-                      color='success'
-                      v-on='on'
-                      @click="setTaskStatus(task._id, 'done')"
-                    )
-                      v-icon mdi-check
-                      // OUTLINED if not done. Filled&disabled if done. Put button outside fab?
-                  span Mark done
-                v-tooltip(top)
-                  template(v-slot:activator='{ on }')
-                    v-btn(
-                      fab
-                      small
-                      color='info'
-                      v-on='on'
-                      @click='postponeTask(task._id)'
-                    )
-                      v-icon mdi-update
-                  span Postpone until tomorrow
+                    //- removed - open-on-hover
+                    template(v-slot:activator)
+                      v-btn(
+                        color='primary'
+                        fab
+                        small
+                      )
+                        v-icon(v-if="fab") mdi-close
+                        v-icon(v-else) mdi-menu
+                    v-tooltip(top)
+                      template(v-slot:activator='{ on }')
+                        v-btn(
+                          fab
+                          small
+                          color='success'
+                          v-on='on'
+                          @click="setTaskStatus(task._id, 'done')"
+                        )
+                          v-icon mdi-check
+                          // OUTLINED if not done. Filled&disabled if done. Put button outside fab?
+                      span Mark done
+                    v-tooltip(top)
+                      template(v-slot:activator='{ on }')
+                        v-btn(
+                          fab
+                          small
+                          color='info'
+                          v-on='on'
+                          @click='postponeTask(task._id)'
+                        )
+                          v-icon mdi-update
+                      span Postpone until tomorrow
+              //-v-spacer
             v-fade-transition
               v-overlay(
                 v-if='isDeleted(task._id)'
@@ -106,15 +109,45 @@ v-container(fluid)
                   v-bind:is-overdue='isOverdue(task._id)'
                   v-bind:is-deleted='isDeleted(task._id)'
                 )
-                  v-row
-                    v-col
-                      tasks-items-tags(v-bind:task='task')
-                    v-col
-                      tr(class="secondary--text overline font-weight-thin	")
-                        td ID:
-                        td(v-text='task._id')
-                      //- (TODO) x-Small btn with brackets for viewing raw document (tied to app - general tool for editing json)
-                  main-delete-button(v-bind:document-id='task._id')
+                v-row
+                  v-col
+                    tasks-items-tags(v-bind:task='task')
+                  v-col
+                    tr(class="font-weight-thin")
+                      td ID:
+                      td(v-text="task._id")
+                  v-col
+                    main-delete-button(v-bind:document-id='task._id')
+                  v-col
+                    v-tooltip(top)
+                      template(v-slot:activator='{ on }')
+                        v-btn(
+                          fab
+                          small
+                          :outlined="task.status != 'done'"
+                          :color="color(task.status)"
+                          v-on='on'
+                          @click="setTaskStatus(task._id, 'done')"
+                        )
+                          v-icon mdi-check
+                          // OUTLINED if not done. Filled&disabled if done. Put button outside fab?
+                            :class="[ isDone(task._id) ? 'success--text' : '' ]"
+                            color='success'
+                      span Mark done
+                    //--v-tooltip(top)
+                      template(v-slot:activator='{ on }')
+                        v-btn(
+                          fab
+                          small
+                          color='success'
+                          v-on='on'
+                          @click="setTaskStatus(task._id, 'done')"
+                        )
+                          v-icon mdi-check
+                          // OUTLINED if not done. Filled&disabled if done. Put button outside fab?
+                      span Mark done
+                    //- (TODO) x-Small btn with brackets for viewing raw document (tied to app - general tool for editing json)
+                //main-delete-button(v-bind:document-id='task._id')
 
 </template>
 
@@ -201,6 +234,9 @@ export default {
       let list = this.$store.getters.getDeletedDocuments;
       if ( list.includes(id) ) {return true}
       return false
+    },
+    color: function (status) {
+      return this.$store.getters.getStatusColors[status]
     }
   }
 };

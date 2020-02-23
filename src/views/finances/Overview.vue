@@ -6,6 +6,12 @@ v-content
     p credit
     ul
       li Accounts: 0
+      li Accounts value
+        v-chip(
+          v-text="this.$store.getters.getFinancialAggregates.valueAccounts"
+          label
+          :color="getColor(this.$store.getters.getFinancialAggregates.valueAccounts)"
+        )
     //p Setting in pimpim settings document for currency(showed currency)
 </template>
 <script>
@@ -28,6 +34,9 @@ export default {
   beforeDestroy() {
   },
   methods: {
+    getColor: function(number) {
+      return (number >= 0) ? "success" : "error";
+    },
   }
 }
 

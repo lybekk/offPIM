@@ -32,7 +32,7 @@
           v-icon(right) mdi-menu-down
       v-list(class="grey lighten-3")
         v-list-item(to="/tools") Tools
-        //-v-list-item Work in progress
+        v-list-item(to="/themes") Themes
         v-menu(
           bottom
           left
@@ -46,6 +46,7 @@
               v-icon(right) mdi-menu-down
           v-list(class="grey lighten-3")
             v-list-item(to="/finances") Finances
+            v-list-item(to="/inventory") Inventory
 
 </template>
 
