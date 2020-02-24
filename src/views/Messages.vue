@@ -1,24 +1,5 @@
 <template>
 <v-content>
-
-  <!-- X-perimental
-  <v-system-bar window>
-    <v-icon>mdi-message</v-icon>
-      <span v-text="totalMessages"></span>
-    -->
-    <!--       
-    <span>Total messages</span>
-    <span v-text="totalMessages"></span>
-    <v-spacer></v-spacer>
-    <span>Over 9000</span>
-    <span>unread messages</span>
-    <v-spacer></v-spacer>
-    <v-icon>mdi-email</v-icon>
-
-    <v-icon>mdi-wifi-strength-4</v-icon>
-  </v-system-bar>
-  -->
-
   <v-container fluid>
     <v-row>
       <v-col cols="auto">
@@ -49,8 +30,8 @@
               mandatory
             >
               <v-list-item 
-                @click="getMessagesByTag('inbox')"
                 title="Messages without tags end up here"
+                @click="getMessagesByTag('inbox')"
               >
                 <v-list-item-icon>
                   <v-icon>mdi-inbox</v-icon>

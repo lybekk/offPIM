@@ -2,8 +2,8 @@
   <div class="alertBox">
         <v-alert
           v-for="(alert, i) in alerts"
-          :value="alert.alert"
           :key="i"
+          :value="alert.alert"
           :index="i"
           max-width="25vw"
           dense

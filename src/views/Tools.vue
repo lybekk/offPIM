@@ -75,6 +75,8 @@ export default {
   },
   created () {
   },
+  mounted () {
+  },
   methods: {
     generateUUID: function() {
       this.generatedUUID = "xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx".replace(/[xy]/g, function(c) {
@@ -82,8 +84,6 @@ export default {
         return v.toString(16);
         });
     }
-  },
-  mounted () {
   },
 }
 </script>
