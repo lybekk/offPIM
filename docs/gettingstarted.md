@@ -6,42 +6,40 @@ Getting PIMPIM up and running can be done in several ways.
 
 ## Installation
 
-### The easy way
+### The easy way - Desktop app
 
-1. If not installed already, [Install CouchDB](https://docs.couchdb.org/en/latest/install/index.html)
-2. Create a database named `vault`.
-3. [Download PIMPIM](https://github.com/lybekk/pimpim/releases/download/v0.1/pimpim_20200213.zip)
-4. Copy contents of the zip-file to an HTTP-server of your choosing. Preferably in a sub-directory named /pimpim. If another sub-directory is wanted, see instructions below.
+* "PIMPIM-Electron" is currently only built and tested on Linux (though it is possible to build for another OS yourself)
+1. Download [this AppImage file](https://github.com/lybekk/pimpim/releases/download/v0.1/pimpim-0.1.0.AppImage)
+2. Make it executable `$ chmod a+x path-to-file/pimpim-0.1.0.AppImage`
+3. and run! `$ ./path-to-file/pimpim-0.1.0.AppImage`
 
-### The still-easy-but-requires-a-few-more-steps way
+### The still-easy-but-requires-a-few-more-steps way (for techies)
 
+1. [Download self-hosted PIMPIM](https://github.com/lybekk/pimpim/releases/download/v0.1/pimpim_20200213.zip)
+2. Copy contents of the zip-file to an HTTP-server of your choosing. Preferably in a sub-directory named /pimpim. If another sub-directory is wanted, see instructions below.
+
+### The hard way - Build it yourself
 1. Clone the repository
 2. install dependencies
-3. Create a database named `vault`
-4. (work in progress)
-5. run `npm run build`
+4. run `npm run build` for self-hosted, or `npm run electron:build` for desktop app
 
-If you want to use another database name or URL, change settings in `settings.js` in pimpims root directory (if using finished build, else found in public/settings.js).
-
+Example
 ```Shell
-$ yarn build
+$ cd /home/user/folder
+$ git clone https://github.com/lybekk/pimpim.git
+$ npm install
+$ npm run electron:build
 ```
 
 ### Customization
 
-Database name and URL can be edited in settings.js (placed in pimpim directory).
-
-::: warning
-PIMPIM implements no security measures. Be sure no one else has access to the database.
-:::
-
-## Tested setups / Deployment options
+## Self-hosted - tested setups / Deployment options
 
 pimpim is run successfully on the following deployment setups
 
 ### CouchDB+Apache (Ubuntu)
-* Couchdb 2.3
 * Apache/2.4.29 (Ubuntu)
+* Couchdb 2.3 (or 3.0)
 
 ### CouchDB HTTP server
 * Couchdb 2.3
@@ -54,3 +52,11 @@ use pimpim/ or another sub-directory if you wish. Using pimpim for simplicity he
 - visit http://localhost:5984/_utils/pimpim/
 
 Added bonus: Turning on CORS is not necessary if put directly in CouchDB's www folder.
+
+## Misc
+For synchronization, CouchDB can be used.
+Installation instructions [Install CouchDB](https://docs.couchdb.org/en/latest/install/index.html)
+
+::: warning
+PIMPIM implements no security measures. Be sure no one else has access to the database.
+:::

@@ -56,13 +56,15 @@ v-content
                         smooth="2"
                         padding="2"
                         type="bar"
+                        :gradient="['white']"
                         auto-line-width
                         auto-draw
                         auto-draw-easing
                         :auto-draw-duration=500
                         show-labels
                       )
-                        template(v-slot:label="item") {{ taskStatuses[item.index] }} {{ item.value }}
+                        //- fix gradient to align with themes
+                        template(v-slot:label="item" color="info") {{ taskStatuses[item.index] }} {{ item.value }}
                 v-col(
                   cols="12"
                   sm="6"

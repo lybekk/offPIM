@@ -2,7 +2,7 @@
 ---
 
 @import "{{ site.theme }}";
-
+// get colors from scandinavian theme
 $font-stack:    Helvetica, sans-serif;
 $primary-color: black;
 $accent-color: goldenrod;
@@ -12,7 +12,40 @@ body {
   color: $primary-color;
 }
 
-h1 {
+nav {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+}
+
+nav ul {
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+  background-color: #0000005e;
+}
+
+nav li {
+  float: left;
+}
+
+nav li a {
+  display: block;
+  color: $accent-color;
+  text-align: center;
+  padding: 14px 16px;
+  text-decoration: none;
+}
+
+/* Change the link color to #111 (black) on hover */
+nav li a:hover {
+  background-color: #111;
+}
+
+
+.main-content h1 {
   color: $accent-color;
 }
 

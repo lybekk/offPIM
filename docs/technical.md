@@ -1,12 +1,16 @@
-# Document data models
+# Behind the scenes
 
 [[toc]]
+
+## Document data models
+
+**(Not up to date)**
 
 The document data model follows a few rules.
 CouchDB's own `_id` values are replaced with UUIDv4.
 Every document has a certain boolean field, for organization and making queries more effective.
 
-## Tasks and Notes
+### Tasks and Notes
 
 The Tasks and Note apps use `"productivity": true`
 
@@ -33,7 +37,7 @@ created: required for Mango queries to find and sort documents.
 }
 ```
 
-## Logbook (Logs)
+### Logbook (Logs)
 
 **Example:**
 ```json
@@ -50,7 +54,7 @@ created: required for Mango queries to find and sort documents.
 }
 ```
 
-## Messages
+### Messages
 
 The Messages app uses `"message":true`. `read` is optional, but will be added during certain actions in the messages app.
 
