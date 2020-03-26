@@ -1,0 +1,24 @@
+---
+---
+
+@import "{{ site.theme }}";
+
+$font-stack:    Helvetica, sans-serif;
+$primary-color: black;
+$accent-color: goldenrod;
+
+body {
+  font: 100% $font-stack;
+  color: $primary-color;
+}
+
+h1 {
+  color: $accent-color;
+}
+
+.page-header {
+    color: #fff;
+    text-align: center;
+    background-color: $primary-color;
+    background-image: linear-gradient(120deg, $primary-color, $accent-color);
+}
