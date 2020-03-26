@@ -1,5 +1,6 @@
 module.exports = {
-  publicPath: '/pimpim/',
+  publicPath: '/pimpim/', //for electron and browser
+  //publicPath: '/', // if phonegap
   "transpileDependencies": [
     "vuetify"
   ]

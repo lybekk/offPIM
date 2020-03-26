@@ -33,11 +33,13 @@ v-container(fluid)
 </template>
 
 <script>
+import pouchMixin from '@/mixins/pouchMixin'
 
 export default {
   name: 'TasksItemsTags',
   components: {
   },
+  mixins: [pouchMixin],
   props: ["task"],
   data: () => ({
     dialog:false,
@@ -45,7 +47,7 @@ export default {
   }),
   computed: {
     tagsListItems: function () {
-      let tl = this.$store.getters.getTasksTagsList;
+      let tl = this.$store.getters.getTagList;
         
       let a = tl.map(obj => {
         return obj.key
@@ -63,14 +65,14 @@ export default {
     },
   },
   methods: {
-    setTaskField: function () {
-      const payload = {
+    setTaskField: async function () {
+      await this.setFieldGeneric({
         _id: this.task._id,
         field: 'tags',
         value: this.updatedTags
-      };
-      this.$store.commit('setTaskField', payload);
+      });
       this.dialog = false;
+      this.$emit('set-doc')
     },
   }
 };

@@ -188,7 +188,8 @@ export default {
         newEntry: {
              title:'',
              description:null,
-             realm:'logs',
+             //realm:'logs',
+             logbook: true,
              tags:[],
              start: '2020-01-01T01:01:01',
              end: '2020-01-01T01:01:01',

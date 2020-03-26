@@ -40,48 +40,67 @@ v-expansion-panel
                     v-subheader Move task to project:
                     v-list-item-group(color="primary")
                       v-list-item(
-                        v-for="(p) in openProjects"
-                        :key="p"
-                        @click="setTaskField(p)"
+                        v-for="(value, key) in openProjects"
+                        :key="key"
+                        @click="setTaskField(value)"
                       )
-                        v-list-item-title(v-text="p")
+                        v-list-item-title(v-text="key")
 </template>
 
 <script>
+import pouchMixin from '@/mixins/pouchMixin'
 
 export default {
   name: 'TasksItemsProject',
   components: {
   },
+  mixins: [pouchMixin],
   props: ["task"],
   data: () => ({
     dialog:false,
+    projectName: null
   }),
   computed: {
-    projectName: function () {
-      const p = this.task.project;
-      if (!p || p==null || p=='') {return 'No project asssigned'}
-      return p
-    },
     openProjects: function () {
+      console.log('Getting project list. Runs multiple times... Optimize')
       const proj = this.$store.getters.getOpenProjects;
-      const arr = [];
+      const arr = {};
       proj.forEach(p => {
-        arr.push(p.project)
+        arr[ p.title ] = p._id
       });
-      arr.sort();
+      //arr.sort();
       return arr
     }
   },
+  mounted () {
+    this.getProjectName()
+  },
   methods: {
-    setTaskField: function (project) {
-      const payload = {
-         _id: this.task._id,
-         field: 'project',
-         value: project
-         };
-      this.$store.commit('setTaskField', payload);
+    getProjectName: async function () {
+      if (this.task.type == 'project') {return}
+      const p = this.task.project;
+      if (!p || p==null || p=='' || p==='undefined') {
+        this.projectName = 'No project asssigned';
+      } else {
+        try {
+          const projectDoc = await this.getDoc( p );
+          this.projectName = projectDoc.title
+        } catch {
+          this.projectName = 'Assigned: ' + p + ', but unable to lookup project'
+        }
+      }
+    },
+    setTaskField: async function (project) {
+      console.log('Fix this!', project)
+      
+      await this.setFieldGeneric({
+        _id: this.task._id,
+        field: 'project',
+        value: project
+      });
+      
       this.dialog = false;
+      this.$emit('set-doc')
     },
   }
 };

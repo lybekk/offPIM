@@ -5,7 +5,7 @@
       group
     >
     <v-timeline-item
-      v-for="(log, i) in this.$store.getters.getLogs"
+      v-for="(log, i) in logs"
       :key="i"
       small
       :color="dot(log._id).color"
@@ -79,7 +79,7 @@
 </template>
 
 <script>
-import LogbookItemsDates from '@/components/LogbookItemsDates.vue'
+import LogbookItemsDates from '@/components/logbook/LogbookItemsDates.vue'
 import MainDeleteButton from '@/components/MainDeleteButton.vue'
 
 export default {
@@ -88,6 +88,7 @@ export default {
     LogbookItemsDates,
     MainDeleteButton
   },
+  props: ['logs'],
   data: () => ({
   }),
   computed: {

@@ -21,7 +21,7 @@ v-content
                         )
                     v-data-table(
                         :headers="headers"
-                        :items="this.$store.getters.getData"
+                        :items="inventoryItems"
                         :items-per-page="20"
                         :search="search"
                         class="elevation-1"
@@ -51,6 +51,7 @@ export default {
         source: String,
     },
     data: () => ({
+        inventoryItems: [],
         search: null,
         headers: [
             { text: 'Label', value: 'name' },
@@ -66,6 +67,28 @@ export default {
     beforeDestroy() {
     },
     methods: {
+        getInventory: async function (type) {
+            const v = this.$store;
+            //context.commit('flushData');
+            v.commit('loaderActive');
+            console.log('Inventory prints this',type); //placeholder to avoid EsLint
+            const mango = {
+                "selector": {
+                    "realm": "inventory"
+                    //"type": type
+                    //"type": "transaction"
+                },
+                "limit": 100
+            };
+            try {
+                let data = await window.db.find(mango);
+                this.inventoryItems = data.docs;
+                //vstore.commit('addNotes', data)
+            } catch (error) {
+                v.commit('showSnackbar', { text:error });
+            }
+            v.commit('loaderInactive');
+        }
     }
 }
 

@@ -4,7 +4,11 @@
             v-icon mdi-plus
         v-list-item-title
             v-row
-                v-dialog(v-model="dialog" persistent max-width="50vw")
+                v-dialog(
+                    v-model="dialog" persistent max-width="50vw"
+                    :fullscreen="$vuetify.breakpoint.mdAndDown"
+                    transition="dialog-bottom-transition"
+                )
                     template(v-slot:activator="{ on }")
                         v-btn(block small color="primary" v-on="on") New
                     v-card
@@ -24,7 +28,7 @@
                                         v-model="newTask.title"
                                         label="Title"
                                     )
-                                    form-textfield(
+                                    form-textareafield(
                                         v-model="newTask.description"
                                         label="Description"
                                     )
@@ -117,11 +121,13 @@
 <script>
 import newDocumentMixin from '@/mixins/newDocumentMixin'
 import formTextfield from '@/components/form/text'
+import formTextareafield from '@/components/form/textarea'
 
 export default {
     name: 'TasksNewtaskform',
     components: {
-        formTextfield
+        formTextfield,
+        formTextareafield
     },
     mixins: [newDocumentMixin],
     data: () => ({
@@ -131,7 +137,8 @@ export default {
         newTask: {
              title:'',
              description:null,
-             realm:'productivity',
+             //realm:'productivity', // removed in favor of boolean below
+             productivity: true,
              type:'task',
              status:'plan',
              priority:4,
@@ -143,7 +150,7 @@ export default {
     }),
     computed: {
         tagsListItems: function () {
-            let tl = this.$store.getters.getTasksTagsList;
+            let tl = this.$store.getters.getTagList;
             
             let a = tl.map(obj => {
                 return obj.key
@@ -214,15 +221,11 @@ export default {
             n.created = now;
             n.start = now;
             n.end = null;
-            //["title","context"].forEach(p => {
-            //    n[p] = this.$store.getters.getFormProperty(p) 
-            //});
-            //n.title = this.$store.getters.getFormProperty('title')
-            //n.context = this.$store.getters.getFormProperty('context')
             n.priority = parseInt(this.newTask.priority);
 
             if (n.type == 'project') {
-                n.project = n.title
+                n.project = null; // not needed. Wasting disk space
+                console.log('Fix project entry form') // consider using classes
             }
 
             let result = await this.$store.dispatch(

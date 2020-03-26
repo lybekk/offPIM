@@ -1,74 +1,101 @@
-<template>
-  <v-app id="inspire">
-
-    <v-app-bar
+<template lang="pug">
+  v-app(id="inspire")
+    v-navigation-drawer(
+      v-model="drawer"
       app
-    >
-      <div class="d-flex align-center">
-        <v-img
+    )
+      NavbarApps
+      v-switch(
+        v-model="isDarkMode" 
+        class="ma-2" 
+        label="Dark mode" 
+        dense 
+        color="black"
+      )
+    v-app-bar(app)
+      v-app-bar-nav-icon(
+        @click.stop="drawer = !drawer"
+      )
+      div(class="d-flex align-center")
+        v-img(
           alt="Vuetify Logo"
           class="shrink mr-2"
           contain
           src="./assets/vuetify-logo-dark.png"
           transition="scale-transition"
           width="40"
-        />
-        <span class="title">pimpim</span>
-      </div>
-
-      <v-spacer></v-spacer>
-      <NavbarApps/>
-      <v-btn
+        )
+        span(class="title") pimpim
+      v-tabs(
+        fixed-tabs
+        background-color="transparent"
+        grow
+        color="transparent"
+      )
+        v-tab(@click.stop="drawer = !drawer")
+      NavbarActions
+      v-btn(
         href="https://lybekk.tech/pimpim/"
         target="_blank"
         text
-      >
-        <span class="mr-2">Docs</span>
-        <v-icon>mdi-open-in-new</v-icon>
-      </v-btn>
-
-      <v-switch v-model="isDarkMode" class="ma-2" label="Dark mode" dense color="black"></v-switch>
-
-      <v-progress-linear
+      )
+        span(class="mr-2") Docs
+        v-icon mdi-open-in-new
+      v-progress-linear(
         :active="loading"
         :indeterminate="loading"
         absolute
         bottom
         color="primary"
-      ></v-progress-linear>
-
-    </v-app-bar>
-
-    <AlertBox/>
-
-    <v-scroll-x-transition mode="out-in">
-      <router-view></router-view>
-    </v-scroll-x-transition>
-
-    <v-snackbar
+      )
+    AlertBox
+    v-scroll-x-transition(mode="out-in")
+      router-view
+    v-snackbar(
       v-model="snackbar.visible"
       :timeout="snackbar.timeout"
       :multi-line="snackbar.multiline === true"
       :color="snackbar.color"
       bottom
-    >
-      {{ snackbar.text }}
-    </v-snackbar>
-  </v-app>
+    ) {{ snackbar.text }}
+    DatabaseConnectionDialog
+
 </template>
 
 <script>
-import NavbarApps from '@/components/NavbarApps.vue'
-import AlertBox from '@/components/AlertBox.vue'
-//import { mapMutations } from "vuex"
+import NavbarApps from '@/components/app/NavbarApps.vue'
+import NavbarActions from '@/components/app/NavbarActions.vue'
+import AlertBox from '@/components/app/AlertBox.vue'
+import DatabaseConnectionDialog from '@/components/app/DatabaseConnectionDialog.vue'
+
+
+/* If pouch-vue is to be used
+import Vue from 'vue'
+import PouchVue from 'pouch-vue'
+
+Vue.use(PouchVue, {
+  //pouch: PouchDB, // optional if `PouchDB` is available on the global object
+  //defaultDB: 'vaulttest' // this is used as a default connect/disconnect database
+  defaultDB: 'vaulttest' // remoteDbName // this is used as a default connect/disconnect database
+  //defaultDB: 'remoteDbName' // remoteDbName // this is used as a default connect/disconnect database
+  //debug: '*' // optional - See `https://pouchdb.com/api.html#debug_mode` for valid settings (will be a separate Plugin in PouchDB 7.0)
+
+  //defaultDB: 'remoteDbName',  // this is used as a default connect/disconnect database
+  //optionDB: {}, // this is used to include a custom fetch() method (see TypeScript example)
+
+})
+*/
 
 export default {
   name: 'App',
   components: {
     NavbarApps,
-    AlertBox
+    NavbarActions,
+    AlertBox,
+    DatabaseConnectionDialog
   },
   data: () => ({
+    drawer: false
   }),
   computed: {
     snackbar() {
@@ -91,46 +118,64 @@ export default {
       }
     }
   },
-  created () {
-    // get settings
-    this.$store.commit('setSettings', window.pimpimSettings);
-    this.$store.dispatch('setTotals');      
-  },
+  created () {},
   mounted () {
-    /*
-    let m = localStorage.getItem('darkMode');
-    if (m) {
-      this.$vuetify.theme.dark = true
-    }
-    */
+    this.startupcheck()
+    //this.createMangoIndexes();
     this.$vuetify.theme.dark = localStorage.getItem('darkMode');
-    this.indexCheck('pimpimMain');
-    this.indexCheck('mango');
-    this.$store.dispatch('setMessagesUnreadCount');
-    this.$store.dispatch('checkThemeSettings'); //store/themes.js
   },
   methods: {
-    indexCheck: async function(dDoc) {
-      const docs = {
-        pimpimMain: ["indexes/pimpim_design_doc.json","pimpim"],
-        mango: ["indexes/mango_indexes.json","pimpim_mango_indexes"]
-      };
+    startupcheck: async function () {
+      let v = this.$store;
+      v.dispatch('checkThemeSettings'); //store/themes.js
+      v.dispatch('localDBInfo')
 
-      const getServerDesignDoc = await fetch( docs[dDoc][0] );
-      const serverDesignDoc = await getServerDesignDoc.json();
+      console.log('Before!!!')
+      try {
+        const pDoc = await v.dispatch( 'startupIndexCheck', { doc: 'pimpim', version: window.pimpim.pimpimDesignDoc.version } )
+        const mDoc = await v.dispatch( 'startupIndexCheck', { doc: 'pimpim_mango_indexes', version: window.pimpim.mangoIndexes.version } )
+        if (!pDoc || !mDoc) {
+          this.$router.push('/setup')
+        }
+      } catch(err) {
+        console.log('Design docs not up to date. Redirecting to setup: ',err)
+        this.$router.push('/setup')
+      }
 
-      const urlDB = this.$store.getters.urlDB;
+      v.dispatch('setTotals')
+      v.dispatch('setMessagesUnreadCount');
 
-      const getDatabaseDesignDoc = await fetch(urlDB + '_design/' + docs[dDoc][1]);
-      const databaseDesignDoc = await getDatabaseDesignDoc.json();
+    },
+    /*
+    createMangoIndexes: async function () {
+      // if less indexes than x, initiate
+      // or
+      // if localstorage array length != indexes.length
+        // account for if othen indexes are in database
+      const indexes = [
+        [ 'noteslatest2',[ 'created', 'realm' ] ],
+        [ 'genericrealm',[ 'realm' ] ] //messagesunread uses this
+      ]
 
-      if (serverDesignDoc.version > databaseDesignDoc.version) {
-        console.log('PIMPIM Server design document version is higher than the one in the database. Redirecting to setup');
-        if(this.$route.matched[0].name != 'setup') {
-          this.$router.push('setup')
+      for await (let idx of indexes) {
+        try {
+          let result = await window.db.createIndex({
+            index: {
+              fields: idx[1],
+              name: idx[0],
+              ddoc: idx[0],
+              type: 'json',
+            }
+          });
+          console.log('Index creation result: ', result)
+        } catch (err) {
+          console.log(err);
         }
       }
+      // create localstorage array of all indexes when done indexing
+
     }
+    */
   }
 };
 </script>

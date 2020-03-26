@@ -77,12 +77,15 @@ export default {
   components: {
     MainDeleteButton
   },
+  props: ['msg'],
   data: () => ({
   }),
   computed: {
+    /*
     msg: function () {
       return this.$store.getters.getActiveMessage
     },
+    */
   },
   methods: {
     isDeleted: function(id) {

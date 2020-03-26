@@ -1,6 +1,6 @@
 const tasks = {
     state: {
-        data: [],
+        //data: [],
         tasksAggregate: {
             today:0,
             overdue:0,
@@ -32,7 +32,7 @@ const tasks = {
             4:0
         },
         postponed: [],
-        tagsList: [],
+        //tagsList: [],
         openProjects: []
     },
     mutations: {
@@ -41,13 +41,15 @@ const tasks = {
             let task = state.data[index];
             task[payload.field] = payload.value;
             this.dispatch('insertDocument', { doc: task });
-        },        
+        },
+        /* old couchdb-code. Moved to component taskitemsdates
         clearTaskDate (state, payload) {
             const index = state.data.findIndex( ({ _id }) => _id === payload._id );
             let task = state.data[index];
             task[payload.key] = null;
             this.dispatch('insertDocument', { doc: task });
         },
+        
         setTaskTime (state, payload) {
             const index = state.data.findIndex( ({ _id }) => _id === payload._id );
             let task = state.data[index];
@@ -66,6 +68,8 @@ const tasks = {
             task[payload.key] = newDate.toISOString();
             this.dispatch('insertDocument', { doc: task });
         },
+        */
+        /*
         setTaskDate (state, payload) {
             const index = state.data.findIndex( ({ _id }) => _id === payload._id );
             let task = state.data[index];
@@ -82,9 +86,14 @@ const tasks = {
             task[payload.key] = currentDate.toISOString();
             this.dispatch('insertDocument', { doc: task });
         },
+        */
+
+        /* moved to component
         setTaskStatus (state, payload) {
-            const index = state.data.findIndex( ({ _id }) => _id === payload._id );
-            let task = state.data[index];
+            //const index = this.getters.getDataItemIndex(payload._id);
+            //const index = state.data.findIndex( ({ _id }) => _id === payload._id );
+            let task = this.getters.getDataItem(payload._id);
+            //let task = state.data[index];
             task.status = payload.status;
             if ( ['done','cancelled'].includes(payload.status) ) {
                 task.end = new Date().toJSON();
@@ -95,24 +104,32 @@ const tasks = {
                 this.dispatch('getTaskStatuses');
               }, 4000);
         },
+        */
         setTaskStatuses (state, payload) {
             state.taskStatuses[payload.key] = payload.value;
         },
         setTaskPriorities (state, payload) {
             state.taskPriorities[payload.key] = payload.value;
         },
+        /*
         addTask (state, payload) {
             state.data.push(payload)
         },
+        addTasks (state, payload) {
+            state.data = payload.docs
+        },
+        */
         addPostponed (state, payload) {
             state.postponed.push(payload)
         },
         setTasksAggregate (state, payload) {
             state.tasksAggregate[payload.key] = payload.value;
         },
+        /*
         flushTasks (state) {
             state.data = []
         },
+        */
         flushOpenProjects (state) {
             state.openProjects = []
         },
@@ -133,17 +150,18 @@ const tasks = {
                     ],
                 },
                 "limit": 1000,
-                "fields": ["due"],
-                "use_index": "pimpim_mango_indexes"
+                "fields": ["due"]
+                //"use_index": "pimpim_mango_indexes"
             };
-            let url = context.getters.urlMango;
-            let data = await context.dispatch('postData', {url:url, data:mango} );
-
+            /*  Old code - for direct CouchDB CRUD
+                let url = context.getters.urlMango;
+                let data = await context.dispatch('postData', {url:url, data:mango} );
+            */
             let aggregate = {
                 today:0,
                 tomorrow:0,
-                overdue:0,
-                doneToday:0
+                overdue:0
+                //doneToday:0
             }
 
             let today = new Date();
@@ -158,7 +176,8 @@ const tasks = {
             let yesterdayMilli = new Date().setDate(today.getDate() - 1);
             let yesterday = new Date(yesterdayMilli);
             const yesterdayDate = yesterday.toISOString().slice(0,10);
-
+            
+            /*
             data.docs.forEach(doc => {
                 if (doc.due > todayDate && doc.due < dayAfterTomorrowDate) {
                     aggregate.tomorrow++
@@ -170,6 +189,38 @@ const tasks = {
                     aggregate.overdue++
                 }
             });
+            */
+
+            /*
+            window.db.find(mango)
+            .then(function (data) {
+
+            }).catch(function (error) {
+                
+            });
+            */
+
+            try {
+                let data = await window.db.find(mango);
+                data.docs.forEach(doc => {
+                    if (doc.due > todayDate && doc.due < dayAfterTomorrowDate) {
+                        aggregate.tomorrow++
+                    }
+                    if (doc.due < tomorrowDate) {
+                        aggregate.today++
+                    }
+                    if (doc.due < todayDate) {
+                        aggregate.overdue++
+                    }
+                });
+                context.commit('setTasksAggregate', { key: 'today', value: aggregate.today});
+                context.commit('setTasksAggregate', { key: 'tomorrow', value: aggregate.tomorrow});
+                context.commit('setTasksAggregate', { key: 'overdue', value: aggregate.overdue});
+            } catch (error) {
+                context.commit('addAlert', {type:'error',text:error})
+            }
+
+            // Prepares new mango query for tasks done today stats
             mango.selector["$nor"] = [
                 {"status": "cancelled"},
                 {"due": null}
@@ -181,15 +232,22 @@ const tasks = {
             }
             mango.fields = ["status"]
 
-            let dataDoneToday = await context.dispatch('postData', {url:url, data:mango} );
+            //let dataDoneToday = await context.dispatch('postData', {url:url, data:mango} );
 
-            context.commit('setTasksAggregate', { key: 'today', value: aggregate.today});
-            context.commit('setTasksAggregate', { key: 'tomorrow', value: aggregate.tomorrow});
-            context.commit('setTasksAggregate', { key: 'overdue', value: aggregate.overdue});
-            context.commit('setTasksAggregate', { key: 'doneToday', value: dataDoneToday.docs.length});
+            try {
+                let data = await window.db.find(mango);
+                console.log('Tasks aggregation tasks done today test: ',data) //dataDoneToday
+                context.commit('setTasksAggregate', { key: 'doneToday', value: data.docs.length});
+            } catch (err) {
+                context.commit('addAlert', {type:'error',text:err})
+            }
+
+
+
         },
-        async populateOpenProjects (context) {
-            let url = context.getters.urlMango;
+        //async populateOpenProjects (context) {
+        populateOpenProjects (context) {
+            //let url = context.getters.urlMango;
             this.commit('flushOpenProjects');
             let mango = { "selector": {
                     "realm": "productivity",
@@ -199,14 +257,23 @@ const tasks = {
                         {"status": "done"}
                     ]
                     },
-                "limit": 100,
+                "limit": 100
                 /*
-                "sort": [
+                "sort": [ 
                     { "project": "asc" }
                 ]
                 */
             };
 
+            window.db.find(mango)
+            .then(function (result) {
+                context.commit('addOpenProjects', result.docs)
+            })
+            .catch(function (err) {
+                context.commit('addAlert', {type:'error',text:err})
+            });
+
+            /* Old code for CouchDB
             try {
                 const response = await fetch(url, {
                     method: "POST",
@@ -220,16 +287,62 @@ const tasks = {
             } catch (error) {
                 this.commit('addAlert', {type:'error',text:error})
             }
+            */
         },
+        //async getTaskStatuses (context) {
         async getTaskStatuses (context) {
+            // count the pokemon whose names start with 'P'
+            
+            /*
+            window.db.query('pimpim/task-status-count', {
+                //key: 'P', 
+                //reduce: true, 
+                group: true
+            }).then(function (data) {
+                // handle result
+                //console.log(result)
+                data.rows.forEach( (aggregate) => {
+                    context.commit('setTaskStatuses', aggregate)
+                });
+            }).catch(function (err) {
+                context.commit('addAlert', {type:'error',text:err})
+                // handle errors
+            });
+            */
+
+            try {
+                var result = await window.db.query('pimpim/task-status-count', {
+                    group: true
+                });
+                result.rows.forEach( (aggregate) => {
+                    context.commit('setTaskStatuses', aggregate)
+                });
+            } catch (err) {
+                context.commit('addAlert', {type:'error',text:err})
+            }
+
+            //db.query(fun, [options], [callback])
+
+            /* old CouchDB code
             let url = context.getters.urlDB;
             const response = await fetch(url + `_design/pimpim/_view/task-status-count?group=true`)
             const result = await response.json();
             result.rows.forEach( (aggregate) => {
                 context.commit('setTaskStatuses', aggregate)
             });
+            */
         },
         getTaskPriorities (context) {
+            window.db.query('pimpim/task-priority-count', {
+                group: true
+            }).then(function (data) {
+                data.rows.forEach( (aggregate) => {
+                    context.commit('setTaskPriorities', aggregate)
+                });
+            }).catch(function (err) {
+                context.commit('addAlert', {type:'error',text:err})
+            });
+            /*
             let url = context.getters.urlDB;
             fetch(url + `_design/pimpim/_view/task-priority-count?group=true`)
             .then((resp) => resp.json())
@@ -238,19 +351,20 @@ const tasks = {
                     context.commit('setTaskPriorities', aggregate)
                 });
             });
+            */
         },
         getTasks (context, payload) {
             let list = payload;
-            let vstore = this;
-            let url = context.getters.urlMango;
-            this.commit('flushTasks');
-            this.commit('toggleLoader');
+            //let vstore = this;
+            //let url = context.getters.urlMango;
+            //this.commit('flushTasks');
+            context.commit('toggleLoader');
             let mango = { "selector": {
                         "realm": "productivity",
                         "type": "task",
                         },
-                    "limit": 50,
-                    "use_index": "pimpim_mango_indexes"
+                    "limit": 50
+                    //"use_index": "pimpim_mango_indexes"
                     /*
                     "sort": [
                         { "due": "asc" },
@@ -302,6 +416,34 @@ const tasks = {
                 d.setDate(d.getDate() + 1);
                 mango.selector.due = {"$lt": d.toISOString().slice(0,10)};
             }
+
+            window.db.find(mango)
+            .then(function (data) {
+                //context.commit('addTasks', data)
+                context.commit('addDataArray', data.docs)                
+                /*
+                data.docs.forEach( (doc, index) => {
+                    context.commit('addTask', doc)
+                    if (index + 1 == data.docs.length) {
+                        context.commit('toggleLoader');
+                    }
+                });
+                if (data.docs.length == 0) {context.commit('toggleLoader');}
+                */
+            }).catch(function (error) {
+                context.commit('toggleLoader');
+                context.commit('addAlert', {type:'error',text: error})
+            });
+
+            /*
+            window.db.explain(mango)
+            .then(function (explained) {
+                console.log(explained)
+            // detailed explained info can be viewed
+            });
+            */
+
+            /* old CouchDB code
             fetch(url, {
                 method: "POST",
                 headers: {
@@ -323,22 +465,45 @@ const tasks = {
                 this.commit('toggleLoader');
                 this.commit('addAlert', {type:'error',text: error})
             });
+            */
+        },
+        getTasksTagList: async function (context) {
+            //let url = context.getters.urlDB;
+            //const response = await fetch(url + '/_design/pimpim/_view/messages-tag-count?group=true');
+            //context.commit('setTagList', await response.json())
+            try {
+                const result = await window.db.query('pimpim/tasks-tag-count', {
+                    group: true
+                });
+                context.commit('setTagList', result)
+                //result.rows.forEach( (aggregate) => {
+                //    context.commit('setTaskStatuses', aggregate)
+                //});
+            } catch (err) {
+                context.commit('addAlert', {type:'error',text:err})
+            }
+
         }
     },
     getters: {
         getOpenProjects: state => {
             return state.openProjects
         },
+        /*
         getTask: (state) => (id) => {
             return state.data.find(task => task._id === id)
         },
+        */        
         getTaskStatus: (state) => (id) => {
+            console.log(state)
             let task = state.data.find(task => task._id === id)
             return task.status
         },
+        /*
         getTasks: state => {
             return state.data
         },
+        */
         getTaskStatuses: state => {
             return state.taskStatuses
         },
@@ -348,15 +513,19 @@ const tasks = {
         getPostponedTasks: state => {
             return state.postponed
         },
+        /*
         countDisplayedTasks: state => {
             return state.data.length
         },
+        */
         getTasksAggregate: state => {
             return state.tasksAggregate
         },
+        /*
         getTasksTagsList: state => {
             return state.tagsList
         },
+        */
         getStatusColors: state => {
             return state.statusColors
         },

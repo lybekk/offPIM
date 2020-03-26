@@ -2,9 +2,9 @@
 v-dialog(v-model="dialog" scrollable max-width="400px")
   template(v-slot:activator="{ on }")
     span(
-      v-text="task.title"
+      v-text="titleFormatted"
       v-on="on"
-      :class="[ isDone(task._id) ? 'success--text' : '' ]"
+      :class="[ status == 'done' ? 'success--text' : '' ]"
     )
   v-card
     v-card-title
@@ -22,12 +22,14 @@ v-dialog(v-model="dialog" scrollable max-width="400px")
 </template>
 
 <script>
+import pouchMixin from '@/mixins/pouchMixin'
 
 export default {
   name: 'TasksItemsTitle',
   components: {
   },
-  props: ["task"],
+  mixins: [pouchMixin],
+  props: ["id","title","status"],
   data: () => ({
     dialog:false,
     newValue: null
@@ -35,27 +37,29 @@ export default {
   computed: {
     value: {
         get () {
-          return this.task.title
+          return this.title
         },
         set (val) {
           this.newValue = val;
         }
+    },
+    titleFormatted() {
+      let t = this.title;
+      if (t == null || t.length == 0) {
+          t = "No title";
+      }
+      return t
     }
   },
   methods: {
-    setTaskField: function () {
-      const payload = {
-        _id: this.task._id,
+    setTaskField: async function () {
+      await this.setFieldGeneric({
+        _id: this.id,
         field: 'title',
         value: this.newValue
-      };
-      this.$store.commit('setTaskField', payload);
+      });
       this.dialog = false;
-    },
-    isDone: function(id) {
-      let task = this.$store.getters.getTask(id);
-      if (task.status == 'done') {return true}
-      return false
+      this.$emit('set-doc')
     },
   }
 };

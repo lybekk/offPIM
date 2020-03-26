@@ -1,139 +1,121 @@
-<template>
-<v-content>
-  <v-container fluid>
-
-  <p class="headline">Setup</p>
-
-  <v-stepper v-model="e6" vertical>
-    <!-- :rules="[() => false]" -->
-    <!-- Consider using editable steppers instead -->
-    <v-stepper-step :complete="e6 > 1" :rules="[() => databaseServerConnectionSuccess]" step="1">
-      Database server connection
-    </v-stepper-step>
-    <v-stepper-content step="1">
-      <v-card v-if="!databaseServerConnectionSuccess" class="mb-12">
-        If no connection. See settings.json in /pimpim/settings.json. Change db-path to xx
-        <br>
-        <v-btn @click="databaseServerConnection">Retry connection</v-btn>
-      </v-card>
-      <v-card v-else>
-        Database server connection established
-        <br>
-        <v-btn color="primary" @click="e6 = 2">Continue</v-btn>
-      </v-card>
-    </v-stepper-content>
-
-    <v-stepper-step :complete="e6 > 2" step="2" :rules="[() => databaseConnectionSuccess]">
-      Database state
-    </v-stepper-step>
-    <v-stepper-content step="2">
-      <v-card v-if="!databaseConnectionSuccess" class="mb-12">
-        Database <code>{{ dbName }}</code> does not exist on database server. 
-        By default name is 'vault'. Change in settings.json if another name is desired.
-        <v-btn @click="databaseConnection">Retry connection</v-btn>
-      </v-card>
-      <v-card v-else>
-        Database <code>{{ dbName }}</code> exists. Great!
-        <br>
-        <!-- 
-        <v-btn color="primary" @click="e6 = 1">Back</v-btn>
-        -->
-        <v-btn color="primary" @click="e6 = 3">Continue</v-btn>
-      </v-card>
-    </v-stepper-content>
-
-    <v-stepper-step :complete="e6 > 3" step="3" :rules="[() => pimpimDesignDocumentSuccess]">
-      PIMPIM Design document
-    </v-stepper-step>
-    <v-stepper-content step="3">
-      <v-card
+<template lang="pug">
+v-content
+  v-container(fluid)
+  p(class="headline") Setup
+  v-stepper(v-model="e6" vertical)
+    // :rules="[() => false]"
+    // Consider using editable steppers instead    
+    //v-stepper-step(
+      :complete="e6 > 1" 
+      :rules="[() => databaseServerConnectionSuccess]" 
+      step="1"
+      ) Database server connection
+    //v-stepper-content(step="1")
+      v-card(
+        v-if="!databaseServerConnectionSuccess" class="mb-12"
+      ) If no connection. See settings.json in /pimpim/settings.json. Change db-path to xx
+        br
+        v-btn(@click="databaseServerConnection") Retry connection
+      v-card(v-else) Database server connection established
+        br
+        v-btn(color="primary" @click="e6 = 2") Continue
+    //v-stepper-step(
+      :complete="e6 > 2" 
+      step="2" 
+      :rules="[() => databaseConnectionSuccess]"
+      ) Database state
+    //v-stepper-content(step="2")
+      v-card(
+        v-if="!databaseConnectionSuccess" 
+        class="mb-12"
+      )
+        | Database 
+        code { dbName }}
+        | does not exist on database server. 
+        |  By default name is 'vault'. Change in settings.json if another name is desired.
+        v-btn(
+          @click="databaseConnection"
+        ) Retry connection
+      v-card(
+        v-else
+      ) Database 
+        code { dbName }}
+        | exists. Great!
+        br
+        v-btn(
+          color="primary" @click="e6 = 3"
+        ) Continue
+    v-stepper-step(
+      :complete="e6 > 1" 
+      step="1" 
+      :rules="[() => design_pimpim]") PIMPIM Design document
+    v-stepper-content(step="1")
+      v-card(
         v-if="pimpimDoc.authenticationRequired"
-      >
-        <v-card>
-          Authentication required for design document to be uploaded
-          <br>
-          <v-btn
+      )
+        v-card Authentication required for design document to be uploaded
+          br
+          v-btn(
             color="warning"
             @click.stop="authDialog = true"
-          >
-            Authenticate
-          </v-btn>
-        </v-card>
-      </v-card>
-      <v-card v-if="pimpimDesignDocumentSuccess">
-        <p>Design document up to date</p>
-        <v-btn color="primary" @click="e6 = 4">Continue</v-btn>
-      </v-card>
-      <v-card v-if="!pimpimDesignDocumentSuccess && !pimpimDoc.authenticationRequired">
-        <!-- 
-          <p>PIMPIM server design document version higher than doc in Database</p>
-        -->
-        <p>Insert design document</p>
-        <v-btn color="primary" @click="pimpimDesignDocument">Insert</v-btn>
-      </v-card>
-    </v-stepper-content>
-
-    <v-stepper-step step="4" :rules="[() => mangoDesignDocumentSuccess]">
-      Mango query indexes document
-    </v-stepper-step>
-    <v-stepper-content step="4">
-      <v-card
+          ) Authenticate
+      v-card(v-if="design_pimpim")
+        p Design document up to date
+        v-btn(color="primary" @click="e6 = 4") Continue
+      v-card(v-if="!design_pimpim && !pimpimDoc.authenticationRequired")
+        //<p>PIMPIM server design document version higher than doc in Database</p>
+        p Insert design document
+        //v-btn(color="primary" @click="pimpimDesignDocument") Insert
+    v-stepper-step(
+      step="2"
+      :rules="[() => design_pimpim_mango_indexes]"
+    ) Mango query indexes document
+    v-stepper-content(step="2")
+      v-card(
         v-if="mangoDoc.authenticationRequired"
-      >
-        <v-card>
-          Authentication required for design document to be uploaded
-          <br>
-          <v-btn
+      )
+        v-card Authentication required for design document to be uploaded
+          br
+          v-btn(
             color="warning"
             @click.stop="authDialog = true"
-          >
-            Authenticate
-          </v-btn>
-        </v-card>
-      </v-card>
-      <v-card v-if="!mangoDesignDocumentSuccess && !mangoDoc.authenticationRequired">
-        <p>Insert mango query index document</p>
-        <v-btn color="primary" @click="mangoDesignDocument">Insert</v-btn>
-      </v-card>
-      <v-card v-if="mangoDesignDocumentSuccess">
-        <p>Mango query index document up to date</p>
-        <p color="success--text">Setup complete</p>
-        <!-- @click="e6 = 1" -->
-        <v-btn to="/" color="success">Go to Dashboard</v-btn>
-      </v-card>
-      <!-- If all is well, btn to Dashboard -->
-    </v-stepper-content>
-  </v-stepper>
-
-  <!-- Authentication dialog -->
-  <div class="text-center">
-    <v-dialog
+          ) Authenticate
+      v-card(v-if="!design_pimpim_mango_indexes && !mangoDoc.authenticationRequired")
+        p Insert mango query index document
+        //v-btn(color="primary" @click="mangoDesignDocument") Insert
+      v-card(v-if="design_pimpim_mango_indexes")
+        p Mango query index document up to date
+        p(color="success--text") Setup complete
+        //<!-- @click="e6 = 1" -->
+        v-btn(to="/" color="success") Go to Dashboard
+      //<!-- If all is well, btn to Dashboard -->
+  v-card(v-if="design_pimpim && design_pimpim_mango_indexes")
+    v-card-title Setup success
+    v-btn(to="/dashboard" color="primary") Go to Dashboard
+  div(class="text-center")
+    v-dialog(
       v-model="authDialog"
       width="500"
-    >
-      <v-card>
-        <v-card-title
+    )
+      //<!-- Authentication dialog -->
+      v-card
+        v-card-title(
           class="headline grey lighten-2"
           primary-title
-        >
-          Authentication
-        </v-card-title>
-        <v-card-text>
-          Provide credentials for a user/admin with permission to upload design documents
-          <v-form>
-            <v-row>
-              <v-col cols="12" >
-                <v-text-field
+        ) Authentication
+        v-card-text Provide credentials for a user/admin with permission to upload design documents
+          v-form
+            v-row
+              v-col(cols="12")
+                v-text-field(
                   v-model="username"
                   label="Username"
                   outlined
                   shaped
-                ></v-text-field>
-              </v-col>
-            </v-row>
-            <v-row>
-              <v-col cols="12" >
-                <v-text-field
+                )
+            v-row
+              v-col(cols="12")
+                v-text-field(
                   v-model="password"
                   :append-icon="show1 ? 'mdi-eye' : 'mdi-eye-off'"
                   :rules="[rules.required, rules.min]"
@@ -143,39 +125,24 @@
                   outlined
                   shaped
                   @click:append="show1 = !show1"
-                ></v-text-field>
-              </v-col>
-            </v-row>
-            <v-row v-if="authMsg">
-              <p class="error--text">{{ authMsg }}</p>
-            </v-row>
-          </v-form>
-        </v-card-text>
-        <v-divider></v-divider>
-        <v-card-actions>
-          <v-spacer></v-spacer>
-          <v-btn
+                )
+            v-row(v-if="authMsg")
+              p(class="error--text") {{ authMsg }}
+        v-divider
+        v-card-actions
+          v-spacer
+          v-btn(
             color="primary"
             text
             @click="requestAuthCookie"
-          >
-            Request auth cookie
-          </v-btn>
-        </v-card-actions>
-      </v-card>
-    </v-dialog>
-  </div>
+          ) Request auth cookie
 
-  </v-container>
-</v-content>
 </template>
 
 <script>
-
 export default {
-  name: 'setup',
-  components: {
-  },
+  name: "setup",
+  components: {},
   data: () => ({
     e6: 0, // stepper
     show1: false,
@@ -188,100 +155,126 @@ export default {
       authenticationRequired: false
     },
     authMsg: null,
-    username: 'admin',
-    password: 'Password',
+    username: "admin",
+    password: "Password",
     rules: {
-      required: value => !!value || 'Required.',
-      min: v => v.length >= 8 || 'Min 8 characters',
+      required: value => !!value || "Required.",
+      min: v => v.length >= 8 || "Min 8 characters"
       //emailMatch: () => ('The email and password you entered don\'t match'),
     },
-    databaseServerConnectionSuccess: false,
-    databaseConnectionSuccess: false,
-    pimpimDesignDocumentSuccess: false,
-    mangoDesignDocumentSuccess: false,
+    //databaseServerConnectionSuccess: false,
+    //databaseConnectionSuccess: false,
+    //pimpimDesignDocumentSuccess: false,
+    //mangoDesignDocumentSuccess: false,
+    design_pimpim: false,
+    design_pimpim_mango_indexes: false
   }),
   computed: {
-    dbName: function () {
+    dbName: function() {
       return this.$store.getters.dbName;
     }
   },
-  created () {
-  },
-  mounted () {
-    this.databaseServerConnection();
-    this.databaseConnection();
+  created() {},
+  mounted() {
+    /*
     setTimeout(() => {
       this.pimpimDesignDocument();
-    }, 1000);
+    }, 1000);    
     setTimeout(() => {
       this.mangoDesignDocument();
     }, 1500);
+    */
+    //this.insertDesignDocument('indexes/pimpim_design_doc.json', 'pimpim');
+    //this.insertDesignDocument('indexes/mango_indexes.json', 'pimpim_mango_indexes');
+    this.insertDesignDocument(window.pimpim.pimpimDesignDoc, "pimpim");
+    this.insertDesignDocument(
+      window.pimpim.mangoIndexes,
+      "pimpim_mango_indexes"
+    );
   },
   methods: {
-    databaseServerConnection: async function() {
-      const url = this.$store.getters.urlDBRoot;
-      const response = await fetch(url);
+    insertDesignDocument: async function(serverDoc, docId) {
+      //const getServerDesignDoc = await fetch( serverDoc );
       //const serverDesignDoc = await getServerDesignDoc.json();
-      if (response.ok) {
-        this.databaseServerConnectionSuccess = true
+      console.log('Checking design document version for doc: ', docId)
+      const s = serverDoc; // serverDesignDoc / design doc included in this version of PIMPIM
+
+      try {
+        const dbDoc = await window.db.get(`_design/${docId}`); // databaseDesignDoc
+        if (s.version > dbDoc.version) {
+          s._rev = dbDoc._rev;
+          const response = await window.db.put(s); // may require confirmation
+          if (response.ok) {
+            this[`design_${docId}`] = true;
+          } else {
+            throw 'Failed inserting design document ' + docId
+          }
+        } else if (s.version == dbDoc.version) {
+          //this.pimpimDesignDocumentSuccess = true;
+          this[`design_${docId}`] = true;
+        }
+      } catch (err) {
+        console.log(docId, " doc does not exist. Attempting insert");
+        const result = await window.db.put(s);
+        this[`design_${docId}`] = true;
+        console.log("Insert result: ", result);
       }
-      //const urlDB = this.$store.getters.urlDB;
     },
-    databaseConnection: async function() {
-      const url = this.$store.getters.urlDB;
-      const response = await fetch(url);
-      //const serverDesignDoc = await getServerDesignDoc.json();
-      if (response.ok) {
-        this.databaseConnectionSuccess = true
-      }
-      //const urlDB = this.$store.getters.urlDB;
-    },
+    /*
     pimpimDesignDocument: async function() {
-      if (!this.databaseConnectionSuccess) {return}
+      //if (!this.databaseConnectionSuccess) {return}
 
       const getServerDesignDoc = await fetch('indexes/pimpim_design_doc.json');
       const serverDesignDoc = await getServerDesignDoc.json();
+      //console.log(serverDesignDoc)
+      //const urlDB = this.$store.getters.urlDB;
 
-      const urlDB = this.$store.getters.urlDB;
-
-      const getDatabaseDesignDoc = await fetch(urlDB + '_design/pimpim');
-      const databaseDesignDoc = await getDatabaseDesignDoc.json();
-
-      const context = this;
-      async function insertDoc(context) {
-        const response = await fetch(urlDB + '_design/pimpim', {
-          method: "PUT",
-          body: JSON.stringify(serverDesignDoc),
-          credentials: 'include',
-          headers: {
-          "Content-Type": "application/json"
-          }
-        });
-        if (response.status == 401) {
-          context.pimpimDoc.authenticationRequired = true;
-        } else if (response.ok) {
-          context.pimpimDesignDocumentSuccess = true;
+      //const getDatabaseDesignDoc = await fetch(urlDB + '_design/pimpim');
+      try {
+        const databaseDesignDoc = await window.db.get('_design/pimpim');
+        //console.log(databaseDesignDoc)
+        if (serverDesignDoc.version > databaseDesignDoc.version) {
+          // response.status == 409
+          serverDesignDoc._rev = databaseDesignDoc._rev
+          await window.db.put(serverDesignDoc);
+        } else if (serverDesignDoc.version == databaseDesignDoc.version) {
+          this.pimpimDesignDocumentSuccess = true;
         }
-        //const result = await response.json();
-        //console.log(result)
-        //return response
+      } catch(err) {
+        console.log('pimpim doc does not exitss')
+        const result = await window.db.put(serverDesignDoc);
+        console.log('Insert resultzz:',result)
       }
+      //const databaseDesignDoc = await getDatabaseDesignDoc.json();
 
-      if (getDatabaseDesignDoc.status == 404) {
-        insertDoc(context);
-      }
-
-      if (serverDesignDoc.version > databaseDesignDoc.version) {
-        /* response.status == 409 */
-        serverDesignDoc._rev = databaseDesignDoc._rev
-        insertDoc(context);
-      } else if (serverDesignDoc.version == databaseDesignDoc.version) {
-        this.pimpimDesignDocumentSuccess = true;
-      }
-
+      //const context = this;
+      //async function insertDoc(context) {
+      //  const response = await fetch(urlDB + '_design/pimpim', {
+      //    method: "PUT",
+      //    body: JSON.stringify(serverDesignDoc),
+      //    credentials: 'include',
+      //    headers: {
+      //    "Content-Type": "application/json"
+      //    }
+      //  });
+      //  if (response.status == 401) {
+      //    context.pimpimDoc.authenticationRequired = true;
+      //  } else if (response.ok) {
+      //    context.pimpimDesignDocumentSuccess = true;
+      //  }
+      //  //const result = await response.json();
+      //  //console.log(result)
+      //  //return response
+      //}
+      //if (getDatabaseDesignDoc.status == 404) {
+      //  insertDoc(context);
+      //}
+      //
     },
+    */
+    /*
     mangoDesignDocument: async function() { //minify - merge with pimpimDoc
-      if (!this.databaseConnectionSuccess) {return}
+      //if (!this.databaseConnectionSuccess) {return}
       const getServerDesignDoc = await fetch('indexes/mango_indexes.json');
       const serverDesignDoc = await getServerDesignDoc.json();
 
@@ -320,15 +313,16 @@ export default {
         this.mangoDesignDocumentSuccess = true;
       }
     },
+    */
     requestAuthCookie: async function() {
       const urlDB = this.$store.getters.urlDBRoot;
-      const form = { name:this.username, password:this.password };
-      const response = await fetch(urlDB + '_session', {
+      const form = { name: this.username, password: this.password };
+      const response = await fetch(urlDB + "_session", {
         method: "POST",
         body: JSON.stringify(form),
-        credentials: 'include',
+        credentials: "include",
         headers: {
-        "Content-Type": "application/json"
+          "Content-Type": "application/json"
         }
       });
       const result = await response.json();
@@ -342,47 +336,14 @@ export default {
         //const cookieObj = await cookie.json();
         //console.log(cookieObj)
       } else if (response.status == 401) {
-        this.authMsg = 'Incorrect credentials';
+        this.authMsg = "Incorrect credentials";
       } else {
         console.log(result);
-        this.authMsg = 'Something went wrong. See console.';
+        this.authMsg = "Something went wrong. See console.";
       }
     }
     //insertPimpimDesignDoc: async function() {
     //}
   }
-}
-
-/*
-console.log('PIMPIM server design document version higher than doc in Database. Replacing...');
-        serverDesignDoc._rev = databaseDesignDoc._rev;
-
-        const uploadDesignDoc = await fetch(urlDB, {
-          method: 'POST', // *GET, POST, PUT, DELETE, etc.
-          //mode: 'cors', // no-cors, *cors, same-origin
-          //cache: 'no-cache', // *default, no-cache, reload, force-cache, only-if-cached
-          //credentials: 'same-origin', // include, *same-origin, omit
-          headers: {
-            'Content-Type': 'application/json'
-            // 'Content-Type': 'application/x-www-form-urlencoded',
-          },
-          //redirect: 'follow', // manual, *follow, error
-          //referrerPolicy: 'no-referrer', // no-referrer, *client
-          body: JSON.stringify(serverDesignDoc) // body data type must match "Content-Type" header
-        });
-
-        if (uploadDesignDoc.status == 401) {
-          console.log('Uatorisert..');
-        }
-        //return await response.json(); // parses JSON response into native JavaScript objects
-        //console.log('respons statusgoe: ', await response.status);
-        console.log('respons etter post: ', await uploadDesignDoc.json()); // parses JSON response into native JavaScript objects
-
-      //* Load local pimpimdocs
-      //* Check if design document exist in database
-      //  Get document
-      //  If not exists, upload
-
-
-*/
+};
 </script>

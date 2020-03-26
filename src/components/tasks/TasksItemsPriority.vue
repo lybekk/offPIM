@@ -38,11 +38,13 @@ v-expansion-panel
 </template>
 
 <script>
+import pouchMixin from '@/mixins/pouchMixin'
 
 export default {
   name: 'TasksItemsPriority',
   components: {
   },
+  mixins: [pouchMixin],
   props: ["task"],
   data: () => ({
     priorityStarColor: {
@@ -69,14 +71,15 @@ export default {
     },
   },
   methods: {
-    setTaskField: function (pri) {
-      const payload = {
+    setTaskField: async function (pri) {
+      await this.setFieldGeneric({
         _id: this.task._id,
         field: 'priority',
         value: pri
-      };
-      this.$store.commit('setTaskField', payload);
+      });
+      this.$emit('set-doc')
     },
+
   }
 };
 

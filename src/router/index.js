@@ -18,7 +18,22 @@ const routes = [
   {
     path: '/tasks',
     name: 'tasks',
-    component: () => import(/* webpackChunkName: "tasks" */ '../views/Tasks.vue')
+    component: () => import(/* webpackChunkName: "tasks" */ '../views/Tasks.vue'),
+    redirect: 'tasks/list/today',
+    children: [
+      {
+        path: 'list/:list',
+        name: 'tasksList',
+        component: () => import(/* webpackChunkName: "tasksList" */ '../views/tasks/List.vue')
+      },
+      {
+        path: 'project/:projectid',
+        name: 'tasksProject',
+        component: () => import(/* webpackChunkName: "tasksList" */ '../views/tasks/Project.vue'),
+        props: true
+        //component: () => import(/* webpackChunkName: "tasks" */ '../views/Tasks.vue'),
+      }
+    ]
   },
   {
     path: '/notes',
@@ -29,6 +44,15 @@ const routes = [
     path: '/logbook',
     name: 'logbook',
     component: () => import(/* webpackChunkName: "logbook" */ '../views/Logbook.vue')
+    /*
+    children: [
+      {
+        path: 'tag',
+        name: 'logbookTag',
+        component: () => import('../views/logbook/Items.vue'),
+      }
+    ]
+    */
   },
   {
     path: '/messages',

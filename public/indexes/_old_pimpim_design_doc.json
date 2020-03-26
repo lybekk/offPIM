@@ -37,6 +37,14 @@
     "logs-start-days": {
       "reduce": "_count",
       "map": "function (doc) {\n  if (doc.realm == \"logs\") {\n    var y = doc.start.slice(0,4);\n    var m = doc.start.slice(5,7);\n    var d = doc.start.slice(8,10);\n    var x = [y, m, d].join('-');\n    emit(x, 1);\n  }\n}"
+    },
+    "finance-totals-sum": {
+      "reduce": "_sum",
+      "map": "function (doc) {\n  \n  if (doc.realm == \"finance\") {\n    if (doc.balance) {\n      emit(\"valueAccounts\", doc.balance);\n    }\n  }\n}"
+    },
+    "tasks-tag-count": {
+      "reduce": "_count",
+      "map": "function (doc) {\n  if (doc.realm == \"productivity\" && doc.type == \"task\") {\n    function emitTag(tag) {\n        emit(tag, 1);\n    }\n    doc.tags.forEach(emitTag);\n    if (doc.tags.length == 0) {\n      emit(\"untagged\", 1);\n    }\n  }\n}"
     }
   },
   "language": "javascript"

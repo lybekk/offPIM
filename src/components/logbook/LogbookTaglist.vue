@@ -75,13 +75,18 @@ export default {
   mounted () {
   },
   methods: {
-    fetch () {
+    async fetch () {
       if (this.tags.length) return
-      let url = this.$store.getters.urlDB;
-      return fetch(url + '/_design/pimpim/_view/logs-tag-count?group=true')
-        .then(res => res.json())
-        .then(data => (this.tags = data.rows))
-        .catch(err => console.log(err))
+      try {
+          var result = await window.db.query('pimpim/logs-tag-count', {
+              group: true
+          });
+          this.tags = result.rows
+          return
+      } catch (err) {
+          this.$store.commit('addAlert', {type:'error',text:err})
+      }
+
     },
     getChildren (letter) {
       const tags = []
@@ -103,15 +108,34 @@ export default {
     getName (name) {
       return `${name.charAt(0).toUpperCase()}${name.slice(1)}`
     },
-    getByTag: function (item) {
+    getByTag: async function (item) {
+      const tag = item.key;
       if (!item.children) {
-        this.$store.dispatch('getLogEntriesByTag', item.name)
+        this.$store.commit('loaderActive'); 
+        let mango = {
+            "selector": {
+                "realm": "logs",
+                "tags": {
+                    "$in": [tag]
+                }
+            },
+            "limit": 100
+        };
+        if (tag == 'inbox' || tag == 'untagged') { mango.selector.tags = [] }
+
+        try {
+            let data = await window.db.find(mango);
+            this.$emit('add-logs', data.docs)
+            this.$store.commit('loaderInactive');
+        } catch (error) {
+            this.$store.commit('showSnackbar', { text:error });
+        }
       }
     },
     tagCount: function (item) {
-      const x = this.tags.find(tag => tag.key === item.name)
+      const x = this.tags.find(tag => tag.key === item.key);
       return x.value
-    },
+    }
   }
 };
 </script>

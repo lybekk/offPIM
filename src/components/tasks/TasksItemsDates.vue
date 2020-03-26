@@ -89,11 +89,13 @@ v-expansion-panel(
 </template>
 
 <script>
+import pouchMixin from '@/mixins/pouchMixin'
 
 export default {
   name: 'TasksItemsDates',
   components: {
   },
+  mixins: [pouchMixin],
   props: ["task","isOverdue","isDeleted"],
   data: () => ({
     dateModal: {
@@ -123,9 +125,8 @@ export default {
         return this.dateFormatter(this.task.due, 'dateOnlyDefaultTodayISO')
       },
       set (pickerValue) {
-        let payload = { _id:this.task._id, key:'due', value: pickerValue };
-        this.$store.commit('setTaskDate', payload);
-        this.$store.commit('addPostponed', this.task._id);
+        let payload = { _id:this.task._id, field:'due', value: pickerValue };
+        this.setDate(payload)
       }
     },
     dateStart: {
@@ -133,8 +134,8 @@ export default {
         return this.dateFormatter(this.task.start, 'dateOnlyDefaultTodayISO')
       },
       set (pickerValue) {
-        let payload = { _id:this.task._id, key:'start', value: pickerValue };
-        this.$store.commit('setTaskDate', payload);
+        let payload = { _id:this.task._id, field:'start', value: pickerValue };
+        this.setDate(payload)
       }
     },
     dateEnd: {
@@ -142,21 +143,27 @@ export default {
         return this.dateFormatter(this.task.end, 'dateOnlyDefaultTodayISO')
       },
       set (pickerValue) {
-        let payload = { _id:this.task._id, key:'end', value: pickerValue };
-        this.$store.commit('setTaskDate', payload);
+        let payload = { _id:this.task._id, field:'end', value: pickerValue };
+        this.setDate(payload)
       }
     },
   },
   methods: {
-    clearTaskDate: function(dateKey) {
-      let payload = { _id:this.task._id, key: dateKey };
-      this.$store.commit('clearTaskDate', payload);
+    setDate: async function(payload) {
+      await this.setFieldDate(payload)
+      this.$store.commit('addPostponed', payload._id);
+      this.$emit('set-doc')
     },
-    setTime: function(dateKey) {
-      let payload = { _id:this.task._id, key: dateKey, value: this.timePicker[dateKey] };
-      this.$store.commit('setTaskTime', payload);
-
+    clearTaskDate: async function(dateKey) {
+      let payload = { _id:this.task._id, field: dateKey };
+      await this.setFieldNull(payload)
+      this.$emit('set-doc')
+    },
+    setTime: async function(dateKey) {
+      let payload = { _id:this.task._id, field: dateKey, value: this.timePicker[dateKey] };
+      await this.setFieldTime(payload)
       this.timeModal[dateKey] = false;
+      this.$emit('set-doc')
     },
     dateTime: function(dateKey) {
       return this.dateFormatter(this.task[dateKey], 'UTC')

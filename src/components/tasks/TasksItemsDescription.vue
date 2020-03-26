@@ -14,7 +14,6 @@ v-dialog(v-model="dialog" scrollable max-width="400px")
           auto-grow
           filled
           dense
-
         )
     v-card-actions
       v-spacer
@@ -23,11 +22,13 @@ v-dialog(v-model="dialog" scrollable max-width="400px")
 </template>
 
 <script>
+import pouchMixin from '@/mixins/pouchMixin'
 
 export default {
   name: 'TasksItemsDescription',
   components: {
   },
+  mixins: [pouchMixin],
   props: ["task"],
   data: () => ({
     dialog:false,
@@ -44,14 +45,14 @@ export default {
     }
   },
   methods: {
-    setTaskField: function () {
-      const payload = {
+    setTaskField: async function () {
+      await this.setFieldGeneric({
         _id: this.task._id,
         field: 'description',
         value: this.newValue
-      };
-      this.$store.commit('setTaskField', payload);
+      });
       this.dialog = false;
+      this.$emit('set-doc')
     },
     taskDescription: function(txt) {
       let t = txt;

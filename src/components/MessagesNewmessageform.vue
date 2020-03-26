@@ -85,7 +85,8 @@ export default {
     data: () => ({
         dialog: false,
         newEntry: {
-            realm:'messages',
+            //realm:'messages',
+            message: true,
             sender:'',
             recipient:'',
             subject:'',

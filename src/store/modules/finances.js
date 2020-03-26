@@ -66,6 +66,7 @@ const finances = {
     },
     actions: {
         getFinancialData: async function (context, type) {
+            context.commit('loaderActive');
             context.commit('flushData');
             const mango = {
                 "selector": {
@@ -83,10 +84,21 @@ const finances = {
                     "$in" : ["bank","cash","credit card","mortgage payable"]
                 }
             }
+
+            /*
             let data = await context.dispatch('postData', {
                 url: context.getters.urlMango, 
                 data:mango
             });
+            */
+           let data;
+
+            try {
+                data = await window.db.find(mango);
+            } catch (error) {
+                context.commit('showSnackbar', { text:error });
+            }
+            context.commit('loaderInactive');
 
             if (["income", "expense"].includes(type)) {
                 context.commit('addBudgetDataArray', {
@@ -97,12 +109,24 @@ const finances = {
             }
         },
         async getFinancialAggregates (context) {
-            let url = context.getters.urlDB;
+            //let url = context.getters.urlDB;
+            try {
+                const response = await window.db.query('pimpim/finance-totals-sum', {
+                    group: true
+                });
+                response.rows.forEach( (aggregate) => {
+                    context.commit('setFinancialAggregates', aggregate)
+                });
+            } catch(err) {
+                context.commit('addAlert', {type:'error',text:err})
+            }
+            /*
             const response = await fetch(url + `_design/pimpim/_view/finance-totals-sum?group=true`)
             const result = await response.json();
             result.rows.forEach( (aggregate) => {
                 context.commit('setFinancialAggregates', aggregate)
             });
+            */
         }
     },
     getters: {

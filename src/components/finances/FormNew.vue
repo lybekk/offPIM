@@ -236,7 +236,8 @@ export default {
         resetForm: function () {
             this.newEntry = {
                 // common properties/fields
-                realm:'finance',
+                //realm:'finance',
+                finance: true,
                 description: null,
                 type: null, // type: {string} - The account type in the list ['none', 'bank', 'cash', 'asset', 'credit card', 'liability'] //savings?
                 category: null,
@@ -288,7 +289,8 @@ export default {
 
            let j = {
                _id: this.generateUUID(),
-                realm: 'finance',
+                //realm: 'finance',
+                finance: true,
                 type: n.type, // type: {string} - The account type in the list ['none', 'bank', 'cash', 'asset', 'credit card', 'liability'] //savings?
                 created: now,
                 description: n.description,

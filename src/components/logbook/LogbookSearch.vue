@@ -53,29 +53,32 @@ export default {
     initiateSearch: async function () {
       this.searchLoader = true;
       const s = this.searchValue;
-      let v = this.$store;
-      let url = v.getters.urlMango;
-      v.commit('flushLogs');
       let mango = {
         "selector": {
             "realm": "logs",
             "$or": [
               {
                   "title": {
-                    "$regex": "(?i)" + s
+                    "$regex": RegExp(s, "i")
                   }
               },
               {
                   "description": {
-                    "$regex": "(?i)" + s
+                    "$regex": RegExp(s, "i")
                   }
               }
             ]
         },
         "limit":100
       };
-      let data = await v.dispatch('postData', {url:url, data:mango} );
-      v.commit('addLogEntries', data.docs);
+      /*
+      * For CouchDB/Erlang regex
+      * // "$regex": "(?i)" + s // CouchDB/Erlang //Javascript does not support look-behind assertions
+      * // "$regex": "(?i)" + s // CouchDB/Erlang //Javascript does not support look-behind assertions
+      */
+      console.log(mango);
+      let data = await window.db.find(mango);
+      this.$emit('add-logs', data.docs)
       this.searchLoader = false;
     }
   }

@@ -15,7 +15,9 @@ v-expansion-panel
             style="width: 100%"
           )
             v-col
-              span.text-capitalize(:class="color+'--text'") {{ task.status }}
+              span.text-capitalize(
+                :class="color+'--text'"
+              ) {{ task.status }}
   v-expansion-panel-content
     v-slider.text-capitalize(
       :tick-labels="statusList"
@@ -54,12 +56,7 @@ export default {
         return index
       },
       set (val) {
-        const payload = {
-          _id: this.task._id,
-          field: 'status',
-          value: this.statusList[val]
-          };
-        this.$store.commit('setTaskField', payload);
+        this.$emit('set-status', this.statusList[val])
       }
     },
     color: function () {

@@ -1,4 +1,5 @@
-import vuetify from '../plugins/vuetify';
+import vuetify from '@/plugins/vuetify';
+//import vuetify from '../../plugins/vuetify';
 
 const themes = {
     state: {

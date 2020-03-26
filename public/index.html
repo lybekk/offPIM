@@ -1,18 +1,35 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width,initial-scale=1.0">
-    <link rel="icon" href="<%= BASE_URL %>favicon.ico">
-    <script type="text/javascript" src="settings.js"></script>
-    <title>pimpim</title>
-  </head>
-  <body>
-    <noscript>
-      <strong>We're sorry but pimpim doesn't work properly without JavaScript enabled. Please enable it to continue.</strong>
-    </noscript>
-    <div id="app"></div>
-    <!-- built files will be auto injected -->
-  </body>
+
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width,initial-scale=1.0">
+  <link rel="icon" href="<%= BASE_URL %>favicon.ico">
+  <script src="<%= BASE_URL %>js/pouchdb-7.1.1.js"></script>
+  <script src="<%= BASE_URL %>js/pouchdb.find.js"></script>
+  <script src="<%= BASE_URL %>js/pouchdb.live-find.js"></script>
+  <script>
+    window.pimpim = {};
+  </script>
+  <script src="<%= BASE_URL %>indexes/pimpim_design_doc.js"></script>
+  <script src="<%= BASE_URL %>indexes/mango_indexes.js"></script>
+  <title>pimpim</title>
+</head>
+
+<body>
+  <noscript>
+    <strong>We're sorry but pimpim doesn't work properly without JavaScript enabled. Please enable it to
+      continue.</strong>
+  </noscript>
+  <script>
+    var db = new PouchDB('vault');
+    // auto_compaction: false. Consider adding true.
+    var remoteDB = null;
+
+  </script>
+  <div id="app"></div>
+  <!-- built files will be auto injected -->
+</body>
+
 </html>

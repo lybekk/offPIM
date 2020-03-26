@@ -35,7 +35,10 @@ v-content
       v-col
         v-card
           v-card-title Tasks
-          v-card-text
+          v-card-text(
+            v-if="isNoTasks"
+          ) No unfinished tasks
+          v-card-text(v-else)
             v-container(fluid)
               v-row
                 v-col(
@@ -65,7 +68,6 @@ v-content
                   sm="6"
                 )
                   div
-                    //-div(v-if="taskProgress.visible")
                     p(v-if="!taskProgress.visible") Retrieving aggregates
                     p(
                       v-if="this.$store.getters.getTasksAggregate.doneToday != 0"
@@ -85,34 +87,92 @@ v-content
                     )
                       //-:indeterminate="taskProgress.visible"
   v-footer 
+    v-container(
+      v-for="dt in dataTables"
+      :key="dt.name"
+    )
+      v-card
+        v-card-title(class="headline") {{ dt.name }}
+        v-card-text
+          //v-container(v-for="dt in [dataTable,dataTableLocalDB]")
+          v-simple-table
+            template(v-slot:default)
+              thead
+                tr
+                  th(class="text-left") Key
+                  th(class="text-left") Value
+              tbody
+                tr(
+                  v-for="data in dt.table" 
+                  :key="data.key"
+                )
+                  //v-for="data in dataTable" 
+                  td {{ data.key }}
+                  td {{ data.value }}
     v-container
-      v-simple-table
-        template(v-slot:default)
-          thead
-            tr
-              th(class="text-left") Key
-              th(class="text-left") Value
-          tbody
-            tr(
-              v-for="data in dataTable" 
-              :key="data.key"
-            )
-              td {{ data.key }}
-              td {{ data.value }}
+      //v-card(v-if="!$store.getters.remoteDBIsOnline")
+        v-card-text Remote database is not connected
+        // button to dbconnectiondialog
+      v-card
+        v-card-title(class="headline") Remote database
+        v-card-text(v-if="!$store.getters.remoteDBIsOnline") Remote database is not connected
+        v-card-text(v-else)
+          v-simple-table
+            template(v-slot:default)
+              //caption(class="headline text-left") Caption
+              //thead
+                tr
+                  th(class="text-left") Key
+                  th(class="text-left") Value
+              tbody
+                tr
+                  td DB Name
+                  td {{ rDBInfo.db_name }}
+                tr
+                  td Deleted documents
+                  td {{ rDBInfo.doc_del_count }}
+                tr
+                  td Total documents
+                  td {{ rDBInfo.doc_count }}
+                tr
+                  td DB disk Size
+                  td {{ formatBytes(rDBInfo.disk_size) }}
+                tr
+                  td DB Adapter
+                  td {{ rDBInfo.adapter }}
 </template>
 
 <script>
+import formatMixin from '@/mixins/formatMixin'
+import { mapGetters } from 'vuex'
+
 
 export default {
   name: 'dashboard',
   components: {
   },
+  mixins: [formatMixin],
   data: () => ({
     taskStatuses: ['wait','plan','todo','next','doing'],
     tasksStatuSparklineValues: [],
-    dataTable: []
+    dataTables: {
+      generic: {
+        name: 'Misc',
+        table: []
+      },
+      localDB: {
+        name: 'Local DB',
+        table: []
+      },
+    }
   }),
   computed: {
+    ...mapGetters({
+      rDBInfo: 'remoteDBInfo'
+    }),
+    isNoTasks: function () {
+      return this.tasksStatuSparklineValues.every(item => {return item == 0});
+    },
     taskProgress: function () {
       let j = { color: 'info', buffer: 0, value: 0, visible: true}
       let a = this.$store.getters.getTasksAggregate
@@ -177,18 +237,16 @@ export default {
   created () {
   },
   mounted () {
-    //this.$store.commit('loaderActive');
     this.$store.dispatch('setMessagesUnreadCount');
     this.$store.dispatch('tasksDueAggregation');
     this.fillTasksSparkline();
-    this.dataTable.push(
+    this.dataTables.generic.table.push(
       { key:'Database server URL' ,value:this.$store.getters.urlDBRoot}
     )
-    this.dataTable.push(
+    this.dataTables.generic.table.push(
       { key:'Database name' ,value:this.$store.getters.dbName}
     )
     this.fillDataTable();
-    //this.$store.commit('loaderInactive');
   },
   methods: {
     fillTasksSparkline: async function() {
@@ -198,36 +256,29 @@ export default {
         this.tasksStatuSparklineValues.push( ts[x] )
       }
     },
-    fillDataTable: function() {
-      const url = this.$store.getters.urlDB;
-      fetch(url)
-      .then((response) => response.json())
-      .then((data) => {
-        function formatBytes(bytes, decimals = 2) { //Thanks! => https://stackoverflow.com/questions/15900485/correct-way-to-convert-size-in-bytes-to-kb-mb-gb-in-javascript
-            if (bytes === 0) return '0 Bytes';
-
-            const k = 1024;
-            const dm = decimals < 0 ? 0 : decimals;
-            const sizes = ['Bytes', 'KB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB'];
-
-            const i = Math.floor(Math.log(bytes) / Math.log(k));
-
-            return parseFloat((bytes / Math.pow(k, i)).toFixed(dm)) + ' ' + sizes[i];
+    fillDataTable: async function() {
+      let ldb = this.dataTables.localDB.table;
+        // PouchDB
+        try {
+          const result = await window.db.info();
+          ldb.push(
+            { key:'Local DB Name' ,value: result.db_name}
+          )
+          ldb.push(
+            { key:'PouchDB DB Adapter' ,value: result.adapter}
+          )
+          ldb.push(
+            { key:'Auto Compaction' ,value: result.auto_compaction}
+          )
+          ldb.push(
+            { key:'Update sequence' ,value: result.update_seq}
+          )
+          ldb.push(
+            { key:'Local documents' ,value: result.doc_count}
+          )
+        } catch (err) {
+          console.log('Local database stats generation failed', err);
         }
-
-        this.dataTable.push(
-          { key:'Deleted documents' ,value: data.doc_del_count}
-        )
-        this.dataTable.push(
-          { key:'Total documents' ,value: data.doc_count}
-        )
-        this.dataTable.push(
-          { key:'DB disk Size' ,value: formatBytes(data.disk_size)}
-        )
-      })
-      .catch((error) => {
-        console.error('Error:', error);
-      });
     }
   }
 }

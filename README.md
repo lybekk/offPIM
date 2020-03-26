@@ -1,6 +1,8 @@
 # pimpim
 PIMPIM - A PIM - A Personal information management system
 
+Pimpim is not yet ready for regular use. 
+
 ![Dashboard screenshot](https://lybekk.tech/pimpim/screenshots/dashboard.png)
 
 ## Description
@@ -25,7 +27,7 @@ No backend needed (just a running database).
 
 *Two flavors are currently available:*
 
-1. Electron-app (no http-server needed)
+1. **Electron-app (no http-server needed)**
     * "PIMPIM-Electron" is currently only built and tested on Linux (though it is possible to build for another OS yourself)
     1. Download [this AppImage file](https://github.com/lybekk/pimpim/releases/download/v0.1/pimpim-0.1.0.AppImage)
     2. Make it executable `$ chmod a+x path-to-file/pimpim-0.1.0.AppImage`
@@ -33,7 +35,7 @@ No backend needed (just a running database).
 
 **OR**
 
-2. Static bundle (SPA)
+2. **Static bundle (SPA)**
     * Suitable for placing on a private VPS served by Apache, or any other http-server (I.E. python http.server or Node.js http.createServer())
     1. Download [the latest version](https://github.com/lybekk/pimpim/releases/download/v0.1/pimpim_20200213.zip) and unzip contents in a sub-directory named `pimpim` on any HTTP-server.
 
@@ -85,6 +87,7 @@ Contributions, ideas, suggestions and feedback is welcomed and always appreciate
 ## Credits
 Creators and maintainers of:
 * [CouchDB](https://couchdb.apache.org/)
+* [PouchDB](https://pouchdb.com/)
 * [Vue](https://vuejs.org/)
 * [Vuetify - Vue JS component framework](https://vuetifyjs.com/en/)
 * [Nano - NPM library for CouchDB](https://www.npmjs.com/package/nano)
