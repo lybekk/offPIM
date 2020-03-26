@@ -130,3 +130,9 @@ dist
 
 #Electron-builder output
 /dist_electron
+
+### Jekyll ###
+_site/
+.sass-cache/
+.jekyll-cache/
+.jekyll-metadata
