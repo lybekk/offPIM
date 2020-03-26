@@ -1,3 +1,4 @@
-theme: jekyll-theme-midnight
+theme: jekyll-theme-cayman
 title: pimpim
 description: A PIM. A personal information management system.
+show_downloads: true
