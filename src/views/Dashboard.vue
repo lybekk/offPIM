@@ -237,18 +237,23 @@ export default {
     }
   },
   created () {
-  },
+    },
   mounted () {
-    this.$store.dispatch('setMessagesUnreadCount');
-    this.$store.dispatch('tasksDueAggregation');
-    this.fillTasksSparkline();
-    this.dataTables.generic.table.push(
-      { key:'Database server URL' ,value:this.$store.getters.urlDBRoot}
-    )
-    this.dataTables.generic.table.push(
-      { key:'Database name' ,value:this.$store.getters.dbName}
-    )
-    this.fillDataTable();
+    setTimeout(() => {
+      this.$store.commit('setLeftDrawer', true);
+    }, 200);
+    setTimeout(() => {      
+      this.$store.dispatch('setMessagesUnreadCount');
+      this.$store.dispatch('tasksDueAggregation');
+      this.fillTasksSparkline();
+      this.dataTables.generic.table.push(
+        { key:'Database server URL' ,value:this.$store.getters.urlDBRoot}
+      )
+      this.dataTables.generic.table.push(
+        { key:'Database name' ,value:this.$store.getters.dbName}
+      )
+      this.fillDataTable();
+    }, 600);
   },
   methods: {
     fillTasksSparkline: async function() {

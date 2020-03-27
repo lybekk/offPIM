@@ -29,6 +29,9 @@ export default {
     return u
   },
    */
+  isLeftDrawerOpen: state => {
+    return state.leftDrawer
+  },
   localDBInfo: state => {
     return state.localDBInfo
   },

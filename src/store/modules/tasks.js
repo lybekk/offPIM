@@ -318,7 +318,8 @@ const tasks = {
                     context.commit('setTaskStatuses', aggregate)
                 });
             } catch (err) {
-                context.commit('addAlert', {type:'error',text:err})
+                //context.commit('addAlert', {type:'error',text:err})
+                console.log('Task status count index missing. If this is the first run. This is completely normal: ', err)
             }
 
             //db.query(fun, [options], [callback])

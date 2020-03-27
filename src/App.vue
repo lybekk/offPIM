@@ -35,7 +35,7 @@
         v-tab(@click.stop="drawer = !drawer")
       NavbarActions
       v-btn(
-        href="https://lybekk.tech/pimpim/"
+        href="https://lybekk.github.io/pimpim/"
         target="_blank"
         text
       )
@@ -95,9 +95,17 @@ export default {
     DatabaseConnectionDialog
   },
   data: () => ({
-    drawer: false
+    //drawer: false
   }),
   computed: {
+    drawer: {
+      get() {
+        return this.$store.getters.isLeftDrawerOpen
+      },
+      set(state) {
+        this.$store.commit('setLeftDrawer', state)
+      }
+    },    
     snackbar() {
       return this.$store.state.snackbar
     },
@@ -137,13 +145,15 @@ export default {
         if (!pDoc || !mDoc) {
           this.$router.push('/setup')
         }
+        v.dispatch('setTotals')
+        v.dispatch('setMessagesUnreadCount');
       } catch(err) {
         console.log('Design docs not up to date. Redirecting to setup: ',err)
         this.$router.push('/setup')
       }
 
-      v.dispatch('setTotals')
-      v.dispatch('setMessagesUnreadCount');
+      //v.dispatch('setTotals')
+      //v.dispatch('setMessagesUnreadCount');
 
     },
     /*

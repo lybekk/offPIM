@@ -1,4 +1,9 @@
 export default {
+
+  setLeftDrawer (state, payload) {
+    state.leftDrawer = payload
+  },
+
   setTagList (state, payload) {
     state.tagList = payload.rows
   },

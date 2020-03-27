@@ -22,6 +22,7 @@ Vue.use(Vuex)
 export default new Vuex.Store({
   state: {
     data: [],
+    leftDrawer: false,
     loaderActive: false,
     //database: 'vaulttest',
     //dbBasePath: 'http://localhost:5984/',
