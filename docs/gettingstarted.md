@@ -1,8 +1,11 @@
-# Getting started
+---
+title: Getting started
+---
 
 Getting PIMPIM up and running can be done in several ways.
 
-[[toc]]
+* TOC
+{:toc}
 
 ## Installation
 

@@ -1,6 +1,9 @@
-# Behind the scenes
+---
+title: Behind the scenes
+---
 
-[[toc]]
+* TOC
+{:toc}
 
 ## Document data models
 

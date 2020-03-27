@@ -1,4 +1,6 @@
 theme: jekyll-theme-cayman
 title: pimpim
 description: A PIM. A personal information management system.
+baseurl: "/pimpim" # the subpath of your site, e.g. /blog
+include: ['docs']
 show_downloads: true

@@ -1,4 +1,9 @@
-# Roadmap
+---
+title: Roadmap
+---
+
+* TOC
+{:toc}
 
 ## On the horizon:
 * Better Dashboard (with Chart.js)

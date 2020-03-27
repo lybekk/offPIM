@@ -1,4 +1,9 @@
-# About
+---
+title: About
+---
+
+* TOC
+{:toc}
 
 ## Electron app
 No setup. Download and run.

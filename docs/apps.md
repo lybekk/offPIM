@@ -1,7 +1,11 @@
-# Apps
+---
+title: Apps
+---
+
 Included apps in PIMPIM:
 
-[[toc]]
+* TOC
+{:toc}
 
 ## Dashboard
 Collection of metrics from the other apps
