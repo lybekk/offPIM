@@ -27,15 +27,15 @@ Features:
 
 1. **Desktop-app (Electron)**
     * "PIMPIM-Electron" is currently only built and tested on Linux (though it is possible to build for another OS yourself)
-    1. Download [this AppImage file](https://github.com/lybekk/pimpim/releases/download/v0.1/pimpim-0.1.0.AppImage)
-    2. Make it executable `$ chmod a+x path-to-file/pimpim-0.1.0.AppImage`
-    3. and run! `$ ./path-to-file/pimpim-0.1.0.AppImage`
+    1. Download [this AppImage file](https://lybekk.tech/downloads/pimpim_desktop_linux.AppImage)
+    2. Make it executable `$ chmod a+x path-to-file/pimpim_desktop_linux.AppImage`
+    3. and run! `$ ./path-to-file/pimpim_desktop_linux.AppImage`
 
 **OR**
 
 2. **Self-hosted static bundle (SPA)**
     * Suitable for placing on a private VPS served by Apache, or any other http-server (I.E. python http.server or Node.js http.createServer)
-    1. Download [the latest version](https://github.com/lybekk/pimpim/releases/download/v0.1/pimpim_20200213.zip) and unzip contents in a sub-directory named `pimpim` on any HTTP-server.
+    1. Download [the latest version](https://lybekk.tech/downloads/pimpim_self_hosted.zip) and unzip contents in a sub-directory named `pimpim` on any HTTP-server.
 
 See the [documentation](docs/gettingstarted#installation) for more details and options.
 

@@ -12,13 +12,13 @@ Getting PIMPIM up and running can be done in several ways.
 ### The easy way - Desktop app
 
 * "PIMPIM-Electron" is currently only built and tested on Linux (though it is possible to build for another OS yourself)
-1. Download [this AppImage file](https://github.com/lybekk/pimpim/releases/download/v0.1/pimpim-0.1.0.AppImage)
-2. Make it executable `$ chmod a+x path-to-file/pimpim-0.1.0.AppImage`
-3. and run! `$ ./path-to-file/pimpim-0.1.0.AppImage`
+1. Download [this AppImage file](https://lybekk.tech/downloads/pimpim_desktop_linux.AppImage)
+2. Make it executable `$ chmod a+x path-to-file/pimpim_desktop_linux.AppImage`
+3. and run! `$ ./path-to-file/pimpim_desktop_linux.AppImage`
 
 ### The still-easy-but-requires-a-few-more-steps way (for techies)
 
-1. [Download self-hosted PIMPIM](https://github.com/lybekk/pimpim/releases/download/v0.1/pimpim_20200213.zip)
+1. [Download self-hosted PIMPIM](https://lybekk.tech/downloads/pimpim_self_hosted.zip)
 2. Copy contents of the zip-file to an HTTP-server of your choosing. Preferably in a sub-directory named /pimpim. If another sub-directory is wanted, see instructions below.
 
 ### The hard way - Build it yourself
