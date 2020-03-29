@@ -1,6 +1,6 @@
 pimpim.mangoIndexes = {
   "_id": "_design/pimpim_mango_indexes",
-  "version": 20200123,
+  "version": 20200128,
   "language": "query",
   "views": {
     "created-json-index": {
@@ -71,15 +71,13 @@ pimpim.mangoIndexes = {
         }
       }
     },
-    "productivityOpenStatus-json-index": {
+    "productivityPriority-json-index": {
       "map": {
         "fields": {
-          "realm": "asc",
-          "type": "asc",
-          "status": "asc"
+          "productivity": "asc",
+          "priority": "asc"
         },
         "partial_filter_selector": {
-          "realm": "productivity",
           "$nor": [
             {
               "status": "cancelled"
@@ -94,9 +92,8 @@ pimpim.mangoIndexes = {
       "options": {
         "def": {
           "fields": [
-            "realm",
-            "type",
-            "status"
+            "productivity",
+            "priority"
           ]
         }
       }

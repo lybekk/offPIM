@@ -32,9 +32,15 @@ v-expansion-panel
                 v-col
                   v-card
                     v-card-title
-                      p Current project
+                      p Set project
                   v-card-text
+                    p Current:
                     p(v-text="projectName")
+                v-col
+                  v-btn(
+                    block
+                    @click="setTaskField(null)"
+                  ) Clear project
                 v-col
                   v-list
                     v-subheader Move task to project:
@@ -91,14 +97,13 @@ export default {
       }
     },
     setTaskField: async function (project) {
-      console.log('Fix this!', project)
-      
+
       await this.setFieldGeneric({
         _id: this.task._id,
         field: 'project',
         value: project
       });
-      
+
       this.dialog = false;
       this.$emit('set-doc')
     },

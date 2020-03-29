@@ -14,6 +14,8 @@
             span(
                 v-if="!item.children"
                 @click="showProject(item.id)"
+                :class="item.archived ? 'projectArchived' : ''"
+                :title="projectTitle(item)"
             ) {{ item.name }}
                 //- :to="`/tasks/project/${item.id}`"
             span(v-else) {{ item.name }}
@@ -62,6 +64,13 @@ export default {
     }
   },
   methods: {
+    projectTitle(item) {
+      if (item.archived) {
+        return `(Archived) ${item.name}`
+      } else {
+        return item.name
+      }
+    },
     showProject(id) {
       this.$router.push(`/tasks/project/${id}`);
     },
@@ -91,7 +100,8 @@ export default {
           result.docs.forEach(doc => {
             let obj = {
               id: doc._id,
-              name: doc.project
+              name: doc.project,
+              archived: doc.archived
             };
             item.children.push(obj);
           });
@@ -103,3 +113,9 @@ export default {
   }
 };
 </script>
+
+<style scoped>
+.projectArchived {
+  opacity: 0.4;
+}
+</style>

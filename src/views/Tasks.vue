@@ -33,7 +33,7 @@ v-content
               v-icon mdi-calendar-arrow-right
             v-list-item-title Postponed > 5x
         v-divider(inset)
-        v-list-group(no-action)
+        //v-list-group(no-action)
           template(v-slot:activator)
             v-list-item-title(title="Open projects") Projects
           v-list-item(

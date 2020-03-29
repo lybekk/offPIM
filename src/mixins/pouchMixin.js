@@ -108,5 +108,27 @@ export default {
             this.putDoc(doc)
         },
 
+        getMango: async function (mango) {
+            // Future feature: if using remote instead of local db (vuex state?), switch to window.remoteDB
+            try {
+                const data = await window.db.find(mango);
+                this.$store.commit('loaderInactive');
+
+                // debugging
+                window.db.explain(mango)
+                  .then(function (explained) {
+                      console.log('Mango query explained: ',explained)
+                    // detailed explained info can be viewed
+                  });
+                  
+
+                return data
+            } catch (error) {
+                //this.$store.commit('addAlert', {type:'error',text:error});
+                this.$store.commit("showSnackbar", { text: error });
+                console.log(error);
+            }
+        },
+
     }
 };
