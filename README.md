@@ -14,12 +14,26 @@ Features:
 * Apps
     * Task management
     * Notes
-    * Journalling/logging 
+    * Journalling/logging
     * Messaging (Used for general purpose information between devices and such, or whatever you feel like)
     * Personal Finances (Under development)
     * Inventory (Under development)
 * Themes
 * Open source. No proprietary technologies. No external requests. No tracking.
+
+## <a id="downloads"></a>Download
+
+<div class="card">
+    <a href="https://lybekk.tech/downloads/pimpim_desktop_linux.AppImage" class="btn">
+        <img src="assets/img/logo_linux.png" alt="Linux" width="32">
+        Linux
+    </a>
+    <a href="https://lybekk.tech/downloads/pimpim_self_hosted.zip" class="btn">
+        <img src="assets/img/logo_self_hosted.png" alt="Self-hosted" width="32">
+        Self-hosted
+    </a>
+
+</div>
 
 ## Installation
 
@@ -27,7 +41,7 @@ Features:
 
 1. **Desktop-app (Electron)**
     * "PIMPIM-Electron" is currently only built and tested on Linux (though it is possible to build for another OS yourself)
-    1. Download [this AppImage file](https://lybekk.tech/downloads/pimpim_desktop_linux.AppImage)
+    1. [Download the app for your operating system](#downloads) (currently Linux only)
     2. Make it executable `$ chmod a+x path-to-file/pimpim_desktop_linux.AppImage`
     3. and run! `$ ./path-to-file/pimpim_desktop_linux.AppImage`
 
@@ -35,7 +49,7 @@ Features:
 
 2. **Self-hosted static bundle (SPA)**
     * Suitable for placing on a private VPS served by Apache, or any other http-server (I.E. python http.server or Node.js http.createServer)
-    1. Download [the latest version](https://lybekk.tech/downloads/pimpim_self_hosted.zip) and unzip contents in a sub-directory named `pimpim` on any HTTP-server.
+    1. [Download](#downloads) and unzip contents in a sub-directory named `pimpim` on any HTTP-server.
 
 See the [documentation](docs/gettingstarted#installation) for more details and options.
 
