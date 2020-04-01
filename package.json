@@ -26,6 +26,7 @@
   },
   "main": "background.js",
   "dependencies": {
+    "chart.js": "^2.9.3",
     "core-js": "^3.6.4",
     "debug": "^4.1.1",
     "nano": "^8.1.0",
@@ -36,6 +37,7 @@
     "pouchdb-find": "^7.2.1",
     "pouchdb-live-find": "^0.4.0",
     "vue": "^2.6.10",
+    "vue-chartjs": "^3.5.0",
     "vue-router": "^3.1.5",
     "vuetify": "^2.2.6",
     "vuex": "^3.1.2"

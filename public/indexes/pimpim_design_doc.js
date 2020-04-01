@@ -7,7 +7,7 @@ var pimpimSettings = {
 
 window.pimpim.pimpimDesignDoc = {
   "_id": "_design/pimpim",
-  "version": 20200328,
+  "version": 20200330,
   "views": {
     "messages-tag-count": {
       "reduce": "_count",
@@ -19,7 +19,7 @@ window.pimpim.pimpimDesignDoc = {
     },
     "note-tag-count": {
       "reduce": "_count",
-      "map": "function (doc) {\n  if (doc.productivity && doc.type == \"note\" && doc.archived != true) {\n    //emit(doc.tags, 1);\n    function emitTag(tag) {\n        emit(tag);\n        //emit(tag, 1);\n        //emit(tag, tag);\n    }\n    //doc.tags && doc.tags.forEach(emitTag);\n    doc.tags.forEach(emitTag);\n    if (doc.tags.length == 0) {\n      emit(\"No tag\");\n      //emit(\"No tag\", 1);\n    }\n  }\n}"
+      "map": "function (doc) {\n  //if (doc.productivity && doc.type == \"note\" && doc.archived != true) {\n  if (doc.productivity && doc.type == \"note\") {\n    //emit(doc.tags, 1);\n    function emitTag(tag) {\n        emit(tag);\n        //emit(tag, 1);\n        //emit(tag, tag);\n    }\n    //doc.tags && doc.tags.forEach(emitTag);\n    doc.tags.forEach(emitTag);\n    if (doc.tags.length == 0) {\n      emit(\"No tag\");\n      //emit(\"No tag\", 1);\n    }\n  }\n}"
     },
     "task-status-count": {
       "reduce": "_count",
@@ -56,6 +56,10 @@ window.pimpim.pimpimDesignDoc = {
     "tasks-due": {
       "reduce": "_count",
       "map": "function (doc) {\n  if (doc.productivity \n      && doc.due \n      && doc.type === \"task\" \n      && doc.status != 'done' \n      && doc.status != 'cancelled') {\n    emit(doc.due);\n  }\n}"
+    },
+    "tasks-done": {
+      "reduce": "_count",
+      "map": "function (doc) {\n  if (doc.productivity \n      && doc.type === \"task\" \n      && doc.status === 'done') {\n    emit(doc.end);\n  }\n}"
     }
   },
   "language": "javascript"

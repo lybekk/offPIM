@@ -1,11 +1,11 @@
 const tasks = {
     state: {
-        //data: [],
         tasksAggregate: {
             today:0,
             overdue:0,
             tomorrow:0,
-            doneToday:0
+            doneToday:0,
+            initiated: false
         },
         statusColors: {
             cancelled:"error",
@@ -32,7 +32,6 @@ const tasks = {
             4:0
         },
         postponed: [],
-        //tagsList: [],
         openProjects: []
     },
     mutations: {
@@ -111,25 +110,12 @@ const tasks = {
         setTaskPriorities (state, payload) {
             state.taskPriorities[payload.key] = payload.value;
         },
-        /*
-        addTask (state, payload) {
-            state.data.push(payload)
-        },
-        addTasks (state, payload) {
-            state.data = payload.docs
-        },
-        */
         addPostponed (state, payload) {
             state.postponed.push(payload)
         },
         setTasksAggregate (state, payload) {
             state.tasksAggregate[payload.key] = payload.value;
         },
-        /*
-        flushTasks (state) {
-            state.data = []
-        },
-        */
         flushOpenProjects (state) {
             state.openProjects = []
         },
@@ -140,20 +126,21 @@ const tasks = {
     },
     actions: {
         tasksDueAggregation: async function (context) {
-            let mango = { "selector": {
-                    "realm": "productivity",
-                    "type": "task",
-                    "$nor": [
-                        {"status": "cancelled"},
-                        {"status": "done"},
-                        {"due": null}
+            /*
+            let mango = { selector: {
+                productivity: true,
+                    type: "task",
+                    $nor: [
+                        {status: "cancelled"},
+                        {status: "done"},
+                        {due: null}
                     ],
                 },
-                "limit": 1000,
-                "fields": ["due"]
-                //"use_index": "pimpim_mango_indexes"
+                limit: 1000,
+                fields: ["due"],
+                use_index: "pimpim_mango_indexes"
             };
-            /*  Old code - for direct CouchDB CRUD
+                Old code - for direct CouchDB CRUD
                 let url = context.getters.urlMango;
                 let data = await context.dispatch('postData', {url:url, data:mango} );
             */
@@ -161,7 +148,6 @@ const tasks = {
                 today:0,
                 tomorrow:0,
                 overdue:0
-                //doneToday:0
             }
 
             let today = new Date();
@@ -201,8 +187,35 @@ const tasks = {
             */
 
             try {
-                let data = await window.db.find(mango);
-                data.docs.forEach(doc => {
+                let options = {
+                    //startkey: startKey,
+                    //endkey: endKey,
+                    limit: 400, // consider controlling this value with vuex
+                    //reduce: true,
+                    group: true,
+                    include_docs: false
+                };
+                let data = await window.db.query('pimpim/tasks-due', options);
+                //let data = await window.db.find(mango);
+                console.log('Fix this. Tasks aggregation DUE test: ',data);
+                data.rows.forEach(doc => {
+                    if (doc.key > todayDate && doc.key < dayAfterTomorrowDate) {
+                        //aggregate.tomorrow++
+                        aggregate.tomorrow += doc.value
+                    }
+                    //if (doc.key < tomorrowDate && doc.key ) {
+                    if (doc.key.slice(0,10) == todayDate ) {
+                        //aggregate.today++
+                        //slice(0,10)
+                        aggregate.today += doc.value
+                    }
+                    if (doc.key < todayDate) {
+                        //aggregate.overdue++
+                        aggregate.overdue += doc.value
+                    }
+                });
+                /*
+                data.rows.forEach(doc => {
                     if (doc.due > todayDate && doc.due < dayAfterTomorrowDate) {
                         aggregate.tomorrow++
                     }
@@ -213,6 +226,7 @@ const tasks = {
                         aggregate.overdue++
                     }
                 });
+                */
                 context.commit('setTasksAggregate', { key: 'today', value: aggregate.today});
                 context.commit('setTasksAggregate', { key: 'tomorrow', value: aggregate.tomorrow});
                 context.commit('setTasksAggregate', { key: 'overdue', value: aggregate.overdue});
@@ -221,43 +235,53 @@ const tasks = {
             }
 
             // Prepares new mango query for tasks done today stats
+            /*
             mango.selector["$nor"] = [
                 {"status": "cancelled"},
                 {"due": null}
             ]
             mango.selector.status = "done"
             mango.selector.end = {
-                "$gt": yesterdayDate,
-                "$lt": tomorrowDate
+                $gt: yesterdayDate,
+                $lt: tomorrowDate
             }
             mango.fields = ["status"]
+            */
 
             //let dataDoneToday = await context.dispatch('postData', {url:url, data:mango} );
 
             try {
-                let data = await window.db.find(mango);
-                console.log('Tasks aggregation tasks done today test: ',data) //dataDoneToday
-                context.commit('setTasksAggregate', { key: 'doneToday', value: data.docs.length});
+                let options = {
+                    startkey: yesterdayDate,
+                    endkey: tomorrowDate,
+                    limit: 400, // consider controlling this value with vuex
+                    reduce: false,
+                    include_docs: false
+                };
+                let data = await window.db.query('pimpim/tasks-done', options);
+                //let data = await window.db.find(mango);
+                console.log('Fix this. Tasks aggregation tasks done today test: ',data) //dataDoneToday
+                //context.commit('setTasksAggregate', { key: 'doneToday', value: data.docs.length});
+                context.commit('setTasksAggregate', { key: 'doneToday', value: data.rows.length});
+                context.commit('setTasksAggregate', { key: 'initiated', value: true });
             } catch (err) {
                 context.commit('addAlert', {type:'error',text:err})
             }
-
-
-
+            return true
         },
         //async populateOpenProjects (context) {
         populateOpenProjects (context) {
             //let url = context.getters.urlMango;
             this.commit('flushOpenProjects');
-            let mango = { "selector": {
-                    "realm": "productivity",
-                    "type": "project",
-                    "$nor": [
-                        {"status": "cancelled"},
-                        {"status": "done"}
+            let mango = { selector: {
+                productivity: true,
+                    type: "project",
+                    $nor: [
+                        { status: "cancelled"},
+                        { status: "done"}
                     ]
                     },
-                "limit": 100
+                limit: 100
                 /*
                 "sort": [ 
                     { "project": "asc" }
@@ -360,11 +384,11 @@ const tasks = {
             //let url = context.getters.urlMango;
             //this.commit('flushTasks');
             context.commit('toggleLoader');
-            let mango = { "selector": {
-                        "realm": "productivity",
-                        "type": "task",
+            let mango = { selector: {
+                productivity: true,
+                        type: "task",
                         },
-                    "limit": 50
+                    limit: 50
                     //"use_index": "pimpim_mango_indexes"
                     /*
                     "sort": [

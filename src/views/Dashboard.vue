@@ -9,7 +9,7 @@ v-content
             tile
           )
             v-list(rounded)
-              v-subheader Status report
+              v-subheader(class="headline font-weight-light") Status report
                 //- Morning/evening / Key figures
               v-list-item-group(color="primary")
                 v-list-item(
@@ -35,21 +35,51 @@ v-content
       v-col
         v-card
           v-card-title Tasks
-          v-card-text(
+          //v-card-text(
             v-if="isNoTasks"
-          ) No unfinished tasks
-          v-card-text(v-else)
+            ) No unfinished tasks
+          v-card-text
             v-container(fluid)
               v-row
+                v-col(cols="12")
+                  div
+                    p(v-if="!this.$store.getters.getTasksAggregate.initiated") Retrieving aggregates
+                    //-p(v-if="!taskProgress.visible") Retrieving aggregates
+                    p(
+                      v-if="this.$store.getters.getTasksAggregate.doneToday != 0"
+                    ) Tasks done today: 
+                      span(
+                        v-text="this.$store.getters.getTasksAggregate.doneToday"
+                        class="success--text"
+                      )
+                    p(
+                      v-if="this.$store.getters.getTasksAggregate.initiated && taskProgress.visible"
+                    ) No tasks done today so far
+                    v-progress-linear(
+                      v-if="this.$store.getters.getTasksAggregate.initiated && taskProgress.visible"
+                      :color="taskProgress.color"
+                      :buffer-value="taskProgress.buffer"
+                      :value="taskProgress.value"
+                      stream
+                    )
+                      //-:indeterminate="taskProgress.visible"
+              v-row
                 v-col(
-                  cols="12"
-                  sm="6"
+                  cols="3"
+                  sm="3"
                 )
+                  //sm="6"
                   v-skeleton-loader(
-                    :loading="sparklineLoading"
+                    :loading="!this.$store.getters.getTasksAggregate.initiated"
                     transition="scale-transition"
                     type="image"
                   )
+                    chart-task-statuses
+                  //v-skeleton-loader(
+                    :loading="sparklineLoading"
+                    transition="scale-transition"
+                    type="image"
+                    )
                     v-sheet(elevation="6")
                       v-sparkline(
                         :value="tasksStatuSparklineValues"
@@ -64,104 +94,101 @@ v-content
                         show-labels
                       )
                         //- fix gradient to align with themes
-                        template(v-slot:label="item" color="info") {{ taskStatuses[item.index] }} {{ item.value }}
+                        template(v-slot:label="item" color="info") { taskStatuses[item.index] }} { item.value }}
                 v-col(
-                  cols="12"
-                  sm="6"
-                )
-                  div
-                    p(v-if="!taskProgress.visible") Retrieving aggregates
-                    p(
-                      v-if="this.$store.getters.getTasksAggregate.doneToday != 0"
-                    ) Tasks done today: 
-                      span(
-                        v-text="this.$store.getters.getTasksAggregate.doneToday"
-                        class="success--text"
-                      )
-                    p(
-                      v-else
-                    ) No tasks done today so far
-                    v-progress-linear(
-                      :color="taskProgress.color"
-                      :buffer-value="taskProgress.buffer"
-                      :value="taskProgress.value"
-                      stream
-                    )
-                      //-:indeterminate="taskProgress.visible"
+                  cols="3"
+                  sm="3"
+                  )
+                  chart-tasks-today
   v-footer 
-    v-container(
-      v-for="dt in dataTables"
-      :key="dt.name"
-    )
-      v-card
-        v-card-title(class="headline") {{ dt.name }}
-        v-card-text
-          //v-container(v-for="dt in [dataTable,dataTableLocalDB]")
-          v-simple-table
-            template(v-slot:default)
-              thead
-                tr
-                  th(class="text-left") Key
-                  th(class="text-left") Value
-              tbody
-                tr(
-                  v-for="data in dt.table" 
-                  :key="data.key"
-                )
-                  //v-for="data in dataTable" 
-                  td {{ data.key }}
-                  td {{ data.value }}
     v-container
-      //v-card(v-if="!$store.getters.remoteDBIsOnline")
-        v-card-text Remote database is not connected
-        // button to dbconnectiondialog
-      v-card
-        v-card-title(class="headline") Remote database
-        v-card-text(v-if="!$store.getters.remoteDBIsOnline") Remote database is not connected
-        v-card-text(v-else)
-          v-simple-table
-            template(v-slot:default)
-              //caption(class="headline text-left") Caption
-              //thead
-                tr
-                  th(class="text-left") Key
-                  th(class="text-left") Value
-              tbody
-                tr
-                  td DB Name
-                  td {{ rDBInfo.db_name }}
-                tr
-                  td Deleted documents
-                  td {{ rDBInfo.doc_del_count }}
-                tr
-                  td Total documents
-                  td {{ rDBInfo.doc_count }}
-                tr
-                  td DB disk Size
-                  td {{ formatBytes(rDBInfo.disk_size) }}
-                tr
-                  td DB Adapter
-                  td {{ rDBInfo.adapter }}
+      v-row
+        v-col
+          v-container(
+            v-for="dt in dataTables"
+            :key="dt.name"
+          )
+            v-card
+              v-card-title(class="headline") {{ dt.name }}
+              v-card-text
+                //v-container(v-for="dt in [dataTable,dataTableLocalDB]")
+                v-simple-table
+                  template(v-slot:default)
+                    thead
+                      tr
+                        th(class="text-left") Key
+                        th(class="text-left") Value
+                    tbody
+                      tr(
+                        v-for="data in dt.table" 
+                        :key="data.key"
+                      )
+                        //v-for="data in dataTable" 
+                        td {{ data.key }}
+                        td {{ data.value }}
+        v-col
+          v-container
+            //v-card(v-if="!$store.getters.remoteDBIsOnline")
+              v-card-text Remote database is not connected
+              // button to dbconnectiondialog
+            v-card
+              v-card-title(class="headline") Remote database
+              v-card-text(v-if="!$store.getters.remoteDBIsOnline") Remote database is not connected
+              v-card-text(v-else)
+                v-simple-table
+                  template(v-slot:default)
+                    //caption(class="headline text-left") Caption
+                    //thead
+                      tr
+                        th(class="text-left") Key
+                        th(class="text-left") Value
+                    tbody
+                      tr
+                        td DB Name
+                        td {{ rDBInfo.db_name }}
+                      tr
+                        td DB Name
+                        td {{ rDBInfo.host }}
+                      tr
+                        td Deleted documents
+                        td {{ rDBInfo.doc_del_count }}
+                      tr
+                        td Total documents
+                        td {{ rDBInfo.doc_count }}
+                      tr
+                        td DB disk Size
+                        td {{ formatBytes(rDBInfo.disk_size) }}
+                      tr
+                        td DB disk Size
+                        td {{ formatBytes(rDBInfo.data_size) }}
+                      tr
+                        td DB Adapter
+                        td {{ rDBInfo.adapter }}
 </template>
 
 <script>
+import ChartTaskStatuses from "@/components/charts/ChartTaskStatuses.vue"
+import ChartTasksToday from "@/components/charts/ChartTasksToday.vue"
 import formatMixin from '@/mixins/formatMixin'
 import { mapGetters } from 'vuex'
-
 
 export default {
   name: 'dashboard',
   components: {
+    ChartTaskStatuses,
+    ChartTasksToday
   },
   mixins: [formatMixin],
   data: () => ({
-    taskStatuses: ['wait','plan','todo','next','doing'],
-    tasksStatuSparklineValues: [],
+    //taskStatuses: ['wait','plan','todo','next','doing'],
+    //tasksStatuSparklineValues: [],
     dataTables: {
+      /* no use for this at the moment
       generic: {
         name: 'Misc',
         table: []
       },
+      */
       localDB: {
         name: 'Local DB',
         table: []
@@ -172,9 +199,11 @@ export default {
     ...mapGetters({
       rDBInfo: 'remoteDBInfo'
     }),
+    /*
     isNoTasks: function () {
       return this.tasksStatuSparklineValues.every(item => {return item == 0});
     },
+    */
     taskProgress: function () {
       let j = { color: 'info', buffer: 0, value: 0, visible: true}
       let a = this.$store.getters.getTasksAggregate
@@ -189,14 +218,12 @@ export default {
         j.color = 'success'
         return j
       }
-
       let s = d + t
       let pct = Math.floor( d / s * 100 )
       j.value = pct
       if (pct <= 50) {
         j.color = 'warning'
       }
-
       return j
     },
     reportMessages: function () {
@@ -243,19 +270,22 @@ export default {
       this.$store.commit('setLeftDrawer', true);
     }, 200);
     setTimeout(() => {      
+      //this.$store.dispatch('tasksDueAggregation');
       this.$store.dispatch('setMessagesUnreadCount');
-      this.$store.dispatch('tasksDueAggregation');
-      this.fillTasksSparkline();
+      //this.fillTasksSparkline();
+      /* no use for this at the moment. May be used in the future
       this.dataTables.generic.table.push(
         { key:'Database server URL' ,value:this.$store.getters.urlDBRoot}
       )
       this.dataTables.generic.table.push(
         { key:'Database name' ,value:this.$store.getters.dbName}
       )
+      */
       this.fillDataTable();
     }, 600);
   },
   methods: {
+    /*
     fillTasksSparkline: async function() {
       await this.$store.dispatch('getTaskStatuses');
       const ts = this.$store.getters.getTaskStatuses;
@@ -263,6 +293,7 @@ export default {
         this.tasksStatuSparklineValues.push( ts[x] )
       }
     },
+    */
     fillDataTable: async function() {
       let ldb = this.dataTables.localDB.table;
         // PouchDB
