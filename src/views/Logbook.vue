@@ -6,6 +6,23 @@ v-content
       app
       right
     )
+      v-list
+        v-list-item
+          v-list-item-content
+            v-list-item-title(class="title") Logbook
+            v-list-item-subtitle Total: 
+              span(v-text="totalLogs")
+        v-divider
+        logbook-newlogform
+        v-list(
+          dense
+          nav
+        )
+          v-list-item(link)
+            v-list-item-icon
+              v-icon mdi-clock
+            v-list-item-content(@click="getLastLogEntriesByCount(30)")
+              v-list-item-title 30 last entries
       logbook-chronology(
         @add-logs="addLogs"
       )
@@ -20,7 +37,7 @@ v-content
             //v-navigation-drawer(
               expand-on-hover
               )
-            v-list
+            //v-list
               v-list-item
                 v-list-item-content
                   v-list-item-title(class="title") Logbook
@@ -140,7 +157,7 @@ export default {
       let now = new Date().toISOString().slice(0, 16);
       let mango = {
         selector: {
-          realm: "logs",
+          logbook: true,
           created: { $lte: now }
         },
         limit: count,

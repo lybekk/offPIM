@@ -22,8 +22,9 @@ export default {
                 }
                 */
             } catch (error) {
-                console.log(error);
-                this.$store.commit('addAlert', {type:'error',text:error})
+                //console.log(error);
+                //this.$store.commit('addAlert', {type:'error',text:error})
+                this.errorHandler( {type:'error',text: error } )
             }    
         },
 
@@ -32,7 +33,7 @@ export default {
                 const result = await window.db.get(id);
                 return result
             } catch (err) {
-                console.error(err);
+                this.errorHandler( {type:'error',text: err } )
             }
         },
 
@@ -49,7 +50,8 @@ export default {
               this.$store.commit('showSnackbar', { text:txt, color:'success' })
               return response
             } else {
-                this.$store.commit('addAlert', {type:'error',text:'Document update failed' + response })
+                this.errorHandler( {type:'error',text:'Document update failed' + response} )
+                //this.$store.commit('addAlert', {type:'error',text:'Document update failed' + response })
             }
         },
 
@@ -75,7 +77,8 @@ export default {
                 doc[payload.field] = currentDate.toISOString();
                 this.putDoc(doc)
             } catch (error) {
-                this.$store.commit('addAlert', {type:'error',text:error})
+                this.errorHandler( {type:'error',text:error} )
+                //this.$store.commit('addAlert', {type:'error',text:error})
             }
 
         },
@@ -86,7 +89,8 @@ export default {
                 doc[payload.field] = null;
                 this.putDoc(doc)
             } catch (error) {
-                this.$store.commit('addAlert', {type:'error',text:error})
+                this.errorHandler( {type:'error',text:error} )
+                //this.$store.commit('addAlert', {type:'error',text:error})
             }
         },
 
@@ -110,6 +114,7 @@ export default {
 
         getMango: async function (mango) {
             // Future feature: if using remote instead of local db (vuex state?), switch to window.remoteDB
+            this.$store.commit('loaderActive');
             try {
                 const data = await window.db.find(mango);
                 this.$store.commit('loaderInactive');
@@ -120,14 +125,47 @@ export default {
                       console.log('Mango query explained: ',explained)
                     // detailed explained info can be viewed
                   });
-                  
-
                 return data
             } catch (error) {
-                //this.$store.commit('addAlert', {type:'error',text:error});
-                this.$store.commit("showSnackbar", { text: error });
-                console.log(error);
+                this.errorHandler(error)
             }
+        },
+
+        getQuery: async function(view, startKey, endKey, includeDocs = false) {
+            let context = this;
+            context.$store.commit('loaderActive');
+            let options = {
+                startkey: startKey,
+                endkey: endKey,
+                limit: 50, // consider controlling this value with vuex
+                reduce: false,
+                include_docs: false
+            };
+            if (includeDocs) { options.include_docs = true}
+
+            let result = [];
+            try {
+                let data = await window.db.query(view, options);
+                for await (let row of data.rows) {
+                    if (includeDocs) {
+                        result.push( row.doc )
+                    } else {
+                        result.push({ _id: row.id })
+                    }
+                }
+                context.$store.commit("loaderInactive");
+                return result
+            } catch(error) {
+                this.errorHandler(error)
+            }
+        },
+
+        errorHandler: function(obj) {
+            console.log(obj);
+            if (!obj.type) {
+                this.$store.commit("showSnackbar", { type:'error', text: obj });
+            }
+            this.$store.commit("showSnackbar", { text: obj });
         },
 
     }

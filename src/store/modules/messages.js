@@ -32,15 +32,15 @@ const messages = {
     actions: {
         setMessagesUnreadCount: async function (context) {
             let mango = {
-                "selector": {
-                    "realm": "messages",
-                    "$or": [
-                        { "read": false },
-                        { "read": { "$exists": false } }
+                selector: {
+                    message: true,                    
+                    $or: [
+                        { read: false },
+                        { read: { "$exists": false } }
                     ]
                 },
-                "limit": 25,
-                "fields": [
+                limit: 25,
+                fields: [
                     "_id"
                 ]
                 //"use_index": "pimpim_mango_indexes"

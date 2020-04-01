@@ -53,13 +53,13 @@ export default {
             q = payload.id.slice(0,10);
         }
         let mango = {
-            "selector": {
-                "realm": "logs",
-                "start": { "$regex": `^${q}` }
+            selector: {
+                logbook: true,
+                start: { $regex: `^${q}` }
             },
-            "limit": 100,
-            "sort": [
-                { "start": "asc" }
+            limit: 100,
+            sort: [
+                { start: "asc" }
             ]
         };
 

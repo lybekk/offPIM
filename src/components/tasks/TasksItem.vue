@@ -30,7 +30,7 @@ div
         v-overlay(
           v-if="doc.archived"
           absolute
-          color="success lighten-2"
+          color="info lighten-2"
           z-index="3"
         )
           v-btn(text) Archived

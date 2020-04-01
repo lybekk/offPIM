@@ -113,13 +113,14 @@ export default {
       if (!item.children) {
         this.$store.commit('loaderActive'); 
         let mango = {
-            "selector": {
-                "realm": "logs",
-                "tags": {
-                    "$in": [tag]
+            selector: {
+                //realm: "logs",
+                logbook: true,
+                tags: {
+                    $in: [tag]
                 }
             },
-            "limit": 100
+            limit: 100
         };
         if (tag == 'inbox' || tag == 'untagged') { mango.selector.tags = [] }
 

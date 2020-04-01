@@ -10,10 +10,17 @@
         dense
       )
         notes-newnoteform
+        v-list-item(
+          link 
+          @click="getNotesByTag()"
+        )
+          v-list-item-icon
+            v-icon mdi-note-text
+          v-list-item-title Untagged
         v-list-item(link @click="getLastEntriesByCount(30)")
-            v-list-item-icon
-              v-icon mdi-account-multiple
-            v-list-item-title 30 latest notes
+          v-list-item-icon
+            v-icon mdi-clock
+          v-list-item-title 30 latest notes
       v-divider
       v-list(
         nav
@@ -139,7 +146,8 @@ import NotesNewnoteform from '@/components/notes/NotesNewnoteform.vue'
     },
     mounted () {
       setTimeout(()=>{ this.drawer = true; }, 300);
-      this.getLastEntriesByCount(30);
+      //this.getLastEntriesByCount(30);
+      this.getNotesByTag()
       this.$store.dispatch('populateTagsList');
     },
     methods: {
@@ -169,40 +177,42 @@ import NotesNewnoteform from '@/components/notes/NotesNewnoteform.vue'
         this.selectedNote = await window.db.get(id);
       },
       getNotesByTag: async function (tag="No tag") {
-        let vstore = this.$store;
+        //let vstore = this.$store;
         //vstore.commit('flushNotes')
         //vstore.commit('toggleLoader');
-        vstore.commit('loaderActive');
+        //vstore.commit('loaderActive');
+        /*
         let mango = {
-            "selector": {
-                "realm": "productivity",
-                "type":"note",
-                "tags": {
-                    "$in": [tag]
+            selector: {
+                productivity: true,
+                type:"note",
+                tags: {
+                    $in: [tag]
                 },
-                "$or": [
-                    { "archived": { "$exists":false } },
-                    { "archived": false }
+                $or: [
+                    { archived: { "$exists":false } },
+                    { archived: false }
                 ]
             },
-            "limit": 25,
-            //"use_index": "pimpim_mango_indexes"
+            limit: 25,
+            use_index: "pimpim_mango_indexes"
             //"fields": ["_id"]
             //"sort": [
             //    { "created": "desc" }
             //]
         };
+        */
+        /*
         if (tag == "No tag") {
             mango.selector.tags = []
         }
+        */
 
         try {
-          let data = await window.db.find(mango);
-          this.noteList = data.docs;
-          //vstore.commit('addNotes', data)
-          vstore.commit('loaderInactive');
+          let data = await this.getQuery('pimpim/note-tag-count', tag, tag, true);
+          this.noteList = data;
         } catch (error) {
-          vstore.commit('showSnackbar', { text:error });
+          this.errorHandler(error)
         }
 
           /*
@@ -241,7 +251,7 @@ import NotesNewnoteform from '@/components/notes/NotesNewnoteform.vue'
         let now = new Date().toISOString().slice(0, 16);
         let mango = {
           selector: {
-              realm: "productivity",
+              productivity: true,
               type:"note",
               created: { "$lte": now },
               $or: [
@@ -252,13 +262,13 @@ import NotesNewnoteform from '@/components/notes/NotesNewnoteform.vue'
           limit: count,
           sort: [
               { created: "desc" }
-          ]
-          //use_index: "pimpim_mango_indexes"
+          ],
+          use_index: "pimpim_mango_indexes"
           //"fields": ["_id"]
       };
 
       try {
-        let data = await window.db.find(mango);
+        let data = await this.getMango(mango);
         this.noteList = data.docs;
         //let data2 = await window.db.explain(mango);
         //console.log(data2)
@@ -281,7 +291,6 @@ import NotesNewnoteform from '@/components/notes/NotesNewnoteform.vue'
         //context.commit('setTasksAggregate', { key: 'doneToday', value: data.docs.length});
         //let txt = `Fetched ${data.docs.length} notes`;
         //vstore.commit('showSnackbar', { text:txt });
-        vstore.commit('loaderInactive');
       } catch (error) {
         vstore.commit('showSnackbar', { text:error });
         //context.commit('addAlert', {type:'error',text:err})

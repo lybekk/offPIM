@@ -54,22 +54,22 @@ export default {
       this.searchLoader = true;
       const s = this.searchValue;
       let mango = {
-        "selector": {
-            "realm": "logs",
-            "$or": [
+        selector: {
+            logbook: true,
+            $or: [
               {
-                  "title": {
-                    "$regex": RegExp(s, "i")
+                  title: {
+                    $regex: RegExp(s, "i")
                   }
               },
               {
-                  "description": {
-                    "$regex": RegExp(s, "i")
+                  description: {
+                    $regex: RegExp(s, "i")
                   }
               }
             ]
         },
-        "limit":100
+        limit:100
       };
       /*
       * For CouchDB/Erlang regex
