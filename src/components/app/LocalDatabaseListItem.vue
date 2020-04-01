@@ -24,9 +24,50 @@
                 v-on="on"
               )
                 v-icon mdi-database-edit
+            v-overlay(
+              :value="destroyInProgress"
+              color="warning"
+            )
+              v-card()
+                v-card-text
+                  v-row
+                    v-col Destroying local database. This may take a while if it's a large database.
+                  v-row
+                    v-col
+                      div(class="text-center")
+                        v-progress-circular(color="error" indeterminate size="64")
             v-card
-              v-card-title Local database settings
+              v-card-title Local database
               v-card-text
+                v-expansion-panels
+                  v-expansion-panel
+                    v-expansion-panel-header Info
+                    v-expansion-panel-content
+                      ul
+                        li Compacting may take a while, depending on number of documents in local DB.
+                        li Performance tips:
+                          ul
+                            li Archive completed projects, tasks and notes.
+                            li Destroy local database (sync to remote or backup first) before doing a full resync to only sync back unarchived items
+                v-list
+                  v-list-item(
+                    :disabled="compactingDone || compactInProgress"
+                    @click="compactLocalDB" 
+                  )
+                    v-list-item-content
+                      v-list-item-title Compact database
+                        v-progress-linear(  
+                          v-if="compactInProgress"
+                          color="info"
+                          buffer-value="0"
+                          stream
+                        )
+                      //v-list-item-title(v-else) Compact database
+                    v-list-item-icon
+                      v-icon(v-if="compactingDone" color="success") mdi-check
+                      //v-icon(:color="compactingDone ? 'success' : 'secondary'") mdi-check
+                    // update icon when compact is done
+                v-divider
                 div(class="text-center")
                   v-btn(
                     v-if="!backupPreparing"
@@ -94,10 +135,28 @@ export default {
     dialog: false,
     backupPreparing: false,
     backupDone: false,
-    trashIconClicked: false
+    trashIconClicked: false,
+    compactingDone: false,
+    compactInProgress: false,
+    destroyInProgress: false,
   }),
   computed: {},
   methods: {
+    compactLocalDB: async function() {
+      try {
+        this.compactInProgress = true;
+        var result = await window.db.compact();
+        if (result.ok) {
+          this.compactingDone = true;
+        }
+        this.compactInProgress = false;
+        console.log(result)
+      } catch (err) {
+        console.log(err);
+        this.compactInProgress = false;
+      }
+    },
+
     backupLocalDB: async function() {
       this.backupPreparing = true; // backup not really ready at this time. Used for proper feedback
       const backup = await window.db.allDocs({
@@ -123,7 +182,9 @@ export default {
         )
       ) {
         try {
-          await window.db.destroy();
+          this.destroyInProgress = true;
+          let result = await window.db.destroy();
+          console.log('db destroy result: ', result)
           console.log("Local PouchDB Database destroyed");
           this.$store.commit("showSnackbar", {
             text: 'Local database destroyed. Reloading pimpim',
@@ -133,7 +194,7 @@ export default {
           //this.$router.push('/');
           setTimeout(() => {
               window.location.reload();
-          }, 400);
+          }, 600);
         } catch (err) {
           this.$store.commit("showSnackbar", {
             text: err,
