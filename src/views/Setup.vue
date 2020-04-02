@@ -140,6 +140,9 @@ v-content
 </template>
 
 <script>
+import PimpimDesignDoc from '@/components/designdocs/pimpim_design_doc.json'
+import MangoDesignDoc from '@/components/designdocs/mango_indexes.json'
+
 export default {
   name: "setup",
   components: {},
@@ -186,11 +189,10 @@ export default {
     */
     //this.insertDesignDocument('indexes/pimpim_design_doc.json', 'pimpim');
     //this.insertDesignDocument('indexes/mango_indexes.json', 'pimpim_mango_indexes');
-    this.insertDesignDocument(window.pimpim.pimpimDesignDoc, "pimpim");
-    this.insertDesignDocument(
-      window.pimpim.mangoIndexes,
-      "pimpim_mango_indexes"
-    );
+    //this.insertDesignDocument(window.pimpim.pimpimDesignDoc, "pimpim");
+    //this.insertDesignDocument(window.pimpim.mangoIndexes, "pimpim_mango_indexes");
+    this.insertDesignDocument(PimpimDesignDoc, "pimpim");
+    this.insertDesignDocument(MangoDesignDoc, "pimpim_mango_indexes");
   },
   methods: {
     insertDesignDocument: async function(serverDoc, docId) {

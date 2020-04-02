@@ -1,13 +1,6 @@
-/* Not in use. Will be removed
-var pimpimSettings = {
-    "database":"vault",
-    "dbBasePath": "http://localhost:5984/"
-};
-*/
-
-window.pimpim.pimpimDesignDoc = {
+{
   "_id": "_design/pimpim",
-  "version": 20200330,
+  "version": 20200331,
   "views": {
     "messages-tag-count": {
       "reduce": "_count",

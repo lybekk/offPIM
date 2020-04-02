@@ -68,6 +68,8 @@ import NavbarActions from '@/components/app/NavbarActions.vue'
 import AlertBox from '@/components/app/AlertBox.vue'
 import DatabaseConnectionDialog from '@/components/app/DatabaseConnectionDialog.vue'
 
+import PimpimDesignDoc from '@/components/designdocs/pimpim_design_doc.json'
+import MangoDesignDoc from '@/components/designdocs/mango_indexes.json'
 
 /* If pouch-vue is to be used
 import Vue from 'vue'
@@ -140,8 +142,10 @@ export default {
 
       console.log('Before!!!')
       try {
-        const pDoc = await v.dispatch( 'startupIndexCheck', { doc: 'pimpim', version: window.pimpim.pimpimDesignDoc.version } )
-        const mDoc = await v.dispatch( 'startupIndexCheck', { doc: 'pimpim_mango_indexes', version: window.pimpim.mangoIndexes.version } )
+        //const pDoc = await v.dispatch( 'startupIndexCheck', { doc: 'pimpim', version: window.pimpim.pimpimDesignDoc.version } )
+        //const mDoc = await v.dispatch( 'startupIndexCheck', { doc: 'pimpim_mango_indexes', version: window.pimpim.mangoIndexes.version } )
+        const pDoc = await v.dispatch( 'startupIndexCheck', { doc: 'pimpim', version: PimpimDesignDoc.version } )
+        const mDoc = await v.dispatch( 'startupIndexCheck', { doc: 'pimpim_mango_indexes', version: MangoDesignDoc.version } )
         if (!pDoc || !mDoc) {
           this.$router.push('/setup')
         }
