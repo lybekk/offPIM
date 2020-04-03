@@ -4,14 +4,21 @@
       v-model="drawer"
       app
     )
-      NavbarApps
+      navbar-apps
       v-switch(
         v-model="isDarkMode" 
         class="ma-2" 
         label="Dark mode" 
         dense 
-        color="black"
+        color=""
       )
+      v-btn(
+        href="https://lybekk.github.io/pimpim/"
+        target="_blank"
+        text
+      )
+        span(class="mr-2") Docs
+        v-icon mdi-open-in-new
     v-app-bar(app)
       v-app-bar-nav-icon(
         @click.stop="drawer = !drawer"
@@ -34,13 +41,6 @@
       )
         v-tab(@click.stop="drawer = !drawer")
       NavbarActions
-      v-btn(
-        href="https://lybekk.github.io/pimpim/"
-        target="_blank"
-        text
-      )
-        span(class="mr-2") Docs
-        v-icon mdi-open-in-new
       v-progress-linear(
         :active="loading"
         :indeterminate="loading"
@@ -71,23 +71,6 @@ import DatabaseConnectionDialog from '@/components/app/DatabaseConnectionDialog.
 import PimpimDesignDoc from '@/components/designdocs/pimpim_design_doc.json'
 import MangoDesignDoc from '@/components/designdocs/mango_indexes.json'
 
-/* If pouch-vue is to be used
-import Vue from 'vue'
-import PouchVue from 'pouch-vue'
-
-Vue.use(PouchVue, {
-  //pouch: PouchDB, // optional if `PouchDB` is available on the global object
-  //defaultDB: 'vaulttest' // this is used as a default connect/disconnect database
-  defaultDB: 'vaulttest' // remoteDbName // this is used as a default connect/disconnect database
-  //defaultDB: 'remoteDbName' // remoteDbName // this is used as a default connect/disconnect database
-  //debug: '*' // optional - See `https://pouchdb.com/api.html#debug_mode` for valid settings (will be a separate Plugin in PouchDB 7.0)
-
-  //defaultDB: 'remoteDbName',  // this is used as a default connect/disconnect database
-  //optionDB: {}, // this is used to include a custom fetch() method (see TypeScript example)
-
-})
-*/
-
 export default {
   name: 'App',
   components: {
@@ -97,7 +80,6 @@ export default {
     DatabaseConnectionDialog
   },
   data: () => ({
-    //drawer: false
   }),
   computed: {
     drawer: {
@@ -142,8 +124,6 @@ export default {
 
       console.log('Before!!!')
       try {
-        //const pDoc = await v.dispatch( 'startupIndexCheck', { doc: 'pimpim', version: window.pimpim.pimpimDesignDoc.version } )
-        //const mDoc = await v.dispatch( 'startupIndexCheck', { doc: 'pimpim_mango_indexes', version: window.pimpim.mangoIndexes.version } )
         const pDoc = await v.dispatch( 'startupIndexCheck', { doc: 'pimpim', version: PimpimDesignDoc.version } )
         const mDoc = await v.dispatch( 'startupIndexCheck', { doc: 'pimpim_mango_indexes', version: MangoDesignDoc.version } )
         if (!pDoc || !mDoc) {
@@ -156,40 +136,8 @@ export default {
         this.$router.push('/setup')
       }
 
-      //v.dispatch('setTotals')
-      //v.dispatch('setMessagesUnreadCount');
-
     },
-    /*
-    createMangoIndexes: async function () {
-      // if less indexes than x, initiate
-      // or
-      // if localstorage array length != indexes.length
-        // account for if othen indexes are in database
-      const indexes = [
-        [ 'noteslatest2',[ 'created', 'realm' ] ],
-        [ 'genericrealm',[ 'realm' ] ] //messagesunread uses this
-      ]
 
-      for await (let idx of indexes) {
-        try {
-          let result = await window.db.createIndex({
-            index: {
-              fields: idx[1],
-              name: idx[0],
-              ddoc: idx[0],
-              type: 'json',
-            }
-          });
-          console.log('Index creation result: ', result)
-        } catch (err) {
-          console.log(err);
-        }
-      }
-      // create localstorage array of all indexes when done indexing
-
-    }
-    */
   }
 };
 </script>
