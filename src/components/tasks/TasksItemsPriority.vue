@@ -1,39 +1,81 @@
 <template lang="pug">
-v-expansion-panel
-  v-expansion-panel-header(v-slot="{ open }")
-    v-row(no-gutters)
-      v-col Priority
-      v-col(
-        cols="8"
-        class="text--secondary"
+div(class="text-center")
+  v-menu(
+    v-model="menu"    
+    left
+    offset-y
+  )
+    //-nudge-width="150"
+    //-nudge-left
+      // nope
+    //-:close-on-content-click="false"
+    //-:nudge-width="200"
+    template(v-slot:activator="{ on }")
+      v-btn(
+        text
+        v-on="on"
       )
-        v-fade-transition(leave-absolute)
-          span(v-if="open") Choose new priority
-          v-row(
-            v-else
-            no-gutters
-            style="width: 100%"
+        //-Priority
+        //-span.text-capitalize(
+          :class="color+'--text'"
+          ) { task.status }}
+        //-v-col.text-capitalize { task.priority }}
+        span.text-capitalize {{ task.priority }}
+          v-icon(:color="priorityStarColor[task.priority]") mdi-star
+    v-card(width="50")
+      v-container(fluid)
+        v-radio-group(row v-model="radioGroup")
+          v-tooltip(
+            v-for="n in 4" 
+            top
+            :key="n"
           )
-            v-col.text-capitalize {{ task.priority }}
-              v-icon(:color="priorityStarColor[task.priority]") mdi-star
-  v-expansion-panel-content
-    v-container(fluid)
-      v-radio-group(row v-model="radioGroup")
-        v-tooltip(
-          v-for="n in 4" 
-          top
-          :key="n"
+            template(v-slot:activator="{ on }")
+              v-radio(
+                :label="`${n}`"
+                :value="n"
+                :color="priorityStarColor[n]"
+                on-icon="mdi-star"
+                off-icon="mdi-star-outline"
+                v-on="on"
+              )
+            span(v-text="priorityTooltip[n]")
+
+  //-v-expansion-panel
+    v-expansion-panel-header(v-slot="{ open }")
+      v-row(no-gutters)
+        v-col Priority
+        v-col(
+          cols="8"
+          class="text--secondary"
         )
-          template(v-slot:activator="{ on }")
-            v-radio(
-              :label="`${n}`"
-              :value="n"
-              :color="priorityStarColor[n]"
-              on-icon="mdi-star"
-              off-icon="mdi-star-outline"
-              v-on="on"
+          v-fade-transition(leave-absolute)
+            span(v-if="open") Choose new priority
+            v-row(
+              v-else
+              no-gutters
+              style="width: 100%"
             )
-          span(v-text="priorityTooltip[n]")
+              v-col.text-capitalize { task.priority }}
+                v-icon(:color="priorityStarColor[task.priority]") mdi-star
+    v-expansion-panel-content
+      v-container(fluid)
+        v-radio-group(row v-model="radioGroup")
+          v-tooltip(
+            v-for="n in 4" 
+            top
+            :key="n"
+          )
+            template(v-slot:activator="{ on }")
+              v-radio(
+                :label="`${n}`"
+                :value="n"
+                :color="priorityStarColor[n]"
+                on-icon="mdi-star"
+                off-icon="mdi-star-outline"
+                v-on="on"
+              )
+            span(v-text="priorityTooltip[n]")
 
 </template>
 
@@ -47,6 +89,7 @@ export default {
   mixins: [pouchMixin],
   props: ["task"],
   data: () => ({
+    menu: false,
     priorityStarColor: {
       1:'error',
       2:'warning',

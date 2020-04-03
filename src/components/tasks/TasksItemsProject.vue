@@ -1,56 +1,153 @@
 <template lang="pug">
-v-expansion-panel
-  v-expansion-panel-header(v-slot="{ open }")
-    v-row(no-gutters)
-      v-col Project
-      v-col(
-        cols="8"
-        class="text--secondary"
-      )
-        v-fade-transition(leave-absolute)
-          span(v-if="open") Details
-          v-row(
-            v-else
-            no-gutters
-            style="width: 100%"
+  v-list(two-line)
+    v-dialog(v-model="dialog" scrollable max-width="300px")
+      template(v-slot:activator="{ on }")
+        v-list-item(@click="")
+          v-list-item-content(v-on="on")
+            v-list-item-title Project
+            v-list-item-subtitle(v-text="projectName")
+          //-v-list-item-action
+            v-btn(icon)
+              v-icon(color="grey lighten-1") mdi-information
+      v-card
+        v-card-text
+          v-row(justify="center")
+            v-col
+              v-card
+                v-card-title Set project
+                v-card-text(v-if="task.project")
+                  v-list(two-line)
+                    v-list-item
+                      v-list-item-content
+                        v-list-item-title Current
+                        v-list-item-subtitle(v-text="projectName")
+            v-col(v-if="task.project")
+              v-btn(
+                block
+                @click="showProject(task.project)"
+              ) Go to project
+            v-col(v-if="task.project")
+              v-btn(
+                block
+                @click="setTaskField(null)"
+              ) Clear project from task
+            v-col
+              v-list
+                v-subheader Move task to project:
+                v-list-item-group(color="primary")
+                  //- Filter list with input field
+                  v-list-item(
+                    v-for="(value, key) in openProjects"
+                    :key="key"
+                    @click="setTaskField(value)"
+                  )
+                    v-list-item-title(v-text="key")
+    //-v-list-item
+      v-list-item-content
+        v-list-item-title Project
+        v-list-item-subtitle(v-text="projectName")
+      v-list-item-action
+        v-btn(icon)
+          v-icon(color="grey lighten-1") mdi-information
+          //- go to project
+  //-v-col.text-capitalize(
+    cols="8"
+    class="text--secondary"
+    )
+    //-v-text="projectName"
+    //-v-col.text-capitalize(v-text="projectName")
+    //-v-container(fluid)
+    //-v-row
+      v-dialog(v-model="dialog" scrollable max-width="300px")
+        template(v-slot:activator="{ on }")
+          v-btn(
+            text
+            small
+            v-on="on"
+            v-text="projectName"
           )
-            v-col.text-capitalize(v-text="projectName")
-  v-expansion-panel-content
-    v-container(fluid)
-      v-row
-        v-dialog(v-model="dialog" scrollable max-width="300px")
-          template(v-slot:activator="{ on }")
-            v-btn(
-              text
-              small
-              v-on="on"
-              v-text="projectName"
+        v-card
+          v-card-text
+            v-row(justify="center")
+              v-col
+                v-card
+                  v-card-title
+                    p Set project
+                v-card-text
+                  p Current:
+                  p(v-text="projectName")
+              v-col
+                v-btn(
+                  block
+                  @click="setTaskField(null)"
+                ) Clear project
+              v-col
+                v-list
+                  v-subheader Move task to project:
+                  v-list-item-group(color="primary")
+                    v-list-item(
+                      v-for="(value, key) in openProjects"
+                      :key="key"
+                      @click="setTaskField(value)"
+                    )
+                      v-list-item-title(v-text="key")
+
+
+
+
+
+  //-v-expansion-panel
+    v-expansion-panel-header(v-slot="{ open }")
+      v-row(no-gutters)
+        v-col Project
+        v-col(
+          cols="8"
+          class="text--secondary"
+        )
+          v-fade-transition(leave-absolute)
+            span(v-if="open") Details
+            v-row(
+              v-else
+              no-gutters
+              style="width: 100%"
             )
-          v-card
-            v-card-text
-              v-row(justify="center")
-                v-col
-                  v-card
-                    v-card-title
-                      p Set project
-                  v-card-text
-                    p Current:
-                    p(v-text="projectName")
-                v-col
-                  v-btn(
-                    block
-                    @click="setTaskField(null)"
-                  ) Clear project
-                v-col
-                  v-list
-                    v-subheader Move task to project:
-                    v-list-item-group(color="primary")
-                      v-list-item(
-                        v-for="(value, key) in openProjects"
-                        :key="key"
-                        @click="setTaskField(value)"
-                      )
-                        v-list-item-title(v-text="key")
+              v-col.text-capitalize(v-text="projectName")
+    v-expansion-panel-content
+      v-container(fluid)
+        v-row
+          v-dialog(v-model="dialog" scrollable max-width="300px")
+            template(v-slot:activator="{ on }")
+              v-btn(
+                text
+                small
+                v-on="on"
+                v-text="projectName"
+              )
+            v-card
+              v-card-text
+                v-row(justify="center")
+                  v-col
+                    v-card
+                      v-card-title
+                        p Set project
+                    v-card-text
+                      p Current:
+                      p(v-text="projectName")
+                  v-col
+                    v-btn(
+                      block
+                      @click="setTaskField(null)"
+                    ) Clear project
+                  v-col
+                    v-list
+                      v-subheader Move task to project:
+                      v-list-item-group(color="primary")
+                        v-list-item(
+                          v-for="(value, key) in openProjects"
+                          :key="key"
+                          @click="setTaskField(value)"
+                        )
+                          v-list-item-title(v-text="key")
 </template>
 
 <script>
@@ -106,6 +203,9 @@ export default {
 
       this.dialog = false;
       this.$emit('set-doc')
+    },
+    showProject(id) {
+      this.$router.push(`/tasks/project/${id}`);
     },
   }
 };
