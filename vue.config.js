@@ -1,7 +1,14 @@
 module.exports = {
-  publicPath: '/pimpim/', //for electron and browser
-  //publicPath: '/', // if phonegap
+  publicPath: '/pimpim/',
   "transpileDependencies": [
     "vuetify"
-  ]
+  ],
+  pluginOptions: {
+    electronBuilder: {
+      builderOptions: {
+        // options placed here will be merged with default configuration and passed to electron-builder
+        "artifactName": "${productName}_desktop.${ext}"
+      }
+    }
+  }
 }
