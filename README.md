@@ -24,7 +24,7 @@ Features:
 ## <a id="downloads"></a>Download
 
 <div class="card">
-    <a href="https://lybekk.tech/downloads/pimpim_desktop_linux.AppImage" class="btn">
+    <a href="https://lybekk.tech/downloads/pimpim_desktop.AppImage" class="btn">
         <img src="assets/img/logo_linux.png" alt="Linux" width="32">
         Linux
     </a>
@@ -42,8 +42,8 @@ Features:
 1. **Desktop-app (Electron)**
     * "PIMPIM-Electron" is currently only built and tested on Linux (though it is possible to build for another OS yourself)
     1. [Download the app for your operating system](#downloads) (currently Linux only)
-    2. Make it executable `$ chmod a+x path-to-file/pimpim_desktop_linux.AppImage`
-    3. and run! `$ ./path-to-file/pimpim_desktop_linux.AppImage`
+    2. Make it executable `$ chmod a+x path-to-file/pimpim_desktop.AppImage`
+    3. and run! `$ ./path-to-file/pimpim_desktop.AppImage`
 
 **OR**
 
