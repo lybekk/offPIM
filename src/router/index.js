@@ -32,6 +32,11 @@ const routes = [
         component: () => import(/* webpackChunkName: "tasksList" */ '../views/tasks/Project.vue'),
         props: true
         //component: () => import(/* webpackChunkName: "tasks" */ '../views/Tasks.vue'),
+      },
+      {
+        path: 'completed_projectless',
+        name: 'completedProjectless',
+        component: () => import(/* webpackChunkName: "tasksList" */ '../views/tasks/ArchivalCompletedProjectless.vue')
       }
     ]
   },

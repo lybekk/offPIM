@@ -31,8 +31,12 @@
           src="./assets/vuetify-logo-dark.png"
           transition="scale-transition"
           width="40"
+          @click.stop="drawer = !drawer"
         )
-        span(class="title") pimpim
+        span(
+          class="title"
+          @click.stop="drawer = !drawer"
+        ) pimpim
       v-tabs(
         fixed-tabs
         background-color="transparent"
