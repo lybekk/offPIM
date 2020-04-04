@@ -13,7 +13,7 @@
       v-card
         v-card-title Remote database settings
         v-card-text
-          v-expansion-panels
+          v-expansion-panels(:value="2")
             v-expansion-panel
               v-expansion-panel-header Info
               v-expansion-panel-content
@@ -24,43 +24,51 @@
                   li If username:password not in url, provide credentials in form
                   li Note: User/admin must have permission to upload design documents
                   li Leave username blank if credentials are in the url
-          v-card
-            v-card-text
-              v-row
-                v-col(cols="12")
-                  v-text-field(
-                      v-model="remoteDBUrl"
-                      :color="getColor"
-                      label="Remote database URL"
-                      class="text-capitalize"
-                      outlined
-                      shaped
-                  )
-                v-col(cols="12" sm="6")
-                  v-text-field(
-                    v-model="username"
-                    label="Username"
-                    outlined
-                    shaped
-                  )
-                v-col(cols="12" sm="6")
-                  v-text-field(
-                    v-model="password"
-                    :append-icon="show1 ? 'mdi-eye' : 'mdi-eye-off'"
-                    :type="show1 ? 'text' : 'password'"
-                    name="pwd"
-                    label="Password"
-                    outlined
-                    shaped
-                    @click:append="show1 = !show1"
-                  )
-                v-col(cols="12")
-                  v-checkbox(
-                    v-model="saveConnectionDetails"
-                    label="Save settings in browser"
-                  )
-          v-row(v-if="connectionResultMessage")
-            p(class="error--text") {{ connectionResultMessage }}
+            v-expansion-panel
+              v-expansion-panel-header Actions
+              v-expansion-panel-content
+                v-list
+                  database-compaction(whatdb="remoteDB")
+            v-expansion-panel
+              v-expansion-panel-header Authentication
+              v-expansion-panel-content
+                v-card
+                  v-card-text
+                    v-row
+                      v-col(cols="12")
+                        v-text-field(
+                            v-model="remoteDBUrl"
+                            :color="getColor"
+                            label="Remote database URL"
+                            class="text-capitalize"
+                            outlined
+                            shaped
+                        )
+                      v-col(cols="12" sm="6")
+                        v-text-field(
+                          v-model="username"
+                          label="Username"
+                          outlined
+                          shaped
+                        )
+                      v-col(cols="12" sm="6")
+                        v-text-field(
+                          v-model="password"
+                          :append-icon="show1 ? 'mdi-eye' : 'mdi-eye-off'"
+                          :type="show1 ? 'text' : 'password'"
+                          name="pwd"
+                          label="Password"
+                          outlined
+                          shaped
+                          @click:append="show1 = !show1"
+                        )
+                      v-col(cols="12")
+                        v-checkbox(
+                          v-model="saveConnectionDetails"
+                          label="Save settings in browser"
+                        )
+                v-row(v-if="connectionResultMessage")
+                  p(class="error--text") {{ connectionResultMessage }}
         v-card-actions
           v-btn(
             small
@@ -75,12 +83,14 @@
 </template>
 
 <script>
-import DatabaseRemoteAuthentication from "@/components/app/DatabaseRemoteAuthentication.vue";
+import DatabaseRemoteAuthentication from "@/components/app/DatabaseRemoteAuthentication.vue"; //will be removed
+import DatabaseCompaction from "@/components/app/DatabaseCompaction.vue";
 
 export default {
   name: 'DatabaseConnectionDialog',
   components: {
-    DatabaseRemoteAuthentication
+    DatabaseRemoteAuthentication, //will be removed
+    DatabaseCompaction
   },
   data: () => ({
     remoteDBUrl: null,
@@ -210,7 +220,8 @@ export default {
         console.log(result);
         this.authMsg = "Something went wrong. See console.";
       }
-    }
+    },
+
     /*
     connectionCheck: async function () {
       try {

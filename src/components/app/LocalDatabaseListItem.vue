@@ -39,7 +39,7 @@
             v-card
               v-card-title Local database
               v-card-text
-                v-expansion-panels
+                v-expansion-panels(:value="1")
                   v-expansion-panel
                     v-expansion-panel-header Info
                     v-expansion-panel-content
@@ -49,24 +49,26 @@
                           ul
                             li Archive completed projects, tasks and notes.
                             li Destroy local database (sync to remote or backup first) before doing a full resync to only sync back unarchived items
-                v-list
-                  v-list-item(
-                    :disabled="compactingDone || compactInProgress"
-                    @click="compactLocalDB" 
-                  )
-                    v-list-item-content
-                      v-list-item-title Compact database
-                        v-progress-linear(  
-                          v-if="compactInProgress"
-                          color="info"
-                          buffer-value="0"
-                          stream
-                        )
-                      //v-list-item-title(v-else) Compact database
-                    v-list-item-icon
-                      v-icon(v-if="compactingDone" color="success") mdi-check
-                      //v-icon(:color="compactingDone ? 'success' : 'secondary'") mdi-check
-                    // update icon when compact is done
+                  v-expansion-panel
+                    v-expansion-panel-header Actions
+                    v-expansion-panel-content
+                      v-card(class="mx-auto" tile)
+                        v-list
+                          database-compaction(whatdb="localDB")
+                          //v-list-item(
+                            :disabled="compactingDone || compactInProgress"
+                            @click="compactLocalDB" 
+                            )
+                            v-list-item-content
+                              v-list-item-title Compact database
+                                v-progress-linear(  
+                                  v-if="compactInProgress"
+                                  color="info"
+                                  buffer-value="0"
+                                  stream
+                                )
+                            v-list-item-icon
+                              v-icon(v-if="compactingDone" color="success") mdi-check
                 v-divider
                 div(class="text-center")
                   v-btn(
@@ -129,19 +131,25 @@
 </template>
 
 <script>
+import DatabaseCompaction from "@/components/app/DatabaseCompaction.vue";
+
 export default {
   name: "LocalDatabaseListItem",
+  components: {
+    DatabaseCompaction
+  },
   data: () => ({
     dialog: false,
     backupPreparing: false,
     backupDone: false,
     trashIconClicked: false,
-    compactingDone: false,
-    compactInProgress: false,
+    //compactingDone: false,
+    //compactInProgress: false,
     destroyInProgress: false,
   }),
   computed: {},
   methods: {
+    /*
     compactLocalDB: async function() {
       try {
         this.compactInProgress = true;
@@ -156,6 +164,7 @@ export default {
         this.compactInProgress = false;
       }
     },
+    */
 
     backupLocalDB: async function() {
       this.backupPreparing = true; // backup not really ready at this time. Used for proper feedback
