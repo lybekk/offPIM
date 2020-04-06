@@ -1,22 +1,6 @@
-<template>
-  <v-container fluid>
-    <v-card height="100%">
-      <v-card-title>
-        Messages
-        <v-spacer></v-spacer>
-        <v-text-field
-          v-model="search"
-          append-icon="mdi-email-search"
-          label="Search"
-          single-line
-          hide-details
-        ></v-text-field>
-      </v-card-title>
-    </v-card>
-
-    <br />
-
-    <v-data-table
+<template lang="pug">
+  v-container
+    v-data-table(
       v-model="selectedMessages"
       :search="search"
       :headers="headers"
@@ -27,40 +11,37 @@
       item-key="_id"
       show-select
       dense
-    >
-      <template v-slot:item.read="{ item }">
-        <v-icon v-text="isRead(item.read)"></v-icon>
-      </template>
-
-      <template v-slot:item.subject="{ item }">
-        <div class="msgLink" @click="$emit('read-message', item)">
-          <a>{{ item.subject }}</a>
-        </div>
-      </template>
-
-      <template v-slot:item.sender="{ item }">
-        <div class="msgLink" @click="$emit('read-message', item)"> 
-          <a>{{ item.sender }}</a>
-        </div>
-      </template>
-
-      <template v-slot:item.actions="{ item }">
-        <v-btn v-if="isDeleted(item._id)" text x-small disabled>Deleted</v-btn>
-        <v-btn v-else text icon @click="deleteMsg(item._id)">
-          <v-icon>mdi-delete</v-icon>
-        </v-btn>
-      </template>
-    </v-data-table>
-  </v-container>
+    )
+      template(v-slot:item.read="{ item }")
+        v-icon(v-text="isRead(item.read)")
+      template(v-slot:item.subject="{ item }")
+        div(class="msgLink" @click="$emit('read-message', item)")
+          a {{ item.subject }}
+      template(v-slot:item.sender="{ item }")
+        div(class="msgLink" @click="$emit('read-message', item)")
+          a {{ item.sender }}
+      template(v-slot:item.actions="{ item }")
+        v-btn(
+          v-if="isDeleted(item._id)" 
+          text 
+          x-small 
+          disabled
+        ) Deleted
+        v-btn(
+          v-else 
+          text 
+          icon 
+          @click="deleteMsg(item._id)"
+        )
+          v-icon mdi-delete
 </template>
 
 <script>
 export default {
   name: "MessagesMessagelist",
   components: {},
-  props: ['messageList'],
+  props: ['messageList', 'search'],
   data: () => ({
-    search: "",
     headers: [
       {
         text: "Read",

@@ -1,79 +1,70 @@
-<template>
-    <v-list-item link @click.stop="dialog = true">
-        <v-list-item-icon>
-            <v-icon>mdi-pen</v-icon>
-        </v-list-item-icon>
-        <v-list-item-title>
-            <v-row>
-                <v-dialog v-model="dialog" persistent max-width="50vw">
-                <template v-slot:activator="{ on }">
-                    <v-btn block small color="primary" v-on="on">New message</v-btn>
-                </template>
-                <v-card>
-                    <v-card-title>
-                    <span class="headline">Create a new message</span>
-                    <v-spacer></v-spacer>
-                    <v-btn color="error" text @click="dialog = false">Cancel</v-btn>
-                    <v-btn color="primary" text @click="insertNewEntry">Send</v-btn>
-                    </v-card-title>
-                    <v-card-text>
-                        <v-container>
-                            <v-row dense>
-
-                                <v-col cols="6">
-                                    <v-text-field
-                                        v-model="newEntry.sender"
-                                        label="Sender"
-                                        dense
-                                    ></v-text-field>
-                                </v-col>
-                                <v-col cols="6">
-                                    <v-text-field
-                                        v-model="newEntry.recipient"
-                                        label="Recipient"
-                                        dense
-                                    ></v-text-field>
-                                </v-col>
-
-                                <v-col cols="12">
-                                    <v-text-field
-                                        v-model="newEntry.subject"
-                                        label="Subject"
-                                        dense
-                                    ></v-text-field>
-                                </v-col>
-                                <v-col cols="12">
-                                    <v-textarea
-                                        v-model="newEntry.body"
-                                        label="Message body"
-                                        rows="3"
-                                        filled
-                                        dense
-                                    ></v-textarea>
-                                </v-col>
-                                <v-col cols="12">
-                                    <v-combobox
-                                    v-model="newEntry.tags"
-                                    :items="tagsListItems"
-                                    label="Tags"
-                                    multiple
-                                    chips
-                                    dense
-                                    ></v-combobox>
-                                </v-col>
-                            </v-row>
-                        </v-container>
-                    </v-card-text>
-                    <v-card-actions>
-                    <v-spacer></v-spacer>
-                    <v-btn color="error" text @click="dialog = false">Cancel</v-btn>
-                    <v-btn color="primary" text @click="insertNewEntry">Send</v-btn>
-                    </v-card-actions>
-                </v-card>
-                </v-dialog>
-            </v-row>
-        </v-list-item-title>
-    </v-list-item>
+<template lang="pug">
+    v-dialog(
+        v-model="dialog" 
+        persistent 
+        :fullscreen="$vuetify.breakpoint.mdAndDown"
+        max-width="50vw"
+        transition="dialog-bottom-transition"
+    )
+        template(v-slot:activator="{ on }")
+            v-btn(
+                color="primary"
+                fab
+                small
+                absolute
+                bottom
+                right
+                v-on="on"
+            )
+                v-icon mdi-plus
+        v-card
+            v-card-title
+                span(class="headline") Create a new message
+                v-spacer
+                v-btn(color="error" text @click="dialog = false") Cancel
+                v-btn(color="primary" text @click="insertNewEntry") Send
+            v-card-text
+                v-container
+                    v-row(dense)
+                        v-col(cols="6")
+                            v-text-field(
+                                v-model="newEntry.sender"
+                                label="Sender"
+                                dense
+                            )
+                        v-col(cols="6")
+                            v-text-field(
+                                v-model="newEntry.recipient"
+                                label="Recipient"
+                                dense
+                            )
+                        v-col(cols="12")
+                            v-text-field(
+                                v-model="newEntry.subject"
+                                label="Subject"
+                                dense
+                            )
+                        v-col(cols="12")
+                            v-textarea(
+                                v-model="newEntry.body"
+                                label="Message body"
+                                rows="3"
+                                filled
+                                dense
+                            )
+                        v-col(cols="12")
+                            v-combobox(
+                                v-model="newEntry.tags"
+                                :items="tagsListItems"
+                                label="Tags"
+                                multiple
+                                chips
+                                dense
+                            )
+            v-card-actions
+                v-spacer
+                v-btn(color="error" text @click="dialog = false") Cancel
+                v-btn(color="primary" text @click="insertNewEntry") Send
 </template>
 
 <script>
@@ -85,7 +76,6 @@ export default {
     data: () => ({
         dialog: false,
         newEntry: {
-            //realm:'messages',
             message: true,
             sender:'',
             recipient:'',

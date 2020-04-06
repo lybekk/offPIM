@@ -24,7 +24,7 @@
         @click.stop="drawer = !drawer"
       )
       div(class="d-flex align-center")
-        v-img(
+        //v-img(
           alt="Vuetify Logo"
           class="shrink mr-2"
           contain
@@ -32,7 +32,7 @@
           transition="scale-transition"
           width="40"
           @click.stop="drawer = !drawer"
-        )
+          )
         span(
           class="title"
           @click.stop="drawer = !drawer"
@@ -117,7 +117,6 @@ export default {
   created () {},
   mounted () {
     this.startupcheck()
-    //this.createMangoIndexes();
     this.$vuetify.theme.dark = localStorage.getItem('darkMode');
   },
   methods: {

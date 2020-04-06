@@ -137,7 +137,7 @@ export default {
             let options = {
                 startkey: startKey,
                 endkey: endKey,
-                limit: 50, // consider controlling this value with vuex
+                limit: 100, // consider controlling this value with vuex
                 reduce: false,
                 include_docs: false
             };

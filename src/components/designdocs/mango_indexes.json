@@ -1,6 +1,6 @@
 {
   "_id": "_design/pimpim_mango_indexes",
-  "version": 20200129,
+  "version": 20200406,
   "language": "query",
   "views": {
     "created-json-index": {
@@ -49,24 +49,6 @@
           "fields": [
             "realm",
             "tags"
-          ]
-        }
-      }
-    },
-    "messages-json-index": {
-      "map": {
-        "fields": {
-          "realm": "asc"
-        },
-        "partial_filter_selector": {
-          "realm": "messages"
-        }
-      },
-      "reduce": "_count",
-      "options": {
-        "def": {
-          "fields": [
-            "realm"
           ]
         }
       }

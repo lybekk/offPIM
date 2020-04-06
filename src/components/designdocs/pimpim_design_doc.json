@@ -1,6 +1,6 @@
 {
   "_id": "_design/pimpim",
-  "version": 20200331,
+  "version": 20200406,
   "views": {
     "messages-tag-count": {
       "reduce": "_count",
@@ -53,6 +53,10 @@
     "tasks-done": {
       "reduce": "_count",
       "map": "function (doc) {\n  if (doc.productivity \n      && doc.type === \"task\" \n      && doc.status === 'done') {\n    emit(doc.end);\n  }\n}"
+    },
+    "messages-unread": {
+      "reduce": "_count",
+      "map": "function (doc) {\n  if (doc.message && !doc.read) {\n    emit(doc.read);\n  }\n}"
     }
   },
   "language": "javascript"

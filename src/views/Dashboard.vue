@@ -53,7 +53,7 @@ v-content
                         class="success--text"
                       )
                     p(
-                      v-if="this.$store.getters.getTasksAggregate.initiated && taskProgress.visible"
+                      v-if="this.$store.getters.getTasksAggregate.initiated && !taskProgress.visible"
                     ) No tasks done today so far
                     v-progress-linear(
                       v-if="this.$store.getters.getTasksAggregate.initiated && taskProgress.visible"
@@ -65,10 +65,9 @@ v-content
                       //-:indeterminate="taskProgress.visible"
               v-row
                 v-col(
-                  cols="3"
-                  sm="3"
+                  cols="12"
+                  lg="3"
                 )
-                  //sm="6"
                   v-skeleton-loader(
                     :loading="!this.$store.getters.getTasksAggregate.initiated"
                     transition="scale-transition"
@@ -96,8 +95,8 @@ v-content
                         //- fix gradient to align with themes
                         template(v-slot:label="item" color="info") { taskStatuses[item.index] }} { item.value }}
                 v-col(
-                  cols="3"
-                  sm="3"
+                  cols="12"
+                  lg="3"
                   )
                   chart-tasks-today
   v-footer 
@@ -180,8 +179,6 @@ export default {
   },
   mixins: [formatMixin],
   data: () => ({
-    //taskStatuses: ['wait','plan','todo','next','doing'],
-    //tasksStatuSparklineValues: [],
     dataTables: {
       /* no use for this at the moment
       generic: {
@@ -272,7 +269,6 @@ export default {
     setTimeout(() => {      
       //this.$store.dispatch('tasksDueAggregation');
       this.$store.dispatch('setMessagesUnreadCount');
-      //this.fillTasksSparkline();
       /* no use for this at the moment. May be used in the future
       this.dataTables.generic.table.push(
         { key:'Database server URL' ,value:this.$store.getters.urlDBRoot}
@@ -285,15 +281,6 @@ export default {
     }, 600);
   },
   methods: {
-    /*
-    fillTasksSparkline: async function() {
-      await this.$store.dispatch('getTaskStatuses');
-      const ts = this.$store.getters.getTaskStatuses;
-      for (let x of this.taskStatuses) {
-        this.tasksStatuSparklineValues.push( ts[x] )
-      }
-    },
-    */
     fillDataTable: async function() {
       let ldb = this.dataTables.localDB.table;
         // PouchDB
