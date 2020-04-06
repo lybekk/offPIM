@@ -5,7 +5,9 @@
         v-list-item-title
             v-row
                 v-dialog(
-                    v-model="dialog" persistent max-width="50vw"
+                    v-model="dialog" 
+                    persistent 
+                    max-width="50vw"
                     :fullscreen="$vuetify.breakpoint.mdAndDown"
                     transition="dialog-bottom-transition"
                 )
@@ -137,7 +139,6 @@ export default {
         newTask: {
              title:'',
              description:null,
-             //realm:'productivity', // removed in favor of boolean below
              productivity: true,
              type:'task',
              status:'plan',

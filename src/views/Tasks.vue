@@ -40,7 +40,7 @@ v-content
       grow
     )
       v-spacer
-      v-menu(top offset-y)
+      v-bottom-sheet(v-model="statusSheet" inset)
         template(v-slot:activator="{ on }")
           v-btn(
             text
@@ -50,10 +50,12 @@ v-content
             span By status
             v-icon mdi-progress-check
         v-list
+          v-subheader Get tasks by status
           v-list-item(
             v-for="status in ['wait','plan','todo','next','doing']"
             :key="status"
             :to="`/tasks/list/status${status}`"
+            @click="statusSheet = false"
           )
             v-list-item-content
               v-list-item-title(
@@ -65,13 +67,14 @@ v-content
                 v-if="statusCount(status) != 0"
                 v-text="statusCount(status)"
               )
-      v-menu(top offset-y)
+      //v-menu(top offset-y)
+      v-bottom-sheet(v-model="prioritySheet" inset)
         template(v-slot:activator="{ on }")
           v-btn(
             text
             color="primary"
             v-on="on"
-          )
+          ) 
             span By priority
             v-icon mdi-star
         v-list
@@ -79,12 +82,12 @@ v-content
             v-for="btn in priorityButtons"
             :key="btn.pri"
             :to="`/tasks/list/priority${btn.pri}`"
+            @click="prioritySheet = false"
           )
             v-list-item-content
               v-list-item-title(
                 :title="btn.title"
-                v-text="btn.pri"
-              )
+              ) ({{ btn.pri }}) {{ btn.title }}
             v-list-item-action
               v-list-item-action-text(
                 v-if="priorityCount(btn.pri) != 0"
@@ -113,6 +116,8 @@ export default {
   },
   data: () => ({
     drawer: false,
+    statusSheet: false,
+    prioritySheet: false,
     showBottomNav: false,
     icon: 'justify',
     priorityButtons: [
