@@ -1,7 +1,8 @@
 # pimpim
-PIMPIM - A PIM - A Personal information management system
+pimpim - A PIM - A Personal information management system
 
 ![Dashboard screenshot](assets/img/dashboard.png)
+![Dashboard screenshot](assets/img/dashboard-dark.png)
 
 ## Description
 An easily deployable PIM made for the CouchDB ecosystem.
@@ -21,6 +22,13 @@ Features:
 * Themes
 * Open source. No proprietary technologies. No external requests. No tracking.
 
+## Try
+[Try a live version of pimpim](https://lybekk.tech/pimpim/) (or use it permanently, as it works just as it will anywhere else). You may close the browser and tabs. Your data will still be there.
+
+* PS: Your data never leaves your browser, as it uses [PouchDB](https://pouchdb.com/), an in-browser database. The data entered into pimpim will neaver touch the server it's hosted on (unless you want to synchronize with a remote database).
+* PS2: The downside to this however, is that the data will disappear if the browser cache/data gets deleted during an upgrade or the like. Remember to back up and/or synchronize regularly, as is crucially regarding all valuable data.
+* PS3: To verify the data flow, open the developer tab (F12), and check the network tab to see where the traffic goes (or rather where it doesn't go).
+
 ## <a id="downloads"></a>Download
 
 <div class="card">
@@ -32,7 +40,6 @@ Features:
         <img src="assets/img/logo_self_hosted.png" alt="Self-hosted" width="32">
         Self-hosted
     </a>
-
 </div>
 
 ## Installation
