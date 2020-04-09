@@ -10,7 +10,7 @@ v-content
           )
             v-list(rounded)
               v-subheader(class="headline font-weight-light") Status report
-                //- Morning/evening / Key figures
+                //- TODO Morning/evening / Key figures
               v-list-item-group(color="primary")
                 v-list-item(
                   v-if="this.$store.getters.getTasksAggregate.today != 0"
@@ -44,7 +44,6 @@ v-content
                 v-col(cols="12")
                   div
                     p(v-if="!this.$store.getters.getTasksAggregate.initiated") Retrieving aggregates
-                    //-p(v-if="!taskProgress.visible") Retrieving aggregates
                     p(
                       v-if="this.$store.getters.getTasksAggregate.doneToday != 0"
                     ) Tasks done today: 
@@ -62,7 +61,6 @@ v-content
                       :value="taskProgress.value"
                       stream
                     )
-                      //-:indeterminate="taskProgress.visible"
               v-row
                 v-col(
                   cols="12"
@@ -74,7 +72,7 @@ v-content
                     type="image"
                   )
                     chart-task-statuses
-                  //v-skeleton-loader(
+                  //-v-skeleton-loader(
                     :loading="sparklineLoading"
                     transition="scale-transition"
                     type="image"
@@ -110,7 +108,6 @@ v-content
             v-card
               v-card-title(class="headline") {{ dt.name }}
               v-card-text
-                //v-container(v-for="dt in [dataTable,dataTableLocalDB]")
                 v-simple-table
                   template(v-slot:default)
                     thead
@@ -127,7 +124,7 @@ v-content
                         td {{ data.value }}
         v-col
           v-container
-            //v-card(v-if="!$store.getters.remoteDBIsOnline")
+            //-v-card(v-if="!$store.getters.remoteDBIsOnline")
               v-card-text Remote database is not connected
               // button to dbconnectiondialog
             v-card
@@ -136,8 +133,8 @@ v-content
               v-card-text(v-else)
                 v-simple-table
                   template(v-slot:default)
-                    //caption(class="headline text-left") Caption
-                    //thead
+                    //-caption(class="headline text-left") Caption
+                    //-thead
                       tr
                         th(class="text-left") Key
                         th(class="text-left") Value
@@ -242,14 +239,15 @@ export default {
       let tod = t.today;
       let tov = t.overdue;
       if (tod == 1) {
-        r = `Only ${tod} task needs your attention.`
+        // combine and compare with overdue //r = `Only ${tod} task needs your attention.`
+        r = `Only ${tod} task due today.`
       } else if (tod >= 10) {
         r = `${randomEncouragement} ${tod} tasks ahead.`
       } else if (tod < 10) {
         r = `You have ${tod} tasks due today.`
       }
       if (tov != 0) {
-        ov = `${tov}` //<span class="error">overdue</span>
+        ov = `${tov}`
       }
       return { main: r, overdue: ov }
     },
@@ -266,8 +264,7 @@ export default {
     setTimeout(() => {
       this.$store.commit('setLeftDrawer', true);
     }, 200);
-    setTimeout(() => {      
-      //this.$store.dispatch('tasksDueAggregation');
+    setTimeout(() => {
       this.$store.dispatch('setMessagesUnreadCount');
       /* no use for this at the moment. May be used in the future
       this.dataTables.generic.table.push(

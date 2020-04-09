@@ -39,14 +39,14 @@ import pouchMixin from "@/mixins/pouchMixin";
 export default {
   name: "tasksList",
   components: {
-    TasksItem
+    TasksItem,
   },
   mixins: [pouchMixin],
   props: {
-    source: String
+    source: String,
   },
   data: () => ({
-    tasks: []
+    tasks: [],
   }),
   computed: {
     list: function() {
@@ -55,14 +55,14 @@ export default {
         return x;
       }
       return "";
-    }
+    },
   },
   watch: {
     $route(to) {
       if (to) {
         this.getTaskList();
       }
-    }
+    },
   },
   created() {},
   mounted() {
@@ -77,14 +77,13 @@ export default {
       let mango = {
         selector: {
           productivity: true,
-          type: "task"
+          type: "task",
         },
         limit: 50,
         use_index: "pimpim_mango_indexes",
-        fields: ["_id"]
+        fields: ["_id"],
       };
       if (list.slice(0, 6) == "status") {
-        //mango.selector.status = list.slice(6);
         this.processQuery(
           "pimpim/task-status-count",
           list.slice(6),
@@ -95,30 +94,21 @@ export default {
         mango.selector["$nor"] = [{ status: "cancelled" }, { status: "done" }];
         mango.selector.project = list.slice(7);
       } else if (list.slice(0, 8) == "priority") {
+        const pri = parseInt(list.slice(8));
+        this.processQuery("pimpim/task-priority-count", pri, pri);
+        return;
+      } else if (list.slice(0, 11) == "noproject") {
         mango.selector["$nor"] = [{ status: "cancelled" }, { status: "done" }];
-        const pri = list.slice(8);
-        mango.selector.priority = parseInt(pri);
+        mango.selector["project"] = null;
+        delete mango.use_index;
       } else if (list.slice(0, 11) == "postponed") {
         mango.selector["$nor"] = [{ status: "cancelled" }, { status: "done" }];
         mango.selector.postponed = { $gt: 5 };
         delete mango.use_index;
       } else if (list.slice(0, 8) == "tomorrow") {
-        /*
-                mango.selector["$nor"] = [
-                    {"status": "cancelled"},
-                    {"status": "done"},
-                    {"due": null}
-                ];
-                */
         let today = new Date();
         let dayAfterTomorrowMilli = new Date().setDate(today.getDate() + 2);
         let dayAfterTomorrow = new Date(dayAfterTomorrowMilli);
-        /*
-                mango.selector.due = {
-                    "$gt": today.toISOString().slice(0,10),
-                    "$lt": dayAfterTomorrow.toISOString().slice(0,10)
-                };
-                */
         this.processQuery(
           "pimpim/tasks-due",
           today.toISOString().slice(0, 10),
@@ -126,16 +116,8 @@ export default {
         );
         return;
       } else {
-        /*
-                mango.selector["$nor"] = [
-                    {"status": "cancelled"},
-                    {"status": "done"},
-                    {"due": null}
-                ];
-                */
         let d = new Date();
         d.setDate(d.getDate() + 1);
-        //mango.selector.due = {"$lt": d.toISOString().slice(0,10)};
 
         this.processQuery(
           "pimpim/tasks-due",
@@ -146,40 +128,7 @@ export default {
       }
 
       let data = await this.getMango(mango);
-      //this.$store.commit('loaderInactive');
       this.tasks = data.docs;
-      /*
-            try {
-                //let data = await window.db.find(mango);
-                //console.log(data)
-            } catch (error) {
-                //this.$store.commit('addAlert', {type:'error',text:error})
-            }
-            */
-
-      /* old CouchDB code
-            fetch(url, {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json"
-                },
-                body: JSON.stringify(mango)
-            })
-            .then((resp) => resp.json())
-            .then(function(dbData) {
-                dbData.docs.forEach( (doc, index) => {
-                    vstore.commit('addTask', doc)
-                    if (index + 1 == dbData.docs.length) {
-                        vstore.commit('toggleLoader');
-                    }
-                });
-                if (dbData.docs.length == 0) {vstore.commit('toggleLoader');}
-            })
-            .catch(function(error) {
-                this.commit('toggleLoader');
-                this.commit('addAlert', {type:'error',text: error})
-            });
-            */
     },
     processQuery: function(view, startKey, endKey) {
       let context = this;
@@ -188,10 +137,10 @@ export default {
           startkey: startKey,
           endkey: endKey,
           limit: 50,
-          reduce: false
+          reduce: false,
         })
         .then(function(data) {
-          data.rows.forEach(row => {
+          data.rows.forEach((row) => {
             context.tasks.push({ _id: row.id });
           });
           context.$store.commit("loaderInactive");
@@ -200,7 +149,7 @@ export default {
           context.$store.commit("showSnackbar", { text: err });
           console.log(err);
         });
-    }
-  }
+    },
+  },
 };
 </script>

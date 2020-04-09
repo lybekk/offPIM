@@ -4,48 +4,57 @@
         :items="items"
         :load-children="fetchProjects"
         :open.sync="open"
+        expand-icon="mdi-chevron-down"
         activatable
         color="warning"
         open-on-click
         transition
+        dense
     )
         template(v-slot:label="{ item, active }")
-            //<v-icon v-if="!item.children">mdi-account</v-icon>
             span(
                 v-if="!item.children"
                 @click="showProject(item.id)"
                 :class="item.archived ? 'projectArchived' : ''"
                 :title="projectTitle(item)"
             ) {{ item.name }}
-                //- :to="`/tasks/project/${item.id}`"
             span(v-else) {{ item.name }}
 </template>
 
 <script>
+import pouchMixin from "@/mixins/pouchMixin";
+
 export default {
   name: "projectList",
+  mixins: [pouchMixin],
   data: () => ({
     closedProjects: [],
     openProjects: [],
-
+    projects: {
+      doing: [],
+      next: [],
+      todo: [],
+      plan: [],
+      wait: [],
+      done: [],
+      cancelled: []
+    },
     active: [],
     avatar: null,
     open: []
   }),
   computed: {
     items() {
-      return [
-        {
-          id: "open",
-          name: "Projects",
-          children: this.openProjects
-        },
-        {
-          id: "closed",
-          name: "Closed projects",
-          children: this.closedProjects
-        }
-      ];
+      let arr = [];
+      const keys = Object.keys( this.projects );
+      for (let k of keys) {
+        arr.push({
+          id: k,
+          name: k.charAt(0).toUpperCase() + k.slice(1),
+          children: this.projects[k]
+        })
+      }
+      return arr
     },
     closedProjectsSorted: function() {
       const proj = this.closedProjects;
@@ -75,40 +84,15 @@ export default {
       this.$router.push(`/tasks/project/${id}`);
     },
     async fetchProjects(item) {
-      let mango = {
-        selector: {
-          realm: "productivity",
-          type: "project"
-        },
-        limit: 1000
-      };
-      if (item.id === "closed") {
-        mango.selector["$nor"] = [
-          { status: "wait" },
-          { status: "plan" },
-          { status: "todo" },
-          { status: "next" },
-          { status: "doing" }
-        ];
-      }
-      if (item.id === "open") {
-        mango.selector["$nor"] = [{ status: "cancelled" }, { status: "done" }];
-      }
-      return window.db
-        .find(mango)
-        .then(function(result) {
-          result.docs.forEach(doc => {
-            let obj = {
-              id: doc._id,
-              name: doc.project,
-              archived: doc.archived
-            };
-            item.children.push(obj);
-          });
-        })
-        .catch(function(err) {
-          this.$store.commit("addAlert", { type: "error", text: err });
-        });
+      const projects = await this.getQuery('pimpim/tasks-projects', item.id, item.id, true);
+      projects.forEach(doc => {
+        let obj = {
+          id: doc._id,
+          name: doc.title,
+          archived: doc.archived
+        };
+        item.children.push(obj);
+      });
     }
   }
 };

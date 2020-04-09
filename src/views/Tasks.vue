@@ -28,12 +28,17 @@ v-content
               v-icon mdi-calendar-arrow-right
             v-list-item-title Postponed > 5x
         v-divider(inset)
+        v-subheader.subtitle-1 Projects
         project-list
         v-divider(inset)
         v-list-item(link to="/tasks/completed_projectless")
             v-list-item-icon
               v-icon mdi-check
             v-list-item-title Completed & projectless
+        v-list-item(link to="/tasks/list/noproject")
+            v-list-item-icon
+              v-icon mdi-folder-alert
+            v-list-item-title No project
     v-bottom-navigation(
       app
       :input-value="showBottomNav"

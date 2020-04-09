@@ -1,6 +1,6 @@
 {
   "_id": "_design/pimpim_mango_indexes",
-  "version": 20200406,
+  "version": 20200407,
   "language": "query",
   "views": {
     "created-json-index": {
@@ -31,51 +31,6 @@
         "def": {
           "fields": [
             "start"
-          ]
-        }
-      }
-    },
-    "realmTags-json-index": {
-      "map": {
-        "fields": {
-          "realm": "asc",
-          "tags": "asc"
-        },
-        "partial_filter_selector": {}
-      },
-      "reduce": "_count",
-      "options": {
-        "def": {
-          "fields": [
-            "realm",
-            "tags"
-          ]
-        }
-      }
-    },
-    "productivityPriority-json-index": {
-      "map": {
-        "fields": {
-          "productivity": "asc",
-          "priority": "asc"
-        },
-        "partial_filter_selector": {
-          "$nor": [
-            {
-              "status": "cancelled"
-            },
-            {
-              "status": "done"
-            }
-          ]
-        }
-      },
-      "reduce": "_count",
-      "options": {
-        "def": {
-          "fields": [
-            "productivity",
-            "priority"
           ]
         }
       }

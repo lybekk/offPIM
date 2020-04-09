@@ -56,8 +56,9 @@
                                             class="my-2"
                                             :items="projectList"
                                             label="Project"
+                                            item-text="text"
+                                            item-value="value"
                                             editable
-                                            item-value="text"
                                         )
                                     form-textfield(
                                         v-model="newTask.context"
@@ -115,127 +116,133 @@
                                                 @click:minute="$refs.timemodal.save(pickerTime)"
                                             )
                         v-card-actions
+                            span(v-text="newTask._id")
                             v-spacer
                             v-btn(color="error" text @click="dialog = false") Close
                             v-btn(color="primary" text @click="insertNewTask") Save
 </template>
 
 <script>
-import newDocumentMixin from '@/mixins/newDocumentMixin'
-import formTextfield from '@/components/form/text'
-import formTextareafield from '@/components/form/textarea'
+import newDocumentMixin from "@/mixins/newDocumentMixin";
+import formTextfield from "@/components/form/text";
+import formTextareafield from "@/components/form/textarea";
 
 export default {
-    name: 'TasksNewtaskform',
-    components: {
-        formTextfield,
-        formTextareafield
+  name: "TasksNewtaskform",
+  components: {
+    formTextfield,
+    formTextareafield,
+  },
+  mixins: [newDocumentMixin],
+  data: () => ({
+    dialog: false,
+    dateModal: null,
+    timeModal: null,
+    newTask: {
+      _id: null,
+      title: "",
+      description: null,
+      productivity: true,
+      type: "task",
+      status: "plan",
+      priority: 4,
+      tags: [],
+      due: "2020-01-01T01:01:01",
+      project: null,
+      context: null,
     },
-    mixins: [newDocumentMixin],
-    data: () => ({
-        dialog: false,
-        dateModal: null,
-        timeModal: null,
-        newTask: {
-             title:'',
-             description:null,
-             productivity: true,
-             type:'task',
-             status:'plan',
-             priority:4,
-             tags:[],
-             due: '2020-01-01T01:01:01',
-             project:null,
-             context:null
-        }
-    }),
-    computed: {
-        tagsListItems: function () {
-            let tl = this.$store.getters.getTagList;
-            
-            let a = tl.map(obj => {
-                return obj.key
-            })
+  }),
+  computed: {
+    tagsListItems: function() {
+      let tl = this.$store.getters.getTagList;
 
-            return a;
-        },
-        pickerDate: {
-            get () {
-                let d = this.newTask.due.substring(0,10);
-                return d
-            },
-            set (pickerValue) {
-                let old = this.newTask.due.substring(0,10);
-                var newDate = this.newTask.due.replace(old, pickerValue);
-                this.newTask.due = newDate;
-            }
-        },
-        pickerTime: {
-            get () {
-                let hhmm = this.newTask.due.substring(11,16);
-                return hhmm
-            },
-            set (pickerValue) {
-                let old = this.newTask.due.substring(11,16);
-                var newTime = this.newTask.due.replace(old, pickerValue);
-                this.newTask.due = newTime;
-            }
-        },
-        newTaskPriority: {
-            get () {
-                return this.newTask.priority.toString()
-            },
-            set (radioValue) {
-                this.newTask.priority = parseInt(radioValue);
-            }
-        },
-        projectList: function () {
-            let pl = this.$store.getters.getOpenProjects;
-            let a = pl.map(obj => {
-                return obj.project
-            })
-            return a.sort();
-        }
+      let a = tl.map((obj) => {
+        return obj.key;
+      });
+
+      return a;
     },
-    watch: {
-        dialog: function (d) {
-            if (d) {
-                let dt = new Date();
-                let n = this.newTask;
-                n.type = 'task';
-                n.due = dt.toISOString();
-                n.title = '';
-                n.description = '';
-                n.status = 'plan';
-                n.priority = 4;
-                n.tags = [];
-                n.project = null;
-                n.context = null;
-            }
-        }
+    pickerDate: {
+      get() {
+        let d = this.newTask.due.substring(0, 10);
+        return d;
+      },
+      set(pickerValue) {
+        let old = this.newTask.due.substring(0, 10);
+        var newDate = this.newTask.due.replace(old, pickerValue);
+        this.newTask.due = newDate;
+      },
     },
-    methods: {
-        insertNewTask: async function () {
-            var now = new Date().toISOString();
-            let n = this.newTask;
-            n._id = this.generateUUID();
-            n.created = now;
-            n.start = now;
-            n.end = null;
-            n.priority = parseInt(this.newTask.priority);
+    pickerTime: {
+      get() {
+        let hhmm = this.newTask.due.substring(11, 16);
+        return hhmm;
+      },
+      set(pickerValue) {
+        let old = this.newTask.due.substring(11, 16);
+        var newTime = this.newTask.due.replace(old, pickerValue);
+        this.newTask.due = newTime;
+      },
+    },
+    newTaskPriority: {
+      get() {
+        return this.newTask.priority.toString();
+      },
+      set(radioValue) {
+        this.newTask.priority = parseInt(radioValue);
+      },
+    },
+    projectList: function() {
+      let pl = this.$store.getters.getOpenProjects;
+      let a = pl.map((obj) => {
+            return { text: obj.title, value: obj._id };
+            //return obj.project;
+      });
+      //return a.sort();
+      return a;
+    },
+  },
+  watch: {
+    dialog: function(d) {
+      if (d) {
+        let dt = new Date();
+        let n = this.newTask;
+        n._id = this.generateUUID();
+        n.type = "task";
+        n.due = dt.toISOString();
+        n.title = "";
+        n.description = "";
+        n.status = "plan";
+        n.priority = 4;
+        n.tags = [];
+        n.project = null;
+        n.context = null;
+      }
+    },
+  },
+  methods: {
+    insertNewTask: async function() {
+      var now = new Date().toISOString();
+      let n = this.newTask;
+      //n._id = this.generateUUID();
+      n.created = now;
+      n.start = now;
+      n.end = null;
+      n.priority = parseInt(this.newTask.priority);
 
-            if (n.type == 'project') {
-                n.project = null; // not needed. Wasting disk space
-                console.log('Fix project entry form') // consider using classes
-            }
+      if (n.type == "project") {
+        n.project = null; // not needed. Wasting disk space
+        console.log("Fix project entry form"); // consider using classes
+      }
 
-            let result = await this.$store.dispatch(
-                'insertDocument', { doc: n, snackbarText:'Added task: ' + n.title }
-                );
-            if (result.ok) {
-                this.dialog = false;
-            }
-        },
-    }
-}
+      let result = await this.$store.dispatch("insertDocument", {
+        doc: n,
+        snackbarText: "Added task: " + n.title,
+      });
+      if (result.ok) {
+        this.dialog = false;
+      }
+    },
+  },
+};
 </script>
