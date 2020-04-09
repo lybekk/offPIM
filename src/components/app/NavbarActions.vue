@@ -139,8 +139,6 @@ export default {
                 .get(doc._id)
                 .then(function(localDoc) {
                   if (doc._rev > localDoc._rev) {
-                    //console.log('Remote DOC: ', doc);
-                    //console.log('Local DOC: ', localDoc);
                     return true;
                   }
                 })
@@ -222,7 +220,7 @@ export default {
           console.log("Error syncing: ", err);
           // set localStorage sync did not finish
           vuex.commit("showSnackbar", {
-            text: err,
+            text: 'Something went wrong during sync. Is the Remote DB reachable? ' + err,
             color: "error"
           });
         });

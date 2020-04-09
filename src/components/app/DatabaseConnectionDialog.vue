@@ -15,7 +15,7 @@
         v-card-text
           v-expansion-panels(:value="2")
             v-expansion-panel
-              v-expansion-panel-header Info
+              v-expansion-panel-header.subtitle-1 Info
               v-expansion-panel-content
                 ul
                   li Use full url, with http or https, including database name (I.E. <code class="secondary info--text">http://localhost:5984/vault</code>), to a 
@@ -25,12 +25,12 @@
                   li Note: User/admin must have permission to upload design documents
                   li Leave username blank if credentials are in the url
             v-expansion-panel
-              v-expansion-panel-header Actions
+              v-expansion-panel-header.subtitle-1 Actions
               v-expansion-panel-content
                 v-list
                   database-compaction(whatdb="remoteDB")
             v-expansion-panel
-              v-expansion-panel-header Authentication
+              v-expansion-panel-header.subtitle-1 Authentication
               v-expansion-panel-content
                 v-card
                   v-card-text
@@ -186,15 +186,11 @@ export default {
       }
     },
     requestAuthCookie: async function() { // not used for the time being, as pouchdb handles authentication well
-      //const urlDB = this.remoteDBUrl;
-      //let url = this.remoteDBUrl;
       let urlSplit = this.remoteDBUrl.split('/');
       urlSplit.pop();
       let sessionUrl = urlSplit.join('/') + "/_session";
 
-      //const urlDB = this.$store.getters.urlDBRoot;
       const form = { name: this.username, password: this.password };
-      //const response = await fetch(urlDB + "_session", {
       const response = await fetch( sessionUrl, {
         method: "POST",
         body: JSON.stringify(form),
@@ -205,15 +201,7 @@ export default {
       });
       const result = await response.json();
       if (response.ok) {
-        //this.authenticated = true;
-        //this.authMsg = null;
         this.authMsg = 'Authenticated';
-        //this.authDialog = false;
-        //this.pimpimDoc.authenticationRequired = false;
-        //this.mangoDoc.authenticationRequired = false;
-        //const cookie = await fetch(urlDB + '_session');
-        //const cookieObj = await cookie.json();
-        //console.log(cookieObj)
       } else if (response.status == 401) {
         this.authMsg = "Incorrect credentials";
       } else {
@@ -221,31 +209,6 @@ export default {
         this.authMsg = "Something went wrong. See console.";
       }
     },
-
-    /*
-    connectionCheck: async function () {
-      try {
-        const response = await fetch( this.remoteDBUrl,{
-          credentials: "include"
-        } );
-        const data = await response.json();
-        //const data = await window.remoteDB.info();
-        //console.log(data);
-        //Do not use -> if ( response.status == 200) { // gives 200 for all relative paths
-        if ( data.db_name) {
-          this.connectionOK = true;
-        } else {
-          throw 'Could not establish connection to remote database'
-        }
-      } catch(error) {
-        this.connectionOK = false
-        setTimeout(() => {
-          this.connectionOK = null
-        }, 400);
-        this.$store.commit('showSnackbar', { text:'Connection failed: ' + error, color:'error' })
-      }
-    },
-    */
   }
 };
 </script>

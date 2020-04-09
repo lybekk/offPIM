@@ -55,42 +55,30 @@
                       v-card(class="mx-auto" tile)
                         v-list
                           database-compaction(whatdb="localDB")
-                          //v-list-item(
-                            :disabled="compactingDone || compactInProgress"
-                            @click="compactLocalDB" 
-                            )
+                          v-list-item(
+                            :disabled="backupPreparing && !backupDone"
+                            @click="backupLocalDB"
+                          )
                             v-list-item-content
-                              v-list-item-title Compact database
-                                v-progress-linear(  
-                                  v-if="compactInProgress"
+                              v-list-item-title Create backup
+                                v-progress-linear(
+                                  v-if="backupPreparing && !backupDone"
                                   color="info"
                                   buffer-value="0"
                                   stream
                                 )
+                              div(
+                                v-if="backupPreparing"
+                              )
+                                // Ready:
+                                a(
+                                  id="linkReadyContainer"
+                                  class="backupLink"
+                                  download="pimpim_LocalDB_backup"
+                                ) Creating backup
                             v-list-item-icon
-                              v-icon(v-if="compactingDone" color="success") mdi-check
+                              v-icon(v-if="backupDone" color="success") mdi-check
                 v-divider
-                div(class="text-center")
-                  v-btn(
-                    v-if="!backupPreparing"
-                    color="primary"
-                    @click="backupLocalDB"
-                  ) Create backup
-                  div(
-                    v-if="backupPreparing"
-                  )
-                    // Ready:
-                    a(
-                      id="linkReadyContainer"
-                      class="backupLink"
-                      download="pimpim_LocalDB_backup"
-                    ) Creating backup
-                    v-progress-linear(
-                      v-if="backupPreparing && !backupDone"
-                      color="info"
-                      buffer-value="0"
-                      stream
-                    )
                 //v-divider
                 v-fab-transition
                   v-speed-dial(
@@ -127,7 +115,6 @@
                       @click="dialog = false"
                   ) Close
                   v-spacer
-
 </template>
 
 <script>
@@ -143,29 +130,10 @@ export default {
     backupPreparing: false,
     backupDone: false,
     trashIconClicked: false,
-    //compactingDone: false,
-    //compactInProgress: false,
     destroyInProgress: false,
   }),
   computed: {},
   methods: {
-    /*
-    compactLocalDB: async function() {
-      try {
-        this.compactInProgress = true;
-        var result = await window.db.compact();
-        if (result.ok) {
-          this.compactingDone = true;
-        }
-        this.compactInProgress = false;
-        console.log(result)
-      } catch (err) {
-        console.log(err);
-        this.compactInProgress = false;
-      }
-    },
-    */
-
     backupLocalDB: async function() {
       this.backupPreparing = true; // backup not really ready at this time. Used for proper feedback
       const backup = await window.db.allDocs({
