@@ -27,7 +27,7 @@ Features:
 
 * PS: Your data never leaves your browser, as it uses [PouchDB](https://pouchdb.com/), an in-browser database. The data entered into pimpim will neaver touch the server it's hosted on (unless you want to synchronize with a remote database).
 * PS2: The downside to this however, is that the data will disappear if the browser cache/data gets deleted during an upgrade or the like. Remember to back up and/or synchronize regularly, as is crucially regarding all valuable data.
-* PS3: To verify the data flow, open the developer tab (F12), and check the network tab to see where the traffic goes (or rather where it doesn't go).
+* PS3: To verify the data flow, open the developer tab (F12), and check the network tab to see where the traffic goes (or rather, where it doesn't go).
 
 ## <a id="downloads"></a>Download
 

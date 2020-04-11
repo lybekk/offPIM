@@ -1,4 +1,0 @@
-{
-	"reduce": "_count",
-	"map": "function (doc) {\n  if (doc.realm == \"messages\") {\n    emit(\"messages\", 1);\n  }\n  if (doc.realm == \"productivity\" && doc.type == \"task\") {\n    emit(\"tasks\", 1);\n  }\n}"
-}
