@@ -182,9 +182,6 @@ export default {
           return '+10'
         }
         return list[priority]
-    },
-    getTasksByPriority: function(pri) {
-      this.$store.dispatch('getTasks', 'priority' + pri);
     }
   }
 }

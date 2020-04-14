@@ -63,6 +63,7 @@
                 @click="syncDatabase"
                 block
                 :loading="syncInProgress"
+                :disabled="!$store.getters.remoteDBIsOnline"
               ) Sync
             span Avoid closing browser window during syncing
 </template>
