@@ -1,7 +1,9 @@
 <template lang="pug">
 v-dialog(v-model="dialog" scrollable max-width="400px")
   template(v-slot:activator="{ on }")
-    span(v-text="taskDescription(task.description)" v-on="on")
+    //-span(v-text="taskDescription(task.description)" v-on="on")
+    v-btn(icon v-on="on" :color="!value ? 'secondary' : '' ")
+      v-icon(v-text="!value ? 'mdi-comment-outline' : 'mdi-comment' ") 
   v-card
     v-card-title
       span(class="headline") Edit description

@@ -12,15 +12,16 @@ div(class="text-center")
     //-:nudge-width="200"
     template(v-slot:activator="{ on }")
       v-btn(
-        text
+        icon
         v-on="on"
       )
+        v-icon(:color="priorityStarColor[task.priority]") mdi-star
         //-Priority
         //-span.text-capitalize(
           :class="color+'--text'"
           ) { task.status }}
         //-v-col.text-capitalize { task.priority }}
-        span.text-capitalize {{ task.priority }}
+        //-span.text-capitalize { task.priority }}
           v-icon(:color="priorityStarColor[task.priority]") mdi-star
     v-card(width="50")
       v-container(fluid)

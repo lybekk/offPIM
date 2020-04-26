@@ -45,7 +45,12 @@ v-content
       grow
     )
       v-spacer
-      v-bottom-sheet(v-model="statusSheet" inset)
+      v-bottom-sheet(
+        v-model="statusSheet" 
+        overlay-color="secondary"
+        max-width="350"
+        inset
+      )
         template(v-slot:activator="{ on }")
           v-btn(
             text
@@ -62,6 +67,11 @@ v-content
             :to="`/tasks/list/status${status}`"
             @click="statusSheet = false"
           )
+            v-list-item-avatar
+              v-icon(
+                :color="$store.getters.getStatusColors[status]"
+                v-text="$store.getters.getStatusIcons[status]"
+              )
             v-list-item-content
               v-list-item-title(
                 v-text="status"
@@ -73,7 +83,12 @@ v-content
                 v-text="statusCount(status)"
               )
       //v-menu(top offset-y)
-      v-bottom-sheet(v-model="prioritySheet" inset)
+      v-bottom-sheet(
+        v-model="prioritySheet" 
+        overlay-color="secondary"
+        max-width="450"
+        inset
+      )
         template(v-slot:activator="{ on }")
           v-btn(
             text
@@ -89,6 +104,8 @@ v-content
             :to="`/tasks/list/priority${btn.pri}`"
             @click="prioritySheet = false"
           )
+            v-list-item-avatar
+              v-icon(:color="priorityStarColor[btn.pri]") mdi-star
             v-list-item-content
               v-list-item-title(
                 :title="btn.title"
@@ -130,7 +147,13 @@ export default {
       { pri: 2, title:'Important but not urgent'},
       { pri: 3, title:'Not important but urgent'},
       { pri: 4, title:'Not important and not urgent'}
-    ]
+    ],
+    priorityStarColor: {
+      1:'error',
+      2:'warning',
+      3:'primary',
+      4:'secondary'
+    },
   }),
   computed: {
     openProjects: function () {

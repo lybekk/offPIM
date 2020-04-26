@@ -12,14 +12,23 @@ div(class="text-center")
     //-:nudge-width="200"
     template(v-slot:activator="{ on }")
       v-btn(
-        text
+        icon
+        :color="$store.getters.getStatusColors[task.status]"
         v-on="on"
       )
+        //-:class="$store.getters.getStatusColors[task.status] + '--text lighten-4'"
+        v-icon(
+          v-text="$store.getters.getStatusIcons[task.status]"
+        )
+      //-v-btn(
+        icon
+        v-on="on"
+        )
         //-Status
         //- Consider using Select component
         span.text-capitalize(
           :class="color+'--text lighten-4'"
-        ) {{ task.status }}
+        ) { task.status }}
     v-card(width="160")
       v-slider.text-capitalize(
         :tick-labels="statusList"

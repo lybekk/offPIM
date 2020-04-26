@@ -16,6 +16,15 @@ const tasks = {
             doing: "info",
             done: "success"
         },
+        statusIcons: {
+            cancelled: "mdi-close-circle",
+            wait: "mdi-progress-clock",
+            plan: "mdi-progress-wrench",
+            todo: "mdi-circle-double",
+            next: "mdi-arrow-right-circle-outline",
+            doing: "mdi-circle-slice-5",
+            done: "mdi-check-circle"
+        },
         taskStatuses: {
             "plan": 0,
             "wait": 0,
@@ -109,7 +118,7 @@ const tasks = {
                 context.commit('setTasksAggregate', { key: 'tomorrow', value: aggregate.tomorrow });
                 context.commit('setTasksAggregate', { key: 'overdue', value: aggregate.overdue });
             } catch (error) {
-                context.commit('addAlert', { type: 'error', text: error })
+                context.commit('addAlert', { type: 'error', text: 'Task aggregation: ' + error })
             }
 
             try {
@@ -125,7 +134,7 @@ const tasks = {
                 context.commit('setTasksAggregate', { key: 'doneToday', value: data.rows.length });
                 context.commit('setTasksAggregate', { key: 'initiated', value: true });
             } catch (err) {
-                context.commit('addAlert', { type: 'error', text: err })
+                context.commit('addAlert', { type: 'error', text: 'Task aggregation: ' + err })
             }
             return true
         },
@@ -144,7 +153,7 @@ const tasks = {
                 }
                 context.commit('addOpenProjects', projects)
             } catch (error) {
-                context.commit('addAlert', { type: 'error', text: error })
+                context.commit('addAlert', { type: 'error', text: 'Fetching open projects: ' + error })
             }
         },
 
@@ -169,7 +178,7 @@ const tasks = {
                     context.commit('setTaskPriorities', aggregate)
                 });
             }).catch(function (err) {
-                context.commit('addAlert', { type: 'error', text: err })
+                context.commit('addAlert', { type: 'error', text: 'Getting task priorities failed' + err })
             });
 
         },
@@ -236,7 +245,7 @@ const tasks = {
 
                 }).catch(function (error) {
                     context.commit('toggleLoader');
-                    context.commit('addAlert', { type: 'error', text: error })
+                    context.commit('addAlert', { type: 'error', text: 'Getting tasks failed: ' + error })
                 });
 
 
@@ -249,7 +258,7 @@ const tasks = {
                 context.commit('setTagList', result)
 
             } catch (err) {
-                context.commit('addAlert', { type: 'error', text: err })
+                context.commit('addAlert', { type: 'error', text: 'Failed fetching tasks tag count: ' + err })
             }
 
         }
@@ -277,6 +286,9 @@ const tasks = {
         },
         getStatusColors: state => {
             return state.statusColors
+        },
+        getStatusIcons: state => {
+            return state.statusIcons
         },
     },
 }
