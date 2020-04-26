@@ -1,1 +1,0 @@
-This is a work in progress. An experiment on drop-in apps
