@@ -1,34 +1,5 @@
 export default {
-  /*
-  urlMango: state => {
-    let u = state.dbBasePath + state.database + '/_find' ;
-    return u
-  },
 
-  localDB: state => {
-    let u = state.localDB;
-    return u
-  },
-  remoteDB: state => {
-    let u = state.remoteDB;
-    return u
-  },
-  
-  urlDB: state => {
-    let u = state.dbBasePath + state.database + '/' ;
-    return u
-  },
-  
-  urlDBRoot: state => {
-    let u = state.dbBasePath ;
-    return u
-  },
-  
-  dbName: state => {
-    let u = state.database ;
-    return u
-  },
-   */
   isLeftDrawerOpen: state => {
     return state.leftDrawer
   },
@@ -85,8 +56,6 @@ export default {
   },
 
   getDataItemIndex: (state) => (id) => {
-    //return state.data.find(item => item._id === id)
-    //const index = state.data.findIndex( ({ _id }) => _id === payload._id );
     return state.data.findIndex( ({ _id }) => _id === id );
   },
 
@@ -94,9 +63,9 @@ export default {
     return state.dbConnectionDialog
   },
 
-  /*
-  isPouchDB: state => {
-    return state.isPouchDB
+  dialogItemDetailed: state => {
+    return state.dialogItemDetailed
   },
-  */
+
+
 }

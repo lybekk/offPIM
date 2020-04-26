@@ -1,11 +1,9 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
 
-//import state from './state'
 import actions from './actions'
 import getters from './getters'
 import mutations from './mutations'
-//import * as actions from './actions'
 
 import notes from './modules/notes'
 import tasks from './modules/tasks'
@@ -14,8 +12,6 @@ import messages from './modules/messages'
 import finances from './modules/finances'
 import inventory from './modules/inventory'
 import themes from './modules/themes'
-//import form from './form' /* not in use */
-
 
 Vue.use(Vuex)
 
@@ -24,10 +20,6 @@ export default new Vuex.Store({
     data: [],
     leftDrawer: false,
     loaderActive: false,
-    //database: 'vaulttest',
-    //dbBasePath: 'http://localhost:5984/',
-    //localDB: 'vault', // will replace the two above.
-    //remoteDB: 'http://localhost:5984/vaulttest',
     remoteDBIsOnline: false,
     remoteDBSettings: {
       name: null, // I.E. 'http://localhost:5984/vault'
@@ -38,10 +30,9 @@ export default new Vuex.Store({
     },
     remoteDBInfo: {},
     localDBInfo: {},
-    //dbms: null, // CouchDB or PouchDB
-    //isPouchDB: false,
     dbConnectionEstablished: false,
     dbConnectionDialog: false,
+    dialogItemDetailed: false,
     errors: [],
     alerts: [],
     navItems: [],
@@ -67,6 +58,5 @@ export default new Vuex.Store({
     finances,
     inventory,
     themes
-    //form
   }
 })

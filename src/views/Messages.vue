@@ -13,25 +13,36 @@
               span(v-text="totalMessages")
       v-divider
       v-list(dense nav)
-        //messages-newmessageform
+        v-list-item(
+          @click="getMessagesByTag(false)"
+        )
+          v-list-item-icon
+            v-icon mdi-inbox
+          v-list-item-content
+            v-list-item-title Unread
+          v-list-item-action
+            //- TODO - get from vuex
+            v-chip(
+              small v-text="tagListUntaggedOnly"
+            ) 0
+        v-list-item(
+          title="Messages without tags end up here"
+          @click="getMessagesByTag('untagged')"
+        )
+          v-list-item-icon
+            v-icon mdi-inbox
+          v-list-item-content
+            v-list-item-title Inbox
+          v-list-item-action
+            v-chip(
+              small v-text="tagListUntaggedOnly"
+            ) 0
         v-subheader Tags
-        v-list-item-group(v-model="activeTag" mandatory)
-          v-list-item(
-            title="Messages without tags end up here"
-            @click="getMessagesByTag('untagged')"
-          )
-            v-list-item-icon
-              v-icon mdi-inbox
-            v-list-item-content
-              v-list-item-title Inbox
-            v-list-item-action
-              v-chip(
-                small v-text="tagListUntaggedOnly"
-              ) 0
+        v-list-item-group(v-model="activeTag")
           v-list-item(
             v-for="(tag, i) in tagList"
             :key="i"
-            v-on:click="getMessagesByTag(tag.key)"
+            @click="getMessagesByTag(tag.key)"
           )
             v-list-item-icon
               v-icon mdi-tag
@@ -69,18 +80,18 @@
 import MessagesMessagelist from "@/components/MessagesMessagelist.vue";
 import MessagesReader from "@/components/MessagesReader.vue";
 import MessagesNewmessageform from "@/components/MessagesNewmessageform.vue";
-import pouchMixin from '@/mixins/pouchMixin'
+import pouchMixin from "@/mixins/pouchMixin";
 
 export default {
   name: "messages",
   components: {
     MessagesMessagelist,
     MessagesReader,
-    MessagesNewmessageform
+    MessagesNewmessageform,
   },
   mixins: [pouchMixin],
   props: {
-    source: String
+    source: String,
   },
   data: () => ({
     drawerRight: false,
@@ -111,19 +122,21 @@ export default {
     },
     activeMessage: function() {
       const index = this.messageList.findIndex(
-          ({ _id }) => _id === this.activeMessageId 
+        ({ _id }) => _id === this.activeMessageId
       );
       if (index == -1) {
-          return false
+        return false;
       }
-      return this.messageList[index]
+      return this.messageList[index];
       //},
-    }
+    },
   },
   created: function() {},
   mounted() {
     this.$store.dispatch("setMessagesUnreadCount");
-    this.getMessagesByTag("untagged");
+    //this.getMessagesByTag("untagged");
+    //this.getMessagesByTag("readNotTrue");
+    this.getMessagesByTag(false);
     this.getMessagesTagList();
     setTimeout(() => {
       this.drawerRight = true;
@@ -139,11 +152,15 @@ export default {
       const vuex = this.$store;
       vuex.commit("loaderActive");
       try {
-        //let data = await window.db.find(mango);
-        const data = await this.getQuery('pimpim/messages-tag-count', tag, tag, true);
-        //this.messageList = data.rows;
+        const view = !tag ? "pimpim/messages-unread" : "pimpim/messages-tag-count";
+        const data = await this.getQuery(
+          view,
+          tag,
+          tag,
+          true
+        );
         for await (let doc of data) {
-          this.messageList.push( doc );
+          this.messageList.push(doc);
         }
         this.getMessagesTagList();
       } catch (error) {
@@ -154,25 +171,26 @@ export default {
     getMessagesTagList: async function() {
       try {
         var result = await window.db.query("pimpim/messages-tag-count", {
-          group: true
+          group: true,
         });
         this.tags = result.rows;
       } catch (err) {
-        this.$store.commit("addAlert", { type: "error", text: err });
+        this.$store.commit("addAlert", {
+          type: "error",
+          text: "Failed fetching message tags: " + err,
+        });
       }
     },
     readMessage: function(item) {
-      this.$store.commit('setReaderDialog', true)
+      this.$store.commit('setGenericStateBooleanTrue', 'dialogItemDetailed');
       this.activeMessageId = item._id;
       if (!item.read) {
-        const index = this.messageList.findIndex(
-            ({ _id }) => _id === item._id
-        );
+        const index = this.messageList.findIndex(({ _id }) => _id === item._id);
         let msg = this.messageList[index];
         msg.read = true;
         this.putDoc(msg);
       }
-    }
-  }
+    },
+  },
 };
 </script>

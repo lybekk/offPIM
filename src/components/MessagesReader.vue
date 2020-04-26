@@ -16,17 +16,22 @@
           color="error"
           z-index="3"
         )
-          v-btn(text) Deleted
+          v-btn(
+            text
+            @click="$store.commit('setGenericStateBooleanFalse', 'dialogItemDetailed');"
+          ) Deleted
+            v-icon mdi-close
       v-list(two-line)
         v-list-item
           v-list-item-avatar(color="grey")
           v-list-item-content
             v-list-item-title(class="headline" v-text="msg.subject")
-            v-list-item-subtitle Sender:
+            v-list-item-subtitle.subtitle-1 Sender:
               span(v-text="msg.sender")
-            v-list-item-subtitle Recipient:
-              span(v-text="msg.recipient")
-          v-list-item-action(@click="$store.commit('setReaderDialog', false)")
+            v-list-item-subtitle.subtitle-1 Recipient:
+              span(class="subtitle" v-text="msg.recipient")
+          v-list-item-action(@click="$store.commit('setGenericStateBooleanFalse', 'dialogItemDetailed');")
+            //-v-list-item-action(@click="$store.commit('setReaderDialog', false)")
             v-btn(text)
               v-icon mdi-close
       v-card-text
@@ -34,9 +39,9 @@
         br
         hr
         v-row
-          v-col Created: 
-            time(v-text="msg.created")
-          v-col ID: 
+          v-col.body-1 Created: 
+            time(v-text="new Date(this.msg.created)")
+          v-col.body-1 ID: 
             span(v-text="msg._id")
       v-card-actions
         MainDeleteButton(
@@ -56,12 +61,16 @@ export default {
   data: () => ({
   }),
   computed: {
+    msgCreated() {
+      return new Date(this.msg.created)
+    },
     dialog: {
       get () {
-        return this.$store.getters.isReaderDialogOpen
+        return this.$store.getters.dialogItemDetailed        
       },
       set (val) {
-        this.$store.commit('setReaderDialog', val)
+        const mutation = val ? 'setGenericStateBooleanTrue' : 'setGenericStateBooleanFalse';
+        this.$store.commit(mutation, 'dialogItemDetailed');
       }
     }
   },

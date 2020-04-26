@@ -24,15 +24,6 @@
         @click.stop="drawer = !drawer"
       )
       div(class="d-flex align-center")
-        //v-img(
-          alt="Vuetify Logo"
-          class="shrink mr-2"
-          contain
-          src="./assets/vuetify-logo-dark.png"
-          transition="scale-transition"
-          width="40"
-          @click.stop="drawer = !drawer"
-          )
         span(
           class="title"
           @click.stop="drawer = !drawer"
@@ -125,7 +116,6 @@ export default {
       v.dispatch('checkThemeSettings'); //store/themes.js
       v.dispatch('localDBInfo')
 
-      console.log('Before!!!')
       try {
         const pDoc = await v.dispatch( 'startupIndexCheck', { doc: 'pimpim', version: PimpimDesignDoc.version } )
         const mDoc = await v.dispatch( 'startupIndexCheck', { doc: 'pimpim_mango_indexes', version: MangoDesignDoc.version } )

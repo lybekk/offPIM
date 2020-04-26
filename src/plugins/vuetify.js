@@ -6,7 +6,7 @@ Vue.use(Vuetify);
 
 export default new Vuetify({
     icons: {
-        iconfont: 'mdi', // 'mdi' || 'mdiSvg' || 'md' || 'fa' || 'fa4'
+        iconfont: 'mdi',
     },
     theme: {
         themes: {
@@ -27,7 +27,7 @@ export default new Vuetify({
                 //accent: '#8B008B',
                 warning: '#ffa000', //Amber
                 info: '#0277bd', // 
-                success: '#33691e', //
+                success: '#72754f', // #33691e
             },
         }
     }

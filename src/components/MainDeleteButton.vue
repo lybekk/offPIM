@@ -53,6 +53,7 @@ export default {
     deleteDocument: function (id) {
       this.toggleTrashIcon();
       this.$store.dispatch('deleteDocument', id);
+      this.$store.commit('setGenericStateBooleanFalse', 'dialogItemDetailed');
       this.isDeleted = true;
     },
   }

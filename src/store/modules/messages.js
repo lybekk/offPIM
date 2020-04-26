@@ -1,12 +1,8 @@
 const messages = {
     state: {
-        readerDialog: false,
         messagesUnreadCount: 0,
     },
     mutations: {
-        setReaderDialog (state, payload) {
-            state.readerDialog = payload;
-        },
         setMessagesUnreadCount (state, payload) {
             state.messagesUnreadCount = payload;
         },
@@ -27,9 +23,6 @@ const messages = {
         }
     },
     getters: {
-        isReaderDialogOpen: state => {
-            return state.readerDialog
-        },
         getMessagesUnreadCount: state => {
             return state.messagesUnreadCount
         },
