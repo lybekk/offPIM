@@ -3,7 +3,7 @@
   v-row(justify="center")
     v-dialog(
       v-model="dialog" 
-      max-width="25vw"
+      max-width="50vw"
       overlay-opacity="0.9"
       overlay-color="secondary"
       scrollable
@@ -178,11 +178,14 @@ export default {
       if ( rDB ) {
         const options = JSON.parse(rDB);
         this.remoteDBUrl = options.name;
-        window.remoteDB = await new window.PouchDB( options );
-        const result = await this.$store.dispatch('remoteDBConnectivityCheck');
-        if (result) {
-          this.$store.dispatch('remoteDBInfo');
-        }
+        this.username = options.username ? options.username : null;
+        this.password = options.password ? options.password : null;
+
+        this.setValues();
+        /* Further testing required before removal
+          window.remoteDB = await new window.PouchDB( options );
+          this.$store.dispatch('remoteDBConnectivityCheck');
+        */
       }
     },
     requestAuthCookie: async function() { // not used for the time being, as pouchdb handles authentication well

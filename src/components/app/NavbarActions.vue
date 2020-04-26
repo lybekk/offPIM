@@ -58,13 +58,20 @@
           v-tooltip(bottom)
             template(v-slot:activator="{ on }")
               v-btn(
+                v-if="!remoteDBIsOnline"
+                color="warning"
+                block
+                @click="connectRemote"
+              ) Connect
+              v-btn(
+                v-else
                 v-on="on"
                 color="primary"
                 @click="syncDatabase"
                 block
                 :loading="syncInProgress"
-                :disabled="!$store.getters.remoteDBIsOnline"
               ) Sync
+              //-:disabled="!remoteDBIsOnline"
             span Avoid closing browser window during syncing
 </template>
 
@@ -104,6 +111,12 @@ export default {
     this.updateLastSync();
   },
   methods: {
+    connectRemote: async function() {
+      const isConnected = await this.$store.dispatch('remoteDBConnectivityCheck');
+      if (!isConnected) {
+        this.$store.commit('setGenericStateBooleanTrue', 'dbConnectionDialog')
+      }
+    },
     updateLastSync: function() {
       const ls = localStorage.getItem("lastSync");
       let time, granularity;
@@ -139,6 +152,7 @@ export default {
               window.db
                 .get(doc._id)
                 .then(function(localDoc) {
+                  //console.log(localDoc);
                   if (doc._rev > localDoc._rev) {
                     return true;
                   }
