@@ -17,17 +17,14 @@ export default new Vuetify({
                 warning: '#c7882d', //Auric
                 info: '#2ba9ae', //Aquarium
                 success: '#72754f', //Secret meadow
-                //accent: '#8B008B', //
             },
             dark: {
-                //primary: '#DAA520',
                 primary: '#00838f', // undecided
                 secondary: '#2F4F4F', //DarkSlateGray
                 error: '#cf6679', 
-                //accent: '#8B008B',
                 warning: '#ffa000', //Amber
                 info: '#0277bd', // 
-                success: '#72754f', // #33691e
+                success: '#6b8e23', // Olive drab
             },
         }
     }

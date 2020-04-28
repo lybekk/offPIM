@@ -59,7 +59,6 @@ v-content
                       :color="taskProgress.color"
                       :buffer-value="taskProgress.buffer"
                       :value="taskProgress.value"
-                      stream
                     )
               v-row
                 v-col(
@@ -72,26 +71,6 @@ v-content
                     type="image"
                   )
                     chart-task-statuses
-                  //-v-skeleton-loader(
-                    :loading="sparklineLoading"
-                    transition="scale-transition"
-                    type="image"
-                    )
-                    v-sheet(elevation="6")
-                      v-sparkline(
-                        :value="tasksStatuSparklineValues"
-                        smooth="2"
-                        padding="2"
-                        type="bar"
-                        :gradient="['white']"
-                        auto-line-width
-                        auto-draw
-                        auto-draw-easing
-                        :auto-draw-duration=500
-                        show-labels
-                      )
-                        //- fix gradient to align with themes
-                        template(v-slot:label="item" color="info") { taskStatuses[item.index] }} { item.value }}
                 v-col(
                   cols="12"
                   lg="3"
@@ -124,20 +103,12 @@ v-content
                         td {{ data.value }}
         v-col
           v-container
-            //-v-card(v-if="!$store.getters.remoteDBIsOnline")
-              v-card-text Remote database is not connected
-              // button to dbconnectiondialog
             v-card
               v-card-title(class="headline") Remote database
               v-card-text(v-if="!$store.getters.remoteDBIsOnline") Remote database is not connected
               v-card-text(v-else)
                 v-simple-table
                   template(v-slot:default)
-                    //-caption(class="headline text-left") Caption
-                    //-thead
-                      tr
-                        th(class="text-left") Key
-                        th(class="text-left") Value
                     tbody
                       tr
                         td DB Name
@@ -177,12 +148,6 @@ export default {
   mixins: [formatMixin],
   data: () => ({
     dataTables: {
-      /* no use for this at the moment
-      generic: {
-        name: 'Misc',
-        table: []
-      },
-      */
       localDB: {
         name: 'Local DB',
         table: []
@@ -193,11 +158,6 @@ export default {
     ...mapGetters({
       rDBInfo: 'remoteDBInfo'
     }),
-    /*
-    isNoTasks: function () {
-      return this.tasksStatuSparklineValues.every(item => {return item == 0});
-    },
-    */
     taskProgress: function () {
       let j = { color: 'info', buffer: 0, value: 0, visible: true}
       let a = this.$store.getters.getTasksAggregate
@@ -266,14 +226,6 @@ export default {
     }, 200);
     setTimeout(() => {
       this.$store.dispatch('setMessagesUnreadCount');
-      /* no use for this at the moment. May be used in the future
-      this.dataTables.generic.table.push(
-        { key:'Database server URL' ,value:this.$store.getters.urlDBRoot}
-      )
-      this.dataTables.generic.table.push(
-        { key:'Database name' ,value:this.$store.getters.dbName}
-      )
-      */
       this.fillDataTable();
     }, 600);
   },

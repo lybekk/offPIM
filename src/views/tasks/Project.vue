@@ -1,20 +1,9 @@
 <template lang="pug">
 v-container(fluid)
-    // Project stats
+    //- Project stats
         Time since created
         Number of tasks in project
         tasks done/cancelled vs open tasks (pie chart?)
-    //v-row
-      v-col
-        v-card
-            v-card-text
-              //-v-btn(
-                small
-                color="primary"
-                @click.stop="drawer = !drawer"
-                ) <
-                v-icon mdi-menu
-              span Displaying { tasks.length }} tasks
     v-card(elevation="0")
         v-card-title(
             class="headline"
@@ -31,7 +20,6 @@ v-container(fluid)
                   :value="statusValuePercent(key)"
                   :color="$store.getters.getStatusColors[key]"
                 ) {{ value }}
-                //:indeterminate="statusesLoading"
                 p(class="overline") {{ key }}
             v-spacer
             tasks-project-archival(
@@ -138,7 +126,6 @@ export default {
     statusValuePercent: function(key) {
       const x = this.statuses[key];
       if ( x === 0) return 0;
-      //const filteredArray = this.tasks.filter( obj => obj.status === key );
       return Math.floor(( x / this.tasks.length ) * 100)
     },
     fillCircles: async function() { //countStatuses
@@ -167,20 +154,12 @@ export default {
       this.$store.commit("loaderActive");
       let mango = {
         selector: {
-          //realm: "productivity",
           productivity: true,
           type: "task",
           project: this.projectid
         },
         limit: 1000,
-        //"use_index": "pimpim_mango_indexes",
         fields: ["_id","status"]
-        /*
-                "sort": [
-                    { "due": "asc" },
-                    { "priority": "asc" }
-                ]
-                */
       };
       try {
         let data = await window.db.find(mango);
