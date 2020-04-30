@@ -27,11 +27,9 @@ div
 </template>
 
 <script>
-
 export default {
-  name: 'logbooktaglist',
-  components: {
-  },
+  name: "logbooktaglist",
+  components: {},
   data: () => ({
     tags: [],
     isLoading: false,
@@ -41,102 +39,106 @@ export default {
     letters: [],
   }),
   computed: {
-    items () {
-      const children = this.letters.map(letter => ({
+    items() {
+      const children = this.letters.map((letter) => ({
         id: letter,
         name: this.getName(letter),
         children: this.getChildren(letter),
-      }))
+      }));
 
-      return [{
-        id: 1,
-        name: 'Tags',
-        children,
-      }]
+      return [
+        {
+          id: 1,
+          name: "Tags",
+          children,
+        },
+      ];
     },
   },
   watch: {
-    tags (val) {
-      this.letters = val.reduce((acc, cur) => {
-        let t;
-        if ( !cur.key[0] ) {
-          t = 'Untagged'
-        } else {
-          t = cur.key[0]
-        }
-        const letter = t
+    tags(val) {
+      this.letters = val
+        .reduce((acc, cur) => {
+          let t;
+          if (!cur.key[0]) {
+            t = "Untagged";
+          } else {
+            t = cur.key[0];
+          }
+          const letter = t;
 
-        if (!acc.includes(letter)) acc.push(letter)
+          if (!acc.includes(letter)) acc.push(letter);
 
-        return acc
-      }, []).sort()
+          return acc;
+        }, [])
+        .sort();
     },
   },
-  mounted () {
-  },
+  mounted() {},
   methods: {
-    async fetch () {
-      if (this.tags.length) return
+    async fetch() {
+      if (this.tags.length) return;
       try {
-          var result = await window.db.query('pimpim/logs-tag-count', {
-              group: true
-          });
-          this.tags = result.rows
-          return
+        var result = await window.db.query("offpim/logs-tag-count", {
+          group: true,
+        });
+        this.tags = result.rows;
+        return;
       } catch (err) {
-          this.$store.commit('addAlert', {type:'error',text:err})
+        this.$store.commit("addAlert", { type: "error", text: err });
       }
-
     },
-    getChildren (letter) {
-      const tags = []
+    getChildren(letter) {
+      const tags = [];
 
       for (const tag of this.tags) {
-        if (tag.key[0] !== letter) continue
+        if (tag.key[0] !== letter) continue;
 
         tags.push({
           ...tag,
           name: this.getName(tag.key),
           id: tag.key,
-        })
+        });
       }
 
       return tags.sort((a, b) => {
-        return a.key > b.key ? 1 : -1
-      })
+        return a.key > b.key ? 1 : -1;
+      });
     },
-    getName (name) {
-      return `${name.charAt(0).toUpperCase()}${name.slice(1)}`
+    getName(name) {
+      return `${name.charAt(0).toUpperCase()}${name.slice(1)}`;
     },
-    getByTag: async function (item) {
+    getByTag: async function(item) {
       const tag = item.key;
       if (!item.children) {
-        this.$store.commit('loaderActive'); 
+        this.$store.commit("loaderActive");
         let mango = {
-            selector: {
-                //realm: "logs",
-                logbook: true,
-                tags: {
-                    $in: [tag]
-                }
+          selector: {
+            //realm: "logs",
+            logbook: true,
+            tags: {
+              $in: [tag],
             },
-            limit: 100
+          },
+          limit: 100,
         };
-        if (tag == 'inbox' || tag == 'untagged') { mango.selector.tags = [] }
+        if (tag == "inbox" || tag == "untagged") {
+          mango.selector.tags = [];
+        }
 
         try {
-            let data = await window.db.find(mango);
-            this.$emit('add-logs', data.docs)
-            this.$store.commit('loaderInactive');
+          let data = await window.db.find(mango);
+          this.$emit("add-logs", data.docs);
+          this.$store.commit("loaderInactive");
         } catch (error) {
-            this.$store.commit('showSnackbar', { text:error });
+          this.$store.commit("showSnackbar", { text: error });
         }
       }
     },
-    tagCount: function (item) {
-      const x = this.tags.find(tag => tag.key === item.key);
-      return x.value
-    }
-  }
+    tagCount: function(item) {
+      const x = this.tags.find((tag) => tag.key === item.key);
+      return x.value;
+    },
+  },
 };
 </script>

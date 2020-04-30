@@ -65,7 +65,7 @@ if THEME == "random":
     THEME = random.choice( list(themes.keys()) )
 
 message = MIMEMultipart("alternative")
-message["Subject"] = "PIMPIM report"
+message["Subject"] = "offPIM report"
 message["From"] = SENDER_EMAIL
 message["To"] = RECEIVER_EMAIL
 
@@ -82,7 +82,7 @@ mango = {
         ]
     },
     "limit": 1000,
-    "use_index": "pimpim_mango_indexes"
+    "use_index": "offpim_mango_indexes"
 }
 
 url = MANGO_URL
@@ -132,7 +132,7 @@ for doc in j["docs"]:
             )
 
 # Create the plain-text and HTML version of your message
-title = "PIMPIM Report"
+title = "offPIM Report"
 tto = "Tasks today and overdue"
 tip = "Tasks in progress (status - doing)"
 tna = "Tasks next action (status - next)"

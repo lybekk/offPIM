@@ -98,8 +98,7 @@ const tasks = {
                     group: true,
                     include_docs: false
                 };
-                let data = await window.db.query('pimpim/tasks-due', options);
-                //let data = await window.db.find(mango);
+                let data = await window.db.query('offpim/tasks-due', options);
                 console.log('Fix this. Tasks aggregation DUE test: ', data);
                 data.rows.forEach(doc => {
                     if (doc.key > todayDate && doc.key < dayAfterTomorrowDate) {
@@ -129,7 +128,7 @@ const tasks = {
                     reduce: false,
                     include_docs: false
                 };
-                let data = await window.db.query('pimpim/tasks-done', options);
+                let data = await window.db.query('offpim/tasks-done', options);
                 console.log('Fix this. Tasks aggregation tasks done today test: ', data) //dataDoneToday
                 context.commit('setTasksAggregate', { key: 'doneToday', value: data.rows.length });
                 context.commit('setTasksAggregate', { key: 'initiated', value: true });
@@ -142,7 +141,7 @@ const tasks = {
         async populateOpenProjects(context) {
             this.commit('flushOpenProjects');
             try {
-                let data = await window.db.query('pimpim/tasks-projects', {
+                let data = await window.db.query('offpim/tasks-projects', {
                     reduce: false,
                     keys: ["wait", "plan", "todo", "next", "doing"],
                     include_docs: true
@@ -160,7 +159,7 @@ const tasks = {
         async getTaskStatuses(context) {
 
             try {
-                var result = await window.db.query('pimpim/task-status-count', {
+                var result = await window.db.query('offpim/task-status-count', {
                     group: true
                 });
                 result.rows.forEach((aggregate) => {
@@ -171,7 +170,7 @@ const tasks = {
             }
         },
         getTaskPriorities(context) {
-            window.db.query('pimpim/task-priority-count', {
+            window.db.query('offpim/task-priority-count', {
                 group: true
             }).then(function (data) {
                 data.rows.forEach((aggregate) => {
@@ -248,11 +247,10 @@ const tasks = {
                     context.commit('addAlert', { type: 'error', text: 'Getting tasks failed: ' + error })
                 });
 
-
         },
         getTasksTagList: async function (context) {
             try {
-                const result = await window.db.query('pimpim/tasks-tag-count', {
+                const result = await window.db.query('offpim/tasks-tag-count', {
                     group: true
                 });
                 context.commit('setTagList', result)

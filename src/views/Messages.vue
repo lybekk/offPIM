@@ -152,13 +152,10 @@ export default {
       const vuex = this.$store;
       vuex.commit("loaderActive");
       try {
-        const view = !tag ? "pimpim/messages-unread" : "pimpim/messages-tag-count";
-        const data = await this.getQuery(
-          view,
-          tag,
-          tag,
-          true
-        );
+        const view = !tag
+          ? "offpim/messages-unread"
+          : "offpim/messages-tag-count";
+        const data = await this.getQuery(view, tag, tag, true);
         for await (let doc of data) {
           this.messageList.push(doc);
         }
@@ -170,7 +167,7 @@ export default {
     },
     getMessagesTagList: async function() {
       try {
-        var result = await window.db.query("pimpim/messages-tag-count", {
+        var result = await window.db.query("offpim/messages-tag-count", {
           group: true,
         });
         this.tags = result.rows;
@@ -182,7 +179,7 @@ export default {
       }
     },
     readMessage: function(item) {
-      this.$store.commit('setGenericStateBooleanTrue', 'dialogItemDetailed');
+      this.$store.commit("setGenericStateBooleanTrue", "dialogItemDetailed");
       this.activeMessageId = item._id;
       if (!item.read) {
         const index = this.messageList.findIndex(({ _id }) => _id === item._id);

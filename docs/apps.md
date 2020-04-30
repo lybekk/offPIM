@@ -2,7 +2,7 @@
 title: Apps
 ---
 
-Included apps in PIMPIM:
+Included apps in offPIM:
 
 * TOC
 {:toc}
@@ -36,5 +36,5 @@ Work in progress
 Work in progress
 
 ## Make your own
-Pimpim's data model is flat and not relational, which enables other apps to use the same data if replicated to another database, I.E. CouchDB. 
+offPIM's data model is flat and not relational, which enables other apps to use the same data if replicated to another database, I.E. CouchDB. 
 Create a standalone app or a piece of analytics software to analyze productivity habits, semantics, interessting discoveries about yourself, or `<insert lofty idea here>`.

@@ -23,10 +23,10 @@ const logs = {
         /*
         getLogsTagList: async function (context) { 
             //let url = context.getters.urlDB;
-            //const response = await fetch(url + '/_design/pimpim/_view/logs-tag-count?group=true');
+            //const response = await fetch(url + '/_design/offpim/_view/logs-tag-count?group=true');
             //context.commit('setTagList', await response.json())
             try {
-                var result = await window.db.query('pimpim/logs-tag-count', {
+                var result = await window.db.query('offpim/logs-tag-count', {
                     group: true
                 });
                 context.commit('setTagList', result)

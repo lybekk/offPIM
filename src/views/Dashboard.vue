@@ -61,8 +61,8 @@ v-content
                       :value="taskProgress.value"
                     )
               v-row
-                v-col(
-                  cols="12"
+                v-col(                  
+                  md="6"
                   lg="3"
                 )
                   v-skeleton-loader(
@@ -72,9 +72,9 @@ v-content
                   )
                     chart-task-statuses
                 v-col(
-                  cols="12"
+                  md="6"
                   lg="3"
-                  )
+                )
                   chart-tasks-today
   v-footer 
     v-container
@@ -98,7 +98,6 @@ v-content
                         v-for="data in dt.table" 
                         :key="data.key"
                       )
-                        //v-for="data in dataTable" 
                         td {{ data.key }}
                         td {{ data.value }}
         v-col

@@ -9,19 +9,19 @@ const finances = {
         financeTypes: {
             "account": {
                 // consider using asset, liability, as lvl2
-                "bank":[ //asset
+                "bank": [ //asset
                     "checking account",
                     "savings account",
                     "investment account",
                     "individual retirement account",
                     "brokerage account",
                 ],
-                "cash":["wallet","piggy bank","safe"], //asset
-                "credit card":["standard","rewards","prepaid","business"], //liability
-                "asset":[],
-                "liability":[],
-                "investment":[],
-                "loan":["mortgage payable"] //liability
+                "cash": ["wallet", "piggy bank", "safe"], //asset
+                "credit card": ["standard", "rewards", "prepaid", "business"], //liability
+                "asset": [],
+                "liability": [],
+                "investment": [],
+                "loan": ["mortgage payable"] //liability
             },
             "transaction": {
                 "transaction": [
@@ -37,8 +37,8 @@ const finances = {
                 ]
             },
             "budget": {
-                "income":["salary"],
-                "expense":[
+                "income": ["salary"],
+                "expense": [
                     "Clothing",
                     "Debt",
                     "Food",
@@ -57,10 +57,10 @@ const finances = {
         }
     },
     mutations: {
-        addBudgetDataArray (state, payload) {
+        addBudgetDataArray(state, payload) {
             state.budget[payload.type] = payload.data
         },
-        setFinancialAggregates (state, payload) {
+        setFinancialAggregates(state, payload) {
             state.financialAggregates[payload.key] = payload.value.toFixed(2);
         },
     },
@@ -81,22 +81,16 @@ const finances = {
             }
             if (type == 'account') {
                 mango.selector.type = {
-                    "$in" : ["bank","cash","credit card","mortgage payable"]
+                    "$in": ["bank", "cash", "credit card", "mortgage payable"]
                 }
             }
 
-            /*
-            let data = await context.dispatch('postData', {
-                url: context.getters.urlMango, 
-                data:mango
-            });
-            */
-           let data;
+            let data;
 
             try {
                 data = await window.db.find(mango);
             } catch (error) {
-                context.commit('showSnackbar', { text:error });
+                context.commit('showSnackbar', { text: error });
             }
             context.commit('loaderInactive');
 
@@ -108,25 +102,18 @@ const finances = {
                 context.commit('addDataArray', data.docs);
             }
         },
-        async getFinancialAggregates (context) {
-            //let url = context.getters.urlDB;
+        async getFinancialAggregates(context) {
             try {
-                const response = await window.db.query('pimpim/finance-totals-sum', {
+                const response = await window.db.query('offpim/finance-totals-sum', {
                     group: true
                 });
-                response.rows.forEach( (aggregate) => {
+                response.rows.forEach((aggregate) => {
                     context.commit('setFinancialAggregates', aggregate)
                 });
-            } catch(err) {
-                context.commit('addAlert', {type:'error',text:err})
+            } catch (err) {
+                context.commit('addAlert', { type: 'error', text: err })
             }
-            /*
-            const response = await fetch(url + `_design/pimpim/_view/finance-totals-sum?group=true`)
-            const result = await response.json();
-            result.rows.forEach( (aggregate) => {
-                context.commit('setFinancialAggregates', aggregate)
-            });
-            */
+
         }
     },
     getters: {

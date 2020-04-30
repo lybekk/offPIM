@@ -54,7 +54,7 @@
     </v-stepper-step>
     <v-stepper-content step="1">
       <v-card v-if="!databaseServerConnectionSuccess" class="mb-12">
-        If no connection. See settings.json in /pimpim/settings.json. Change db-path to xx
+        If no connection. See settings.json in /offpim/settings.json. Change db-path to xx
         <br>
         <v-btn @click="databaseServerConnection">Retry connection</v-btn>
       </v-card>
@@ -84,12 +84,12 @@
       </v-card>
     </v-stepper-content>
 
-    <v-stepper-step :complete="e6 > 3" step="3" :rules="[() => pimpimDesignDocumentSuccess]">
-      PIMPIM Design document
+    <v-stepper-step :complete="e6 > 3" step="3" :rules="[() => offpimDesignDocumentSuccess]">
+      offpim Design document
     </v-stepper-step>
     <v-stepper-content step="3">
       <v-card
-        v-if="pimpimDoc.authenticationRequired"
+        v-if="offpimDoc.authenticationRequired"
       >
         <v-card>
           Authentication required for design document to be uploaded
@@ -102,16 +102,16 @@
           </v-btn>
         </v-card>
       </v-card>
-      <v-card v-if="pimpimDesignDocumentSuccess">
+      <v-card v-if="offpimDesignDocumentSuccess">
         <p>Design document up to date</p>
         <v-btn color="primary" @click="e6 = 4">Continue</v-btn>
       </v-card>
-      <v-card v-if="!pimpimDesignDocumentSuccess && !pimpimDoc.authenticationRequired">
+      <v-card v-if="!offpimDesignDocumentSuccess && !offpimDoc.authenticationRequired">
         <!-- 
-          <p>PIMPIM server design document version higher than doc in Database</p>
+          <p>offpim server design document version higher than doc in Database</p>
         -->
         <p>Insert design document</p>
-        <v-btn color="primary" @click="pimpimDesignDocument">Insert</v-btn>
+        <v-btn color="primary" @click="offpimDesignDocument">Insert</v-btn>
       </v-card>
     </v-stepper-content>
 
@@ -223,7 +223,7 @@ export default {
     show1: false,
     authDialog: false,
     authenticated: false,
-    pimpimDoc: {
+    offpimDoc: {
       authenticationRequired: false
     },
     mangoDoc: {
@@ -239,7 +239,7 @@ export default {
     },
     databaseServerConnectionSuccess: false,
     databaseConnectionSuccess: false,
-    pimpimDesignDocumentSuccess: false,
+    offpimDesignDocumentSuccess: false,
     mangoDesignDocumentSuccess: false,
   }),
   computed: {
@@ -253,7 +253,7 @@ export default {
     this.databaseServerConnection();
     this.databaseConnection();
     setTimeout(() => {
-      this.pimpimDesignDocument();
+      this.offpimDesignDocument();
     }, 1000);
     setTimeout(() => {
       this.mangoDesignDocument();
@@ -278,20 +278,20 @@ export default {
       }
       //const urlDB = this.$store.getters.urlDB;
     },
-    pimpimDesignDocument: async function() {
+    offpimDesignDocument: async function() {
       if (!this.databaseConnectionSuccess) {return}
 
-      const getServerDesignDoc = await fetch('indexes/pimpim_design_doc.json');
+      const getServerDesignDoc = await fetch('indexes/offpim_design_doc.json');
       const serverDesignDoc = await getServerDesignDoc.json();
 
       const urlDB = this.$store.getters.urlDB;
 
-      const getDatabaseDesignDoc = await fetch(urlDB + '_design/pimpim');
+      const getDatabaseDesignDoc = await fetch(urlDB + '_design/offpim');
       const databaseDesignDoc = await getDatabaseDesignDoc.json();
 
       const context = this;
       async function insertDoc(context) {
-        const response = await fetch(urlDB + '_design/pimpim', {
+        const response = await fetch(urlDB + '_design/offpim', {
           method: "PUT",
           body: JSON.stringify(serverDesignDoc),
           credentials: 'include',
@@ -300,9 +300,9 @@ export default {
           }
         });
         if (response.status == 401) {
-          context.pimpimDoc.authenticationRequired = true;
+          context.offpimDoc.authenticationRequired = true;
         } else if (response.ok) {
-          context.pimpimDesignDocumentSuccess = true;
+          context.offpimDesignDocumentSuccess = true;
         }
         //const result = await response.json();
         //console.log(result)
@@ -318,24 +318,24 @@ export default {
         serverDesignDoc._rev = databaseDesignDoc._rev
         insertDoc(context);
       } else if (serverDesignDoc.version == databaseDesignDoc.version) {
-        this.pimpimDesignDocumentSuccess = true;
+        this.offpimDesignDocumentSuccess = true;
       }
 
     },
-    mangoDesignDocument: async function() { //minify - merge with pimpimDoc
+    mangoDesignDocument: async function() { //minify - merge with offpimDoc
       if (!this.databaseConnectionSuccess) {return}
       const getServerDesignDoc = await fetch('indexes/mango_indexes.json');
       const serverDesignDoc = await getServerDesignDoc.json();
 
       const urlDB = this.$store.getters.urlDB;
 
-      const getDatabaseDesignDoc = await fetch(urlDB + '_design/pimpim_mango_indexes');
+      const getDatabaseDesignDoc = await fetch(urlDB + '_design/offpim_mango_indexes');
       const databaseDesignDoc = await getDatabaseDesignDoc.json();
 
       const context = this;
 
       async function insertDoc(context) {
-        const response = await fetch(urlDB + '_design/pimpim_mango_indexes', {
+        const response = await fetch(urlDB + '_design/offpim_mango_indexes', {
           method: "PUT",
           body: JSON.stringify(serverDesignDoc),
           credentials: 'include',
@@ -378,7 +378,7 @@ export default {
         this.authenticated = true;
         this.authMsg = null;
         this.authDialog = false;
-        this.pimpimDoc.authenticationRequired = false;
+        this.offpimDoc.authenticationRequired = false;
         this.mangoDoc.authenticationRequired = false;
         //const cookie = await fetch(urlDB + '_session');
         //const cookieObj = await cookie.json();
@@ -390,13 +390,13 @@ export default {
         this.authMsg = 'Something went wrong. See console.';
       }
     }
-    //insertPimpimDesignDoc: async function() {
+    //insertoffpimDesignDoc: async function() {
     //}
   }
 }
 
 /*
-console.log('PIMPIM server design document version higher than doc in Database. Replacing...');
+console.log('offpim server design document version higher than doc in Database. Replacing...');
         serverDesignDoc._rev = databaseDesignDoc._rev;
 
         const uploadDesignDoc = await fetch(urlDB, {
@@ -420,7 +420,7 @@ console.log('PIMPIM server design document version higher than doc in Database. 
         //console.log('respons statusgoe: ', await response.status);
         console.log('respons etter post: ', await uploadDesignDoc.json()); // parses JSON response into native JavaScript objects
 
-      //* Load local pimpimdocs
+      //* Load local offpimdocs
       //* Check if design document exist in database
       //  Get document
       //  If not exists, upload

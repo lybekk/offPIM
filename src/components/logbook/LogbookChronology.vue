@@ -1,11 +1,5 @@
 <template lang="pug">
 v-list
-  //-v-navigation-drawer(
-    v-model="drawerRight"
-    app
-    right
-    )
-  //-template(v-slot:prepend)
   v-toolbar
     v-progress-circular(
       v-if="chronologyLoading" 
@@ -29,56 +23,50 @@ v-list
 </template>
 
 <script>
-
 export default {
-  name: 'logbookchronology',
-  components: {
-  },
+  name: "logbookchronology",
+  components: {},
   data: () => ({
     dateTree: [],
     dateTreeOpen: [],
-    chronologyLoading: false
+    chronologyLoading: false,
   }),
-  computed: {
-  },
-  watch: {
-  },
-  mounted () {
+  computed: {},
+  watch: {},
+  mounted() {
     this.getLogsYears();
   },
   methods: {
-    getLogsByDate: async function (payload) {
-        let q;
-        if (payload.type == 'day') {
-            q = payload.id.slice(0,10);
-        }
-        let mango = {
-            selector: {
-                logbook: true,
-                start: { $regex: `^${q}` }
-            },
-            limit: 100,
-            sort: [
-                { start: "asc" }
-            ]
-        };
+    getLogsByDate: async function(payload) {
+      let q;
+      if (payload.type == "day") {
+        q = payload.id.slice(0, 10);
+      }
+      let mango = {
+        selector: {
+          logbook: true,
+          start: { $regex: `^${q}` },
+        },
+        limit: 100,
+        sort: [{ start: "asc" }],
+      };
 
-        try {
-            let data = await window.db.find(mango);
-            this.$emit('add-logs', data.docs)
-            this.chronologyLoading = false;
-        } catch (error) {
-            this.$store.commit('showSnackbar', { text:error });
-        }
+      try {
+        let data = await window.db.find(mango);
+        this.$emit("add-logs", data.docs);
+        this.chronologyLoading = false;
+      } catch (error) {
+        this.$store.commit("showSnackbar", { text: error });
+      }
     },
     getLogsYears: async function() {
       this.chronologyLoading = true;
       try {
-        const response = await window.db.query("pimpim/logs-start-years", {
+        const response = await window.db.query("offpim/logs-start-years", {
           group: true,
-          descending: true
+          descending: true,
         });
-        response.rows.forEach(y => {
+        response.rows.forEach((y) => {
           const x = `${y.key} (${y.value})`;
           this.dateTree.push({ id: y.key, name: x, children: [] });
         });
@@ -110,7 +98,7 @@ export default {
         "09": "September",
         "10": "October",
         "11": "November",
-        "12": "December"
+        "12": "December",
       };
 
       /* GENERATE DAYS */
@@ -123,104 +111,58 @@ export default {
         let startkey = from.toISOString().slice(0, 7);
         let endkey = to.toISOString().slice(0, 7);
         let dt = this.dateTreeOpen;
-        return window.db.query('pimpim/logs-start-days', {
-          group: true,
-          startkey: startkey,
-          endkey: endkey
-        })
-        .then(function (result) {
-          const l = result.rows.length;
-          result.rows.forEach((aggregate, i) => {
-            const x = aggregate.key.split("-");
-            let day = x[2];
-            const n = `${day} (${aggregate.value})`;
-            item.children.push({ id: aggregate.key, name: n, type: "day" });
-            if (i + 1 == l || l == 0) {
-              notThat.chronologyLoading = false
-            }
-          });
-          dt.push(z);
-        }).catch(err => console.warn(err));
-
-        /* Old CouchDB code for future use - maybe
-        return fetch(
-          url +
-            `/_design/pimpim/_view/logs-start-days?group=true&startkey="${startkey}"&endkey="${endkey}"`
-        )
-          .then(res => res.json())
-          .then(data => {
-            const l = data.rows.length;
-            data.rows.forEach((aggregate, i) => {
+        return window.db
+          .query("offpim/logs-start-days", {
+            group: true,
+            startkey: startkey,
+            endkey: endkey,
+          })
+          .then(function(result) {
+            const l = result.rows.length;
+            result.rows.forEach((aggregate, i) => {
               const x = aggregate.key.split("-");
               let day = x[2];
               const n = `${day} (${aggregate.value})`;
               item.children.push({ id: aggregate.key, name: n, type: "day" });
               if (i + 1 == l || l == 0) {
-                this.$store.commit("setChronologyLoading", false);
+                notThat.chronologyLoading = false;
               }
             });
-            this.dateTreeOpen.push(z);
+            dt.push(z);
           })
-          .catch(err => console.warn(err));
-          */
+          .catch((err) => console.warn(err));
       }
 
       /* GENERATE MONTHS */
-      return (
-        window.db
-          .query("pimpim/logs-start-months", {
-            group: true
-          })
-          .then(data => {
-            const l = data.rows.length;
-            data.rows.forEach((aggregate, i) => {
-              const x = aggregate.key.split("-");
-              const year = x[0];
-              let month = x[1];
-              const parent = item.name.slice(0, 4);
-              if (year == parent) {
-                const n = `${monthList[month]} (${aggregate.value})`;
-                item.children.push({
-                  id: aggregate.key,
-                  name: n,
-                  children: [],
-                  type: "month",
-                  value: aggregate.key.slice(0, 10)
-                });
-              }
-              if (i + 1 == l || l == 0) {
-                this.chronologyLoading = false
-              }
-            });
-            this.dateTreeOpen.push(item.name.slice(0, 4));
-          })
-          .catch(err => console.warn(err))
-      );
-
-      /*
-      //url = this.$store.getters.urlDB;
-      return fetch(url + '/_design/pimpim/_view/logs-start-months?group=true') // if performance issue, use startkey & endkey 
-        .then(res => res.json())
+      return window.db
+        .query("offpim/logs-start-months", {
+          group: true,
+        })
         .then((data) => {
           const l = data.rows.length;
-          data.rows.forEach( (aggregate, i) => {
+          data.rows.forEach((aggregate, i) => {
             const x = aggregate.key.split("-");
             const year = x[0];
             let month = x[1];
-            const parent = item.name.slice(0,4);
+            const parent = item.name.slice(0, 4);
             if (year == parent) {
               const n = `${monthList[month]} (${aggregate.value})`;
-              item.children.push( { id: aggregate.key, name: n, children:[], type: 'month', value: aggregate.key.slice(0,10)} )
+              item.children.push({
+                id: aggregate.key,
+                name: n,
+                children: [],
+                type: "month",
+                value: aggregate.key.slice(0, 10),
+              });
             }
-            if (i +1 == l || l == 0) {
-              this.$store.commit('setChronologyLoading', false)
+            if (i + 1 == l || l == 0) {
+              this.chronologyLoading = false;
             }
           });
-          this.dateTreeOpen.push( item.name.slice(0,4) );
+          this.dateTreeOpen.push(item.name.slice(0, 4));
         })
-        .catch(err => console.warn(err))
-      */
+        .catch((err) => console.warn(err));
     },
-  }
+  },
 };
 </script>

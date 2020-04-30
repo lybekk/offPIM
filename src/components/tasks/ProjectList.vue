@@ -84,7 +84,7 @@ export default {
       this.$router.push(`/tasks/project/${id}`);
     },
     async fetchProjects(item) {
-      const projects = await this.getQuery('pimpim/tasks-projects', item.id, item.id, true);
+      const projects = await this.getQuery('offpim/tasks-projects', item.id, item.id, true);
       projects.forEach(doc => {
         let obj = {
           id: doc._id,

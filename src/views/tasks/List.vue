@@ -78,12 +78,12 @@ export default {
           type: "task",
         },
         limit: 50,
-        use_index: "pimpim_mango_indexes",
+        use_index: "offpim_mango_indexes",
         fields: ["_id"],
       };
       if (list.slice(0, 6) == "status") {
         this.processQuery(
-          "pimpim/task-status-count",
+          "offpim/task-status-count",
           list.slice(6),
           list.slice(6)
         );
@@ -93,7 +93,7 @@ export default {
         mango.selector.project = list.slice(7);
       } else if (list.slice(0, 8) == "priority") {
         const pri = parseInt(list.slice(8));
-        this.processQuery("pimpim/task-priority-count", pri, pri);
+        this.processQuery("offpim/task-priority-count", pri, pri);
         return;
       } else if (list.slice(0, 11) == "noproject") {
         mango.selector["$nor"] = [{ status: "cancelled" }, { status: "done" }];
@@ -108,7 +108,7 @@ export default {
         let dayAfterTomorrowMilli = new Date().setDate(today.getDate() + 2);
         let dayAfterTomorrow = new Date(dayAfterTomorrowMilli);
         this.processQuery(
-          "pimpim/tasks-due",
+          "offpim/tasks-due",
           today.toISOString().slice(0, 10),
           dayAfterTomorrow.toISOString().slice(0, 10)
         );
@@ -118,7 +118,7 @@ export default {
         d.setDate(d.getDate() + 1);
 
         this.processQuery(
-          "pimpim/tasks-due",
+          "offpim/tasks-due",
           "2000-01-01",
           d.toISOString().slice(0, 10)
         );

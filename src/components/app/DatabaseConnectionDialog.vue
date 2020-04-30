@@ -86,6 +86,9 @@
 import DatabaseRemoteAuthentication from "@/components/app/DatabaseRemoteAuthentication.vue"; //will be removed
 import DatabaseCompaction from "@/components/app/DatabaseCompaction.vue";
 
+import PouchDB from 'pouchdb-browser'
+PouchDB.plugin(require('pouchdb-find'));
+
 export default {
   name: 'DatabaseConnectionDialog',
   components: {
@@ -125,7 +128,7 @@ export default {
   },
   methods: {
     removeRemoteDBConnection: async function () {
-      this.$store.commit('showSnackbar', { text:'Removed remote DB connection. Reloading PIMPIM', color:'warning' });
+      this.$store.commit('showSnackbar', { text:'Removed remote DB connection. Reloading offPIM', color:'warning' });
       this.remoteDBUrl = null; // for cosmetic purposes
       this.$store.commit('setGenericStateBooleanFalse', 'remoteDBIsOnline');
       localStorage.removeItem('remoteDBOptions');
@@ -148,7 +151,7 @@ export default {
           password: this.password
         };
       }
-      window.remoteDB = await new window.PouchDB(options);
+      window.remoteDB = await new PouchDB(options);
       try {
         const response = await window.remoteDB.info();
         console.log('Connection response: ', response)
@@ -182,10 +185,6 @@ export default {
         this.password = options.password ? options.password : null;
 
         this.setValues();
-        /* Further testing required before removal
-          window.remoteDB = await new window.PouchDB( options );
-          this.$store.dispatch('remoteDBConnectivityCheck');
-        */
       }
     },
     requestAuthCookie: async function() { // not used for the time being, as pouchdb handles authentication well

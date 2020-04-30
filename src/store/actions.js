@@ -1,11 +1,11 @@
 export default {
   setTotals: async function (context) {
-    const response = await window.db.query('pimpim/totals', {
+    const response = await window.db.query('offpim/totals', {
       group: true
     })
     context.commit('setTotals', response)
   },
-  addError (context) {
+  addError(context) {
     context.commit('addError')
   },
   deleteDocument: async function (context, docId) {
@@ -14,10 +14,10 @@ export default {
       var doc = await window.db.get(docId);
       var response = await window.db.remove(doc);
       this.commit('addDeleted', docId)
-      this.commit('showSnackbar', { text:'Document deleted', color:'error' })
+      this.commit('showSnackbar', { text: 'Document deleted', color: 'error' })
       console.log('Doc delete result: ', response); // TODO - send to log
     } catch (error) {
-      context.commit('addAlert', {type:'error',text: 'Deleting document failed: ' + error})
+      context.commit('addAlert', { type: 'error', text: 'Deleting document failed: ' + error })
       result = error
     }
     return await result;
@@ -45,15 +45,14 @@ export default {
         } else {
           txt = 'Document update OK'
         }
-        this.commit('showSnackbar', { text:txt, color:'success' })
+        this.commit('showSnackbar', { text: txt, color: 'success' })
       } else {
         const errtxt = 'Document update failed' + response;
         throw errtxt
-        //this.commit('addAlert', {type:'error',text:'Document update failed' + response })
       }
       return await response;
     } catch (error) {
-      this.commit('addAlert', {type:'error',text:error})
+      this.commit('addAlert', { type: 'error', text: error })
     }
   },
 
@@ -68,12 +67,8 @@ export default {
     });
     let data = await response.json();
     this.commit('loaderInactive')
-    return data; 
+    return data;
   },
-
-
-
-
 
   startupIndexCheck: async function (context, payload) {
     const localVersion = payload.version;
@@ -89,23 +84,23 @@ export default {
   startupIndexCheck_OLD: async function (context, payload) {
     const dDoc = payload;
     const docs = {
-      pimpimMain: ["indexes/pimpim_design_doc.json","pimpim"],
-      mango: ["indexes/mango_indexes.json","pimpim_mango_indexes"]
-    };  
-        const getServerDesignDoc = await fetch( docs[dDoc][0] );
-        const serverDesignDoc = await getServerDesignDoc.json();
+      offpimMain: ["indexes/offpim_design_doc.json", "offpim"],
+      mango: ["indexes/mango_indexes.json", "offpim_mango_indexes"]
+    };
+    const getServerDesignDoc = await fetch(docs[dDoc][0]);
+    const serverDesignDoc = await getServerDesignDoc.json();
 
-        const urlDB = context.getters.urlDB;
-  
-        const getDatabaseDesignDoc = await fetch(urlDB + '_design/' + docs[dDoc][1]);
-        const databaseDesignDoc = await getDatabaseDesignDoc.json();
-  
-      if (serverDesignDoc.version > databaseDesignDoc.version) {
-        console.log('PIMPIM Server design document version is higher than the one in the database. Redirecting to setup');
-        if(this.$route.matched[0].name != 'setup') {
-          this.$router.push('setup')
-        }
+    const urlDB = context.getters.urlDB;
+
+    const getDatabaseDesignDoc = await fetch(urlDB + '_design/' + docs[dDoc][1]);
+    const databaseDesignDoc = await getDatabaseDesignDoc.json();
+
+    if (serverDesignDoc.version > databaseDesignDoc.version) {
+      console.log('offPIM Server design document version is higher than the one in the database. Redirecting to setup');
+      if (this.$route.matched[0].name != 'setup') {
+        this.$router.push('setup')
       }
+    }
 
   },
 
@@ -114,14 +109,14 @@ export default {
       const response = await window.remoteDB.info();
       if (response.db_name) {
         context.commit('setGenericStateBooleanTrue', 'remoteDBIsOnline');
-        this.commit('showSnackbar', { text:'Remote database connection successful', color:'success' });
+        this.commit('showSnackbar', { text: 'Remote database connection successful', color: 'success' });
         context.dispatch('remoteDBInfo');
         return true
       }
-    } catch(error) {
+    } catch (error) {
       // TODO Send to log (requires logging feature)
       // TODO Advise troubleshooting steps (network/curl, CORS )
-      this.commit('showSnackbar', { text:'Remote database connection unsuccessful', color:'error', log: error });
+      this.commit('showSnackbar', { text: 'Remote database connection unsuccessful', color: 'error', log: error });
       context.commit('setGenericStateBooleanFalse', 'remoteDBIsOnline');
       return false
     }

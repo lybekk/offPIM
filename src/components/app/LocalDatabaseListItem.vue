@@ -74,12 +74,11 @@
                                 a(
                                   id="linkReadyContainer"
                                   class="backupLink"
-                                  download="pimpim_LocalDB_backup"
+                                  download="offpim_LocalDB_backup"
                                 ) Creating backup
                             v-list-item-icon
                               v-icon(v-if="backupDone" color="success") mdi-check
                 v-divider
-                //v-divider
                 v-fab-transition
                   v-speed-dial(
                     absolute 
@@ -96,7 +95,6 @@
                             fab
                             @click="trashIconClicked = !trashIconClicked"
                           )
-                            //@click="toggleTrashIcon"
                             v-icon(v-if="trashIconClicked") mdi-close
                             v-icon(v-else color="primary" title="Jau") mdi-delete
                         span Delete local database
@@ -164,11 +162,10 @@ export default {
           console.log('db destroy result: ', result)
           console.log("Local PouchDB Database destroyed");
           this.$store.commit("showSnackbar", {
-            text: 'Local database destroyed. Reloading pimpim',
+            text: 'Local database destroyed. Reloading offPIM',
             color: "warning"
           });
           localStorage.removeItem("lastSync");
-          //this.$router.push('/');
           setTimeout(() => {
               window.location.reload();
           }, 600);

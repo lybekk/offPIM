@@ -12,32 +12,23 @@ v-content
           label
           :color="getColor(this.$store.getters.getFinancialAggregates.valueAccounts)"
         )
-    //p Setting in pimpim settings document for currency(showed currency)
 </template>
 <script>
-
 export default {
-  name: 'financesOverview',
-  components: {
-  },
+  name: "financesOverview",
+  components: {},
   props: {
     source: String,
   },
-  data: () => ({
-  }),
-  computed: {
-  },
-  created: function () {
-  },
-  mounted () {
-  },
-  beforeDestroy() {
-  },
+  data: () => ({}),
+  computed: {},
+  created: function() {},
+  mounted() {},
+  beforeDestroy() {},
   methods: {
     getColor: function(number) {
-      return (number >= 0) ? "success" : "error";
+      return number >= 0 ? "success" : "error";
     },
-  }
-}
-
+  },
+};
 </script>

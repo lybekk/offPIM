@@ -39,8 +39,8 @@ def db_fetch_with_view():
     """
     try:
         if PRESENTATION == 'terminal':
-            print('Fetching tasks from CouchDB view: pimpim/task-status-count')
-        url = f'{DATABASE_URL}/_design/pimpim/_view/task-status-count?reduce=false&keys=["wait","plan","todo","next","doing"]&include_docs=true'
+            print('Fetching tasks from CouchDB view: offpim/task-status-count')
+        url = f'{DATABASE_URL}/_design/offpim/_view/task-status-count?reduce=false&keys=["wait","plan","todo","next","doing"]&include_docs=true'
         if USERNAME:
             r = requests.get(url = url, auth=(USERNAME, PASSWORD))
         else:

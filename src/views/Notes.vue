@@ -82,7 +82,6 @@
                         v-bind:item="item"
                         @set-selected-note="setSelectedNote"
                       )
-                        //-v-bind:docid="item._id"
     notes-detailed(
       :selected-note="selectedNote"
       @refresh-doc="refreshDoc"
@@ -91,246 +90,89 @@
 </template>
 
 <script>
-import pouchMixin from '@/mixins/pouchMixin'
+import pouchMixin from "@/mixins/pouchMixin";
 
-import NotesItem from '@/components/notes/NotesItem.vue'
-import NotesDetailed from '@/components/notes/NotesDetailed.vue'
-import NotesNewnoteform from '@/components/notes/NotesNewnoteform.vue'
+import NotesItem from "@/components/notes/NotesItem.vue";
+import NotesDetailed from "@/components/notes/NotesDetailed.vue";
+import NotesNewnoteform from "@/components/notes/NotesNewnoteform.vue";
 
-  export default {
-    name: 'notes',
-    components: {
-        NotesItem,
-        NotesDetailed,
-        NotesNewnoteform
+export default {
+  name: "notes",
+  components: {
+    NotesItem,
+    NotesDetailed,
+    NotesNewnoteform,
+  },
+  mixins: [pouchMixin],
+  props: {
+    source: String,
+  },
+  data: () => ({
+    noteList: [],
+    drawer: false,
+    selectedNote: {},
+  }),
+  computed: {
+    tagsList: function() {
+      return this.$store.getters.getTagList;
     },
-    mixins: [pouchMixin],
-    props: {
-      source: String,
+  },
+  created() {},
+  beforeDestroy() {
+    this.drawer = false;
+  },
+  mounted() {
+    setTimeout(() => {
+      this.drawer = true;
+    }, 300);
+    this.getNotesByTag();
+    this.$store.dispatch("populateTagsList");
+  },
+  methods: {
+    refreshDoc: async function(id) {
+      const index = this.noteList.findIndex(({ _id }) => _id === id);
+      const x = await this.getDoc(id);
+      this.noteList[index].title = x.title;
+      this.noteList[index].description = x.description;
+      this.noteList[index].archived = x.archived;
     },
-    /*
-    data () {
-      return {
-        noteList: [],
-        drawer: false,
-        selectedNote: {}
+    setSelectedNote: async function(id) {
+      this.selectedNote = await window.db.get(id);
+    },
+    getNotesByTag: async function(tag = "No tag") {
+      try {
+        let data = await this.getQuery("offpim/note-tag-count", tag, tag, true);
+        this.noteList = data;
+      } catch (error) {
+        this.errorHandler(error);
       }
     },
-    */
-    data: () => ({
-      noteList: [],
-      drawer: false,
-      selectedNote: {}
-    }),
-    computed: {
-      /*
-      notesAll: function () {
-          return this.$store.getters.getNotes
-      },
-      */
-      tagsList: function () {
-          return this.$store.getters.getTagList
-      },
-      /*
-      selectedNote: function() {
-          return this.$store.getters.selectedNote
-      }
-      */
-    },
-    created () {
-      //this.getLastEntriesByCount(30);
-      //this.$store.dispatch('populateTagsList');
-    },
-    beforeDestroy() {
-      this.drawer = false;
-    },
-    mounted () {
-      setTimeout(()=>{ this.drawer = true; }, 300);
-      //this.getLastEntriesByCount(30);
-      this.getNotesByTag()
-      this.$store.dispatch('populateTagsList');
-    },
-    methods: {
-      refreshDoc: async function (id) {
-        const index = this.noteList.findIndex(
-          ({ _id }) => _id === id
-          //({ _id }) => _id === this.selectedNote._id
-        );
-        //this.noteList[index].deleted = true;
-        //let x = this.noteList[index];
-        //console.log('Fyri',x);
-        const x = await this.getDoc(id);
-        this.noteList[index].title = x.title;
-        this.noteList[index].description = x.description;
-        this.noteList[index].archived = x.archived;
-        //console.log('Efte: ',x)
-        //console.log(this.noteList)
-        //this.noteList[index] = this.getDoc(this.selectedNote._id)
-        //await window.db.get(this.selectedNote._id);
-
-        //let doc = await window.db.get(payload._id);
-        //this.noteList.unshift(2, 11);
-         //= await window.db.get(this.selectedNote._id);
-      },
-      setSelectedNote: async function (id) {
-        //let doc = await window.db.get(payload._id);
-        this.selectedNote = await window.db.get(id);
-      },
-      getNotesByTag: async function (tag="No tag") {
-        //let vstore = this.$store;
-        //vstore.commit('flushNotes')
-        //vstore.commit('toggleLoader');
-        //vstore.commit('loaderActive');
-        /*
-        let mango = {
-            selector: {
-                productivity: true,
-                type:"note",
-                tags: {
-                    $in: [tag]
-                },
-                $or: [
-                    { archived: { "$exists":false } },
-                    { archived: false }
-                ]
-            },
-            limit: 25,
-            use_index: "pimpim_mango_indexes"
-            //"fields": ["_id"]
-            //"sort": [
-            //    { "created": "desc" }
-            //]
-        };
-        */
-        /*
-        if (tag == "No tag") {
-            mango.selector.tags = []
-        }
-        */
-
-        try {
-          let data = await this.getQuery('pimpim/note-tag-count', tag, tag, true);
-          this.noteList = data;
-        } catch (error) {
-          this.errorHandler(error)
-        }
-
-          /*
-          fetch(this.$store.getters.urlMango, {
-              method: "POST",
-              headers: {
-                  "Content-Type": "application/json"
-              },
-              body: JSON.stringify(mango)
-          })
-          .then((resp) => resp.json())
-          .then(function(data) {
-              if (data.docs.length == 0) {
-                  vstore.commit('loaderInactive');
-                  return
-              }
-              data.docs.forEach( (doc, index) => {
-                  vstore.commit('addNote', doc)
-                  if (index + 1 == data.docs.length) {
-                    //loader_toggle(false)
-                    vstore.commit('loaderInactive');
-                  }
-              });
-          })
-          .catch(function(error) {
-              console.log(error);
-              console.log(this);
-          });
-          */
-      },
-      getLastEntriesByCount: async function (count = 30) {
-        let vstore = this.$store;
-        //let toast = this.toast;
-        //vstore.commit('flushNotes')
-        vstore.commit('loaderActive');
-        let now = new Date().toISOString().slice(0, 16);
-        let mango = {
-          selector: {
-              productivity: true,
-              type:"note",
-              created: { "$lte": now },
-              $or: [
-                  { archived: { $exists:false } },
-                  { archived: false }
-              ]
-          },
-          limit: count,
-          sort: [
-              { created: "desc" }
-          ],
-          use_index: "pimpim_mango_indexes"
-          //"fields": ["_id"]
+    getLastEntriesByCount: async function(count = 30) {
+      let vstore = this.$store;
+      vstore.commit("loaderActive");
+      let now = new Date().toISOString().slice(0, 16);
+      let mango = {
+        selector: {
+          productivity: true,
+          type: "note",
+          created: { $lte: now },
+          $or: [{ archived: { $exists: false } }, { archived: false }],
+        },
+        limit: count,
+        sort: [{ created: "desc" }],
+        use_index: "offpim_mango_indexes",
       };
 
       try {
         let data = await this.getMango(mango);
         this.noteList = data.docs;
-        //let data2 = await window.db.explain(mango);
-        //console.log(data2)
-        //vstore.commit('addNotes', data)
-
-        /*
-        if (data.docs.length == 0) {
-            vstore.commit('toggleLoader');
-            return
-        }
-        data.docs.forEach( (doc, index) => {
-            vstore.commit('addNote', doc)
-            if (index + 1 == data.docs.length) {
-              vstore.commit('toggleLoader');
-              let txt = `Fetched ${data.docs.length} notes`;
-              vstore.commit('showSnackbar', { text:txt });
-            }
-        });
-        */
-        //context.commit('setTasksAggregate', { key: 'doneToday', value: data.docs.length});
-        //let txt = `Fetched ${data.docs.length} notes`;
-        //vstore.commit('showSnackbar', { text:txt });
       } catch (error) {
-        vstore.commit('showSnackbar', { text:error });
-        //context.commit('addAlert', {type:'error',text:err})
+        vstore.commit("showSnackbar", { text: error });
       }
-
-          /*
-          fetch(this.$store.getters.urlMango, {
-              method: "POST",
-              headers: {
-                  "Content-Type": "application/json"
-              },
-              body: JSON.stringify(mango)
-          })
-          .then((resp) => resp.json())
-          .then(function(data) {
-              
-              if (data.docs.length == 0) {
-                  vstore.commit('toggleLoader');
-                  return
-              }
-              data.docs.forEach( (doc, index) => {
-                  vstore.commit('addNote', doc)
-                  if (index + 1 == data.docs.length) {
-                    vstore.commit('toggleLoader');
-                    let txt = `Fetched ${data.docs.length} notes`;
-                    vstore.commit('showSnackbar', { text:txt });
-                  }
-              });
-          })
-          .catch(function(error) {
-            vstore.commit('showSnackbar', { text:error });
-          });
-          */
-      },
-    }
-  }
-
+    },
+  },
+};
 </script>
-
-
 
 <style scoped>
 .flip-list-move {

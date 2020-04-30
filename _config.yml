@@ -1,6 +1,6 @@
 theme: jekyll-theme-cayman
-title: pimpim
+title: offPIM
 description: A PIM. A personal information management system.
-baseurl: "/pimpim" # the subpath of your site, e.g. /blog
+baseurl: "/offpim" # site subpath
 include: ['docs']
 show_downloads: true

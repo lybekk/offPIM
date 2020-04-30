@@ -1,5 +1,5 @@
 {
-  "_id": "_design/pimpim",
+  "_id": "_design/offpim",
   "version": 20200408,
   "views": {
     "messages-tag-count": {

@@ -13,7 +13,7 @@
         color=""
       )
       v-btn(
-        href="https://lybekk.github.io/pimpim/"
+        href="https://lybekk.github.io/offpim/"
         target="_blank"
         text
       )
@@ -27,7 +27,7 @@
         span(
           class="title"
           @click.stop="drawer = !drawer"
-        ) pimpim
+        ) offPIM
       v-tabs(
         fixed-tabs
         background-color="transparent"
@@ -63,7 +63,7 @@ import NavbarActions from '@/components/app/NavbarActions.vue'
 import AlertBox from '@/components/app/AlertBox.vue'
 import DatabaseConnectionDialog from '@/components/app/DatabaseConnectionDialog.vue'
 
-import PimpimDesignDoc from '@/components/designdocs/pimpim_design_doc.json'
+import offPIMDesignDoc from '@/components/designdocs/offpim_design_doc.json'
 import MangoDesignDoc from '@/components/designdocs/mango_indexes.json'
 
 export default {
@@ -117,8 +117,8 @@ export default {
       v.dispatch('localDBInfo')
 
       try {
-        const pDoc = await v.dispatch( 'startupIndexCheck', { doc: 'pimpim', version: PimpimDesignDoc.version } )
-        const mDoc = await v.dispatch( 'startupIndexCheck', { doc: 'pimpim_mango_indexes', version: MangoDesignDoc.version } )
+        const pDoc = await v.dispatch( 'startupIndexCheck', { doc: 'offpim', version: offPIMDesignDoc.version } )
+        const mDoc = await v.dispatch( 'startupIndexCheck', { doc: 'offpim_mango_indexes', version: MangoDesignDoc.version } )
         if (!pDoc || !mDoc) {
           this.$router.push('/setup')
         }

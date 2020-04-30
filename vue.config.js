@@ -1,8 +1,10 @@
 module.exports = {
-  publicPath: '/pimpim/',
+  publicPath: '',
+
   "transpileDependencies": [
     "vuetify"
   ],
+
   pluginOptions: {
     electronBuilder: {
       builderOptions: {
@@ -12,19 +14,14 @@ module.exports = {
     }
   },
   pwa: {
-    name: 'pimpim',
-    themeColor: '#4DBA87',
-    msTileColor: '#000000',
+    name: 'offPIM',
+    themeColor: '#005a6a',
+    msTileColor: '#005a6a',
     appleMobileWebAppCapable: 'yes',
     appleMobileWebAppStatusBarStyle: 'black',
-    //workboxPluginMode: 'InjectManifest',
-    workboxPluginMode: 'GenerateSW',
-    /* no need for InjectManifest yet. 
-    workboxOptions: {
-      // swSrc is required in InjectManifest mode.
-      swSrc: 'src/service-worker.js',
-      // ...other Workbox options...
-    }
-    */
-  }
+    manifestOptions: {
+      background_color: '#005a6a'
+    },
+  },
+  productionSourceMap: false
 }

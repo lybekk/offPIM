@@ -1,35 +1,27 @@
 {
-  "name": "pimpim",
-  "version": "0.1.1",
+  "name": "offpim",
+  "version": "0.2.0",
   "private": true,
-  "description": "Personal Information Manager for CouchDB",
+  "description": "Personal Information Manager using PouchDB/CouchDB",
   "author": "Christoffer Lybekk",
   "scripts": {
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build",
     "lint": "vue-cli-service lint",
-    "css-build": "node-sass --omit-source-map-url src/sass/main.scss designdoc_builder/components/main.css",
-    "css-build-dark": "node-sass --omit-source-map-url src/sass/dark.scss designdoc_builder/components/dark.css",
-    "css-start": "npm run css-watch",
-    "css-watch": "npm run css-build -- --watch",
     "docs:build": "bundle exec jekyll build",
     "docs:dev": "bundle exec jekyll serve",
     "electron:build": "vue-cli-service electron:build",
     "electron:generate-icons": "electron-icon-builder --input=./public/icon.png --output=build --flatten",
     "electron:serve": "vue-cli-service electron:serve",
     "postinstall": "electron-builder install-app-deps",
-    "postuninstall": "electron-builder install-app-deps",
-    "push:designdoc": "node designdoc_builder/main.js",
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "testbuild": "vue-cli-service build --target lib --inline-vue",
-    "testbuild2": "vue-cli-service build --target lib --name pimpim  src/main.js"
+    "postuninstall": "electron-builder install-app-deps"
   },
   "main": "background.js",
   "dependencies": {
     "chart.js": "^2.9.3",
     "core-js": "^3.6.4",
     "debug": "^4.1.1",
-    "nano": "^8.1.0",
+    "nano": "^8.2.2",
     "pouchdb": "^7.2.1",
     "pouchdb-authentication": "^1.1.3",
     "pouchdb-browser": "^7.2.1",
@@ -39,46 +31,46 @@
     "register-service-worker": "^1.7.1",
     "vue": "^2.6.10",
     "vue-chartjs": "^3.5.0",
-    "vue-router": "^3.1.5",
-    "vuetify": "^2.2.6",
-    "vuex": "^3.1.2"
+    "vue-router": "^3.1.6",
+    "vuetify": "^2.2.26",
+    "vuex": "^3.3.0"
   },
   "devDependencies": {
     "@mdi/font": "^4.8.95",
-    "@vue/cli-plugin-babel": "^4.1.0",
-    "@vue/cli-plugin-eslint": "^4.1.0",
+    "@vue/cli-plugin-babel": "^4.3.1",
+    "@vue/cli-plugin-eslint": "^4.3.1",
     "@vue/cli-plugin-pwa": "^4.3.1",
-    "@vue/cli-plugin-router": "^4.1.0",
-    "@vue/cli-plugin-vuex": "^4.1.0",
-    "@vue/cli-service": "^4.1.0",
-    "babel-eslint": "^10.0.3",
-    "bulma": "^0.8.0",
-    "electron": "^6.0.0",
+    "@vue/cli-plugin-router": "^4.3.1",
+    "@vue/cli-plugin-vuex": "^4.3.1",
+    "@vue/cli-service": "^4.3.1",
+    "babel-eslint": "^10.1.0",
+    "electron": "^8.2.4",
     "electron-icon-builder": "^1.0.2",
     "eslint": "^5.16.0",
     "eslint-plugin-vue": "^5.0.0",
-    "node-sass": "^4.13.1",
+    "node-sass": "^4.14.0",
     "pug": "^2.0.4",
     "pug-plain-loader": "^1.0.0",
-    "sass": "^1.25.0",
+    "sass": "^1.26.5",
     "sass-loader": "^8.0.2",
-    "vue-cli-plugin-electron-builder": "^1.4.5",
-    "vue-cli-plugin-vuetify": "^2.0.3",
+    "vue-cli-plugin-electron-builder": "^1.4.6",
+    "vue-cli-plugin-vuetify": "^2.0.5",
     "vue-template-compiler": "^2.6.10",
     "vuetify-loader": "^1.3.0"
   },
   "bugs": {
-    "url": "https://github.com/lybekk/pimpim/issues"
+    "url": "https://github.com/lybekk/offpim/issues"
   },
-  "homepage": "https://github.com/lybekk/pimpim#readme",
+  "homepage": "https://github.com/lybekk/offpim#readme",
   "keywords": [
     "pim",
+    "pouchdb",
     "couchdb",
     "nosql"
   ],
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/lybekk/pimpim.git"
+    "url": "git+https://github.com/lybekk/offpim.git"
   }
 }

@@ -1,5 +1,5 @@
 {
-  "_id": "_design/pimpim_mango_indexes",
+  "_id": "_design/offpim_mango_indexes",
   "version": 20200407,
   "language": "query",
   "views": {

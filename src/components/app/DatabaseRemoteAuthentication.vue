@@ -111,7 +111,7 @@ export default {
         //this.authMsg = null;
         this.authMsg = 'Authenticated';
         //this.authDialog = false;
-        //this.pimpimDoc.authenticationRequired = false;
+        //this.offpimDoc.authenticationRequired = false;
         //this.mangoDoc.authenticationRequired = false;
         //const cookie = await fetch(urlDB + '_session');
         //const cookieObj = await cookie.json();

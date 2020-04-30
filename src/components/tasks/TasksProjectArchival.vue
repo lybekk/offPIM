@@ -6,7 +6,6 @@ v-dialog(
     transition="dialog-bottom-transition"
     width="500"
 )
-  //-may be needed <v-row justify="center">
   template(v-slot:activator="{ on }")
     v-btn(color="primary" v-on="on") Archive project
   v-card
@@ -19,7 +18,7 @@ v-dialog(
         v-btn(text @click="dialog = false") Close
     v-container
       v-list(three-line subheader)
-        v-subheader Archival makes it so that this project and its tasks will not be synced to pimpim after a full database resync, increassing performance.
+        v-subheader Archival makes it so that this project and its tasks will not be synced to offPIM after a full database resync, increassing performance.
         v-list-item
           v-list-item-content
             v-list-item-title Project: {{ project.project }}
@@ -29,15 +28,6 @@ v-dialog(
         v-btn(
           @click="executeArchival"
         ) Execute archival
-          //-disabled?
-      //-div(class="text-center")
-        v-progress-circular(
-          rotate="-90"
-          size="100"
-          width="15"
-          :value="circularProgressValue"
-          color="success"
-        ) { circularProgressValue }}
 </template>
 
 <script>

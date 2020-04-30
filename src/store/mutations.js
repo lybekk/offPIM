@@ -69,7 +69,7 @@ export default {
       alert: true
     };
     state.alerts.push(alert);
-    console.log('pimpim reported an error: ', p.text);
+    console.log('offPIM reported an error: ', p.text);
   },
   deleteAlert(state, payload) {
     state.alerts.splice(payload, 1)
@@ -101,14 +101,5 @@ export default {
   localDBInfo(state, payload) {
     state.localDBInfo = payload
   },
-  /*
-  setDataItemProperty (state, payload) {
-    //state[payload] = false
-    //const index = this.getters.getDataItemIndex(payload._id);
-    const index = state.data.findIndex( ({ _id }) => _id === payload._id );
-    //let item = this.getters.getDataItem(payload._id);
-    let item = state.data[index];
-  }
-  */
 
 }
