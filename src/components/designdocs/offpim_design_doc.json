@@ -1,6 +1,6 @@
 {
   "_id": "_design/offpim",
-  "version": 20200408,
+  "version": 20200501,
   "views": {
     "messages-tag-count": {
       "reduce": "_count",

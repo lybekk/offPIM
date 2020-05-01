@@ -1,6 +1,6 @@
 {
   "_id": "_design/offpim_mango_indexes",
-  "version": 20200407,
+  "version": 20200501,
   "language": "query",
   "views": {
     "created-json-index": {

@@ -78,6 +78,7 @@
 <script>
 import pouchMixin from "@/mixins/pouchMixin";
 import LocalDatabaseListItem from "@/components/app/LocalDatabaseListItem";
+import PouchDB from 'pouchdb-browser';
 
 export default {
   name: "NavbarActions",
@@ -143,7 +144,8 @@ export default {
       this.syncInProgress = true;
       this.pending.push = 0;
       this.pending.pull = 0;
-      window.PouchDB.sync(window.db, window.remoteDB, {
+      //window.db.sync(window.db, window.remoteDB, {
+      PouchDB.sync(window.db, window.remoteDB, {
         live: false,
         push: {},
         pull: {
