@@ -159,7 +159,7 @@ export default {
                   }
                 })
                 .catch(function() {
-                  this.archivedDocumentsSkippedDuringSync++
+                  dis.archivedDocumentsSkippedDuringSync++
                 });
             } else {
               return true;

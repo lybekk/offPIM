@@ -60,7 +60,10 @@ v-content
                       :buffer-value="taskProgress.buffer"
                       :value="taskProgress.value"
                     )
-              v-row
+              v-row(
+                align="center"
+                justify="center"
+              )
                 v-col(                  
                   md="6"
                   lg="3"
