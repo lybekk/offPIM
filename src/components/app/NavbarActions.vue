@@ -11,7 +11,7 @@
     )
       template(v-slot:activator="{ on }")
         v-btn(
-          text
+          icon
           v-on="on"
           :loading="syncInProgress"
           @click="updateLastSync"
@@ -71,7 +71,6 @@
                 block
                 :loading="syncInProgress"
               ) Sync
-              //-:disabled="!remoteDBIsOnline"
             span Avoid closing browser window during syncing
 </template>
 
@@ -93,7 +92,8 @@ export default {
       pull: 0,
       push: 0
     },
-    syncInProgress: false
+    syncInProgress: false,
+    archivedDocumentsSkippedDuringSync: 0,
   }),
   computed: {
     syncIcon() {
@@ -144,7 +144,7 @@ export default {
       this.syncInProgress = true;
       this.pending.push = 0;
       this.pending.pull = 0;
-      //window.db.sync(window.db, window.remoteDB, {
+      this.archivedDocumentsSkippedDuringSync = 0;
       PouchDB.sync(window.db, window.remoteDB, {
         live: false,
         push: {},
@@ -154,13 +154,12 @@ export default {
               window.db
                 .get(doc._id)
                 .then(function(localDoc) {
-                  //console.log(localDoc);
                   if (doc._rev > localDoc._rev) {
                     return true;
                   }
                 })
-                .catch(function(err) {
-                  console.log("This is here for test purposes", err);
+                .catch(function() {
+                  this.archivedDocumentsSkippedDuringSync++
                 });
             } else {
               return true;
@@ -227,12 +226,12 @@ export default {
               });
             }
           }, 6500);
+          // TODO - send to log: archivedDocumentsSkippedDuringSync
           localStorage.setItem("lastSync", new Date().toJSON());
           dis.updateLastSync();
           dis.syncInProgress = false;
         })
         .on("error", function(err) {
-          // handle error
           dis.syncInProgress = false;
           console.log("Error syncing: ", err);
           // set localStorage sync did not finish

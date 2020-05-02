@@ -1,92 +1,31 @@
 <template lang="pug">
-div(class="text-center")
-  v-menu(
-    v-model="menu"    
-    left
-    offset-y
-  )
-    //-nudge-width="150"
-    //-nudge-left
-      // nope
-    //-:close-on-content-click="false"
-    //-:nudge-width="200"
-    template(v-slot:activator="{ on }")
-      v-btn(
-        icon
-        :color="$store.getters.getStatusColors[task.status]"
-        v-on="on"
-      )
-        //-:class="$store.getters.getStatusColors[task.status] + '--text lighten-4'"
-        v-icon(
-          v-text="$store.getters.getStatusIcons[task.status]"
+v-slider(
+  v-model="value"
+  readonly
+  :color="color"
+  :track-color="colorLighter"
+  max="6"
+  left
+)
+  template(v-slot:prepend)
+    v-menu(offset-y)
+      template(v-slot:activator="{ on }")
+        v-btn(
+          rounded
+          v-on="on"
+        ) {{ task.status }}
+      v-list
+        v-list-item(
+          v-for="(item, index) in statusList"
+          :key="index"
+          @click="$emit('set-status', item)"
         )
-      //-v-btn(
-        icon
-        v-on="on"
-        )
-        //-Status
-        //- Consider using Select component
-        span.text-capitalize(
-          :class="color+'--text lighten-4'"
-        ) { task.status }}
-    v-card(width="160")
-      v-slider.text-capitalize(
-        :tick-labels="statusList"
-        v-model="value"
-        :color="color"
-        :track-color="colorLighter"
-        max="6"
-        ticks="always"
-        tick-size="4"
-        left
-        vertical
-      )
-      //-v-card(color="transparent")
-      //v-list
-        v-list-item
-          v-list-item-content
-            v-slider.text-capitalize(
-              :tick-labels="statusList"
-              v-model="value"
-              :color="color"
-              :track-color="colorLighter"
-              max="6"
-              ticks="always"
-              tick-size="4"
-              vertical
+          v-list-item-avatar
+            v-icon(
+              v-text="$store.getters.getStatusIcons[item]"
+              :color="$store.getters.getStatusColors[item]"
             )
-
-  //- OLD
-  //-v-expansion-panel
-    v-expansion-panel-header(v-slot="{ open }")
-      v-row(no-gutters)
-        v-col Status
-        v-col(
-          cols="8"
-          class="text--secondary"
-        )
-          v-fade-transition(leave-absolute)
-            span(v-if="open") Pick new status
-            v-row(
-              v-else
-              no-gutters
-              style="width: 100%"
-            )
-              v-col
-                span.text-capitalize(
-                  :class="color+'--text'"
-                ) { task.status }}
-    v-expansion-panel-content
-      v-slider.text-capitalize(
-        :tick-labels="statusList"
-        v-model="value"
-        :color="color"
-        :track-color="colorLighter"
-        max="6"
-        ticks="always"
-        tick-size="4"
-        vertical
-      )
+          v-list-item-title.text-capitalize {{ item }}
 </template>
 
 <script>

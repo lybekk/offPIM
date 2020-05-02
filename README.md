@@ -2,7 +2,7 @@
 **Formerly known as pimpim**
 *(rebranded as not to be confused with a "male performance product" solving a different problem)*
 
-*Now also with a fancy URL*
+*Quick access with a fancy URL*
 [offpim.app](https://offpim.app/)
 
 offPIM - A PIM - A Personal information management system
@@ -25,15 +25,16 @@ Features:
     * Messaging (Used for general purpose information between devices and such, or whatever you feel like)
     * Personal Finances (Under development)
     * Inventory (Under development)
+* Progressive web app (PWA)
 * Themes
 * Open source. No proprietary technologies. No external requests. No tracking.
 
 ## Try
 [Try a live version of offPIM](https://offpim.app/) (or use it permanently, as it works just as it will anywhere else). You may close the browser and tabs. Your data will still be there.
 
-* PS: Your data never leaves your browser, as it uses [PouchDB](https://pouchdb.com/), an in-browser database. The data entered into offPIM will neaver touch the server it's hosted on (unless you want to synchronize with a remote database).
-* PS2: The downside to this however, is that the data will disappear if the browser cache/data gets deleted during an upgrade or the like. Remember to back up and/or synchronize regularly, as is crucially regarding all valuable data.
-* PS3: To verify the data flow, open the developer tab (F12), and check the network tab to see where the traffic goes (or rather, where it doesn't go).
+* **PS:** Your data never leaves your browser, as it uses [PouchDB](https://pouchdb.com/), an in-browser database. The data entered into offPIM will neaver touch the server it's hosted on.
+* **PS2:** The downside to this however, is that the data will disappear if the browser cache/data gets deleted during an upgrade or the like. Remember to back up and/or synchronize regularly, as is crucial for all valuable data.
+* **PS3:** *(For network nerds)* To verify there's no monkey business going on here, investigate the data flow yourself. Open the developer tab (F12), and check the network tab to see where the traffic goes (or rather, where it doesn't go).
 
 ## <a id="downloads"></a>Download
 
@@ -66,7 +67,7 @@ Features:
 
     **Note:** Suitable for placing on a private VPS served by Apache, or any other http-server (I.E. python http.server or Node.js http.createServer)
 
-See the [documentation](docs/gettingstarted#installation) for more details and options.
+See the [documentation](https://lybekk.github.io/offPIM/docs/gettingstarted#installation) for more details and options.
 
 ### Requirements
 
@@ -89,9 +90,9 @@ If need for customization, or self-building:
 
 ## Usage
 
-node_modules have been removed from repository. For local customization and development, run <code>npm install</code> first
+For local customization and development, run <code>npm install</code> first.
 
-Tested with 30 000+ documents and seems to work fine. Index optmizations are done continously (tips welcome).
+Tested with 30 000+ documents and seems to work fine (5K in offPIM, while the rest is archived on Remote DB). Index optmizations are done continously (tips welcome).
 
 ### Compiles and hot-reloads for development
 ```
@@ -109,7 +110,7 @@ npm run electron:build
 
 ## Customization
 
-See [documentation](docs/gettingstarted) for customization options.
+See [documentation](https://lybekk.github.io/offPIM/docs/gettingstarted) for customization options.
 
 ### Security
 offPIM doesn't include any built-in security features (i.e. local encryption), and relies entirely on the surrounding environment. With this in mind, it's a good idea to keep an eye open on where your data travels.
@@ -129,7 +130,7 @@ Using, and downloading [Brave Browser](https://brave.com/lyb569) from [this link
 
 ## Roadmap
 
-[Take a look](docs/roadmap)
+[Take a look](https://lybekk.github.io/offPIM/docs/roadmap)
 
 ## Credits
 Creators and maintainers of:

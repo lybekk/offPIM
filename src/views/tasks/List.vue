@@ -1,33 +1,32 @@
 <template lang="pug">
-v-container(fluid)
-    v-row
-      v-col
-        v-card
-            v-card-text
-              span Displaying {{ tasks.length }} tasks
-    div(v-text="list")
-    v-container
-      v-skeleton-loader(
-          :loading="this.$store.getters.loaderState"
-          class="mx-auto"
-          transition="scale-transition"
-          type="article"
-      )
-          v-data-iterator(
-              :items="tasks"
-              :loading="this.$store.getters.loaderState"
-              loading-text="Getting tasks"
-              no-data-text="No tasks matching request"
+v-container
+  v-row
+    v-col
+      v-card
+        v-card-text(class="body-2")
+          span Displaying {{ tasks.length }} tasks from list:
+          span.text-capitalize(v-text="list")
+  v-skeleton-loader(
+      :loading="this.$store.getters.loaderState"
+      class="mx-auto"
+      transition="scale-transition"
+      type="article"
+  )
+    v-data-iterator(
+        :items="tasks"
+        :loading="this.$store.getters.loaderState"
+        loading-text="Getting tasks"
+        no-data-text="No tasks matching request"
+    )
+      //- don't use group-by="status". Reorders tasks on status change, making task lose fokus
+      template(v-slot:default="props")
+        v-row
+          v-col(
+            v-for="doc in props.items"
+            :key="doc._id"
+            cols="12"
           )
-              //- don't use group-by="status". Reorders tasks on status change, making task lose fokus
-              template(v-slot:default="props")
-                  v-row
-                      v-col(
-                      v-for="doc in props.items"
-                      :key="doc._id"
-                      cols="12"
-                      )
-                        TasksItem(v-bind:docid="doc._id")
+            TasksItem(v-bind:docid="doc._id")
 </template>
 
 <script>

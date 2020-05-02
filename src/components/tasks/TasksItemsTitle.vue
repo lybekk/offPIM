@@ -4,7 +4,7 @@ v-dialog(v-model="dialog" scrollable max-width="400px")
     span(
       v-text="titleFormatted"
       v-on="on"
-      :class="[ status == 'done' ? 'success--text' : '' ]"
+      :class="[ status == 'done' ? 'subheading success--text' : 'subheading font-weight-regular' ]"
     )
   v-card
     v-card-title

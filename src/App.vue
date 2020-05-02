@@ -15,6 +15,7 @@
       v-btn(
         href="https://lybekk.github.io/offpim/"
         target="_blank"
+        rel="noreferrer"
         text
       )
         span(class="mr-2") Docs

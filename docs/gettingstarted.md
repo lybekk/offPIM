@@ -29,7 +29,7 @@ Getting offPIM up and running can be done in several ways.
 Example
 ```Shell
 $ cd /home/user/folder
-$ git clone https://github.com/lybekk/offpim.git
+$ git clone https://github.com/lybekk/offPIM.git
 $ npm install
 $ npm run electron:build
 ```

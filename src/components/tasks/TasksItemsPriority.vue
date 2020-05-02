@@ -5,63 +5,15 @@ div(class="text-center")
     left
     offset-y
   )
-    //-nudge-width="150"
-    //-nudge-left
-      // nope
-    //-:close-on-content-click="false"
-    //-:nudge-width="200"
     template(v-slot:activator="{ on }")
       v-btn(
         icon
         v-on="on"
       )
         v-icon(:color="priorityStarColor[task.priority]") mdi-star
-        //-Priority
-        //-span.text-capitalize(
-          :class="color+'--text'"
-          ) { task.status }}
-        //-v-col.text-capitalize { task.priority }}
-        //-span.text-capitalize { task.priority }}
-          v-icon(:color="priorityStarColor[task.priority]") mdi-star
-    v-card(width="50")
+    v-card
       v-container(fluid)
-        v-radio-group(row v-model="radioGroup")
-          v-tooltip(
-            v-for="n in 4" 
-            top
-            :key="n"
-          )
-            template(v-slot:activator="{ on }")
-              v-radio(
-                :label="`${n}`"
-                :value="n"
-                :color="priorityStarColor[n]"
-                on-icon="mdi-star"
-                off-icon="mdi-star-outline"
-                v-on="on"
-              )
-            span(v-text="priorityTooltip[n]")
-
-  //-v-expansion-panel
-    v-expansion-panel-header(v-slot="{ open }")
-      v-row(no-gutters)
-        v-col Priority
-        v-col(
-          cols="8"
-          class="text--secondary"
-        )
-          v-fade-transition(leave-absolute)
-            span(v-if="open") Choose new priority
-            v-row(
-              v-else
-              no-gutters
-              style="width: 100%"
-            )
-              v-col.text-capitalize { task.priority }}
-                v-icon(:color="priorityStarColor[task.priority]") mdi-star
-    v-expansion-panel-content
-      v-container(fluid)
-        v-radio-group(row v-model="radioGroup")
+        v-radio-group(v-model="radioGroup")
           v-tooltip(
             v-for="n in 4" 
             top

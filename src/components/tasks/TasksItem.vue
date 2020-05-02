@@ -1,18 +1,22 @@
 <template lang="pug">
 div(v-if="!hideTask")
-  v-skeleton-loader(
-    :loading="!doc._id"
-    class="mx-auto"
-    transition="scale-transition"
-    type="article"
-  )
     v-card(
       :color="isPostponed(doc._id) ? 'secondary darken-2' : ''"
     )
       v-card-title(
-        :class="[ doc.status == 'done' ? 'subheading success--text' : 'title font-weight-regular' ]"
+        :class="[ doc.status == 'done' ? 'body-1 success--text' : 'body-1 font-weight-regular' ]"
         @click="sheet = !sheet"
       ) {{ doc.title }}
+      v-progress-linear(
+        active
+        rounded
+        absolute
+        top
+        background-color="none"
+        :value="taskProgress"
+        :color="$store.getters.getStatusColors[doc.status]"
+        )
+          //- TODO - map to status-colors
       v-fade-transition
         v-overlay(
           v-if='isDeleted(doc._id)'
@@ -32,11 +36,18 @@ div(v-if="!hideTask")
       //-v-card-subtitle Use v-if overdue here
       //-v-card-text v-if postponed x times and additional info
       v-card-actions
-        //v-btn lol
-        tasks-items-status(
-          v-bind:task='doc'
-          @set-status="setTaskStatus"
-        )
+        div(class="text-center")
+          v-fab-transition
+            v-btn(
+              v-show="doc.status != 'done'"
+              fab
+              small
+              :color="doc.status == 'done' ? 'success' : ''"
+              bottom
+              left
+              @click="setTaskStatus('done')"
+            )
+              v-icon mdi-check
         tasks-items-priority(
           v-bind:task='doc'
           @set-doc="setDoc()"
@@ -62,12 +73,10 @@ div(v-if="!hideTask")
             )
               v-icon mdi-update
           span Postpone until tomorrow
-        v-dialog(
+        v-bottom-sheet(
           v-model="sheet" 
-          overlay-color="secondary"
-          transition="dialog-bottom-transition"
-          :fullscreen="$vuetify.breakpoint.mdAndDown"
-          max-width="50vw"
+          :inset="$vuetify.breakpoint.mdAndUp"
+          scrollable
         )
           template(v-slot:activator="{ on }")
             v-btn(
@@ -76,124 +85,67 @@ div(v-if="!hideTask")
             )
               v-icon mdi-dots-vertical-circle
           v-card
-            v-card-title
-              div(class="my-3 title")
-                tasks-items-title(
-                  v-bind:id='doc._id'
-                  v-bind:title='doc.title'
-                  v-bind:status='doc.status'
-                  @set-doc="setDoc()"
-                )
-              v-spacer
-              v-btn(
-                class="mt-6"
-                text
-                color="error"
-                @click="sheet = !sheet"
-              ) close
-            v-card-subtitle
-              tasks-items-description(
-                v-bind:task='doc'
+            v-card-title(class="secondary")
+              tasks-items-title(
+                v-bind:id='doc._id'
+                v-bind:title='doc.title'
+                v-bind:status='doc.status'
                 @set-doc="setDoc()"
               )
             v-card-text
-              v-row(dense)
-                v-col
-                  tasks-items-project(
-                    v-if="doc.type != 'project'"
-                    v-bind:task='doc'
-                    @set-doc="setDoc()"
-                  )
-                v-divider(
-                  class="mx-4"
-                  vertical
-                )
-                v-col
-                  tasks-items-tags(
-                    v-bind:task='doc'
-                    @set-doc="setDoc()"
-                  )
-              v-divider(inset width="80%")
-              v-expansion-panels(
-                hover
-                flat
-                tile
-              )
-                tasks-items-dates(
+              v-list
+                v-list-item
+                  v-list-item-content
+                    tasks-items-description(
+                      v-bind:task='doc'
+                      @set-doc="setDoc()"
+                    )
+                tasks-items-project(
+                  v-if="doc.type != 'project'"
                   v-bind:task='doc'
-                  v-bind:is-overdue='isOverdue(doc)'
-                  v-bind:is-deleted='isDeleted(doc._id)'
                   @set-doc="setDoc()"
                 )
-                v-row
-                  v-col
-                    div(class="text-left")
-                      v-tooltip(top)
-                        template(v-slot:activator='{ on }')
-                          v-btn(
-                            fab
-                            small
-                            :outlined="doc.status != 'done'"
-                            class="ma-2"
-                            :color="color(doc.status)"
-                            v-on='on'
-                            @click="setTaskStatus('done')"
-                          )
-                            v-icon mdi-check
-                            //- OUTLINED if not done. Filled&disabled if done. Put button outside fab?
-                              :class="[ isDone(doc._id) ? 'success--text' : '' ]"
-                              color='success'
-                        span Mark done
-                      v-tooltip(top)
-                        template(v-slot:activator='{ on }')
-                          v-btn(
-                            fab
-                            small
-                            :outlined="!isPostponed(doc._id)"
-                            color='info'
-                            class="ma-2"
-                            v-on='on'
-                            @click='postponeTask(doc._id)'
-                          )
-                            v-icon mdi-update
-                        span Postpone until tomorrow
-                  v-col
-                    div
-                      span
-                        v-chip(
-                          v-if='isOverdue(doc)'
-                          small
-                          label
-                          color='error'
-                        ) {{ overdueAmount(doc.due) }} Overdue 
-                        v-chip(
-                          v-if="doc.status == 'done'"
-                          small
-                          label
-                          color='success'
-                        ) Done
-                        v-chip(
-                          v-if='isPostponed(doc._id)'
-                          small
-                          label
-                          color='info'
-                        ) Postponed
-                  //-v-col
-                    main-delete-button(v-bind:document-id='doc._id')
-                      //--v-tooltip(top)
-                        template(v-slot:activator='{ on }')
-                          v-btn(
-                            fab
-                            small
-                            color='success'
-                            v-on='on'
-                            @click="setTaskStatus(doc._id, 'done')"
-                          )
-                            v-icon mdi-check
-                            //- OUTLINED if not done. Filled&disabled if done. Put button outside fab?
-                        span Mark done
-                      //- (TODO) x-Small btn with brackets for viewing raw document (tied to app - general tool for editing json)
-                  //-main-delete-button(v-bind:document-id='doc._id')
+                v-list-item
+                  v-list-item-content
+                    tasks-items-status(
+                      v-bind:task='doc'
+                      @set-status="setTaskStatus"
+                    )
+              v-divider(inset width="80%")
+              tasks-items-dates(
+                v-bind:task='doc'
+                v-bind:is-overdue='isOverdue(doc)'
+                v-bind:is-deleted='isDeleted(doc._id)'
+                @set-doc="setDoc()"
+              )
+              v-divider(inset width="80%")
+              tasks-items-tags(
+                v-bind:task='doc'
+                @set-doc="setDoc()"
+              )
+              v-divider
+                v-col
+                  div
+                    span
+                      v-chip(
+                        v-if='isOverdue(doc)'
+                        small
+                        label
+                        color='error'
+                      ) {{ overdueAmount(doc.due) }} Overdue 
+                      v-chip(
+                        v-if="doc.status == 'done'"
+                        small
+                        label
+                        color='success'
+                      ) Done
+                      v-chip(
+                        v-if='isPostponed(doc._id)'
+                        small
+                        label
+                        color='info'
+                      ) Postponed
+                    //- (TODO) x-Small btn with brackets for viewing raw document (tied to app - general tool for editing json)
               v-row
                 v-col
                   tr(class="font-weight-thin")
@@ -201,7 +153,34 @@ div(v-if="!hideTask")
                     td(v-text="doc._id")
                 v-col
                   main-delete-button(v-bind:document-id='doc._id')
-
+            v-card-actions
+              div(class="text-left")
+                v-tooltip(top)
+                  template(v-slot:activator='{ on }')
+                    v-btn(
+                      fab
+                      small
+                      :outlined="doc.status != 'done'"
+                      class="ma-2"
+                      :color="color(doc.status)"
+                      v-on='on'
+                      @click="setTaskStatus('done')"
+                    )
+                      v-icon mdi-check
+                  span Mark done
+                v-tooltip(top)
+                  template(v-slot:activator='{ on }')
+                    v-btn(
+                      fab
+                      small
+                      :outlined="!isPostponed(doc._id)"
+                      color='info'
+                      class="ma-2"
+                      v-on='on'
+                      @click='postponeTask(doc._id)'
+                    )
+                      v-icon mdi-update
+                  span Postpone until tomorrow
 </template>
 
 <script>
@@ -237,8 +216,25 @@ export default {
     fab:false,
     sheet: false,
     hideTask: false,
+    statusList: [
+      'cancelled',
+      'plan',
+      'wait',
+      'todo',
+      'next',
+      'doing',
+      'done'
+    ],
   }),
   computed: {
+    taskProgress: function () {
+      const s = this.doc.status;
+      const progress = 100 - ( 100 / this.statusList.findIndex(status => status === s ) );
+      return ( s === 'done' ? 100 : progress )
+      
+      //return
+    }
+
   },
   mounted () {
     this.setDoc()
@@ -249,7 +245,7 @@ export default {
     setDoc: async function() {
       this.doc = await this.getDoc(this.docid)
     },
-    //copied from former component. For rewrite
+    // TODO copied from former component. For rewrite
     overdueAmount: function (due) {
       let dDue = new Date(due);
       let dNow = new Date();
