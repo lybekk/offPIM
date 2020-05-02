@@ -94,12 +94,10 @@ div(v-if="!hideTask")
               )
             v-card-text
               v-list
-                v-list-item
-                  v-list-item-content
-                    tasks-items-description(
-                      v-bind:task='doc'
-                      @set-doc="setDoc()"
-                    )
+                tasks-items-description(
+                  v-bind:task='doc'
+                  @set-doc="setDoc()"
+                )
                 tasks-items-project(
                   v-if="doc.type != 'project'"
                   v-bind:task='doc'
@@ -184,18 +182,18 @@ div(v-if="!hideTask")
 </template>
 
 <script>
-import TasksItemsStatus from '@/components/tasks/TasksItemsStatus.vue'
-import TasksItemsTitle from '@/components/tasks/TasksItemsTitle.vue'
-import TasksItemsDescription from '@/components/tasks/TasksItemsDescription.vue'
-import TasksItemsProject from '@/components/tasks/TasksItemsProject.vue'
-import TasksItemsTags from '@/components/tasks/TasksItemsTags.vue'
-import TasksItemsPriority from '@/components/tasks/TasksItemsPriority.vue'
-import TasksItemsDates from '@/components/tasks/TasksItemsDates.vue'
-import MainDeleteButton from '@/components/MainDeleteButton.vue'
-import pouchMixin from '@/mixins/pouchMixin'
+import TasksItemsStatus from "@/components/tasks/TasksItemsStatus.vue";
+import TasksItemsTitle from "@/components/tasks/TasksItemsTitle.vue";
+import TasksItemsDescription from "@/components/tasks/TasksItemsDescription.vue";
+import TasksItemsProject from "@/components/tasks/TasksItemsProject.vue";
+import TasksItemsTags from "@/components/tasks/TasksItemsTags.vue";
+import TasksItemsPriority from "@/components/tasks/TasksItemsPriority.vue";
+import TasksItemsDates from "@/components/tasks/TasksItemsDates.vue";
+import MainDeleteButton from "@/components/MainDeleteButton.vue";
+import pouchMixin from "@/mixins/pouchMixin";
 
 export default {
-  name: 'tasksItem',
+  name: "tasksItem",
   components: {
     TasksItemsStatus,
     TasksItemsTitle,
@@ -207,80 +205,70 @@ export default {
     TasksItemsPriority,
   },
   mixins: [pouchMixin],
-  props: ['docid'],
+  props: ["docid"],
   data: () => ({
     doc: {
-      title:'',
-      tags:[],
+      title: "",
+      tags: [],
     },
-    fab:false,
+    fab: false,
     sheet: false,
     hideTask: false,
-    statusList: [
-      'cancelled',
-      'plan',
-      'wait',
-      'todo',
-      'next',
-      'doing',
-      'done'
-    ],
+    statusList: ["cancelled", "plan", "wait", "todo", "next", "doing", "done"],
   }),
   computed: {
-    taskProgress: function () {
+    taskProgress: function() {
       const s = this.doc.status;
-      const progress = 100 - ( 100 / this.statusList.findIndex(status => status === s ) );
-      return ( s === 'done' ? 100 : progress )
-      
-      //return
-    }
+      const progress =
+        100 - 100 / this.statusList.findIndex((status) => status === s);
+      return s === "done" ? 100 : progress;
 
+      //return
+    },
   },
-  mounted () {
-    this.setDoc()
+  mounted() {
+    this.setDoc();
   },
-  beforeDestroy() {
-  },
+  beforeDestroy() {},
   methods: {
     setDoc: async function() {
-      this.doc = await this.getDoc(this.docid)
+      this.doc = await this.getDoc(this.docid);
     },
     // TODO copied from former component. For rewrite
-    overdueAmount: function (due) {
+    overdueAmount: function(due) {
       let dDue = new Date(due);
       let dNow = new Date();
       let diff = dNow - dDue;
-      let hours = Math.floor(diff / (1000 * 60 * 60))
-      let msg = hours + ' hours '
-      return msg
+      let hours = Math.floor(diff / (1000 * 60 * 60));
+      let msg = hours + " hours ";
+      return msg;
     },
     setTaskStatus: async function(newStatus) {
       let doc = await window.db.get(this.doc._id);
       doc.status = newStatus;
-      if ( ['done','cancelled'].includes(newStatus) ) {
-          doc.end = new Date().toJSON();
+      if (["done", "cancelled"].includes(newStatus)) {
+        doc.end = new Date().toJSON();
       }
-      await this.putDoc(doc)
-      this.setDoc()
-      setTimeout(()=>{
-          this.$store.dispatch('getTaskStatuses');
-        }, 4000);
-
+      await this.putDoc(doc);
+      this.setDoc();
+      setTimeout(() => {
+        this.$store.dispatch("getTaskStatuses");
+      }, 4000);
     },
     getTaskStatus: function(id) {
-      return this.$store.getters.getTaskStatus(id)
+      return this.$store.getters.getTaskStatus(id);
     },
     postponeTask: async function(id) {
       var currentDate = new Date();
       currentDate.setDate(currentDate.getDate() + 1);
-      let tom = currentDate.toISOString().slice(0,10);
+      let tom = currentDate.toISOString().slice(0, 10);
       let payload = {
-        _id:id, 
-        field:'due', 
-        value: tom
+        _id: id,
+        field: "due",
+        value: tom,
       };
-      await this.setFieldDate(payload)
-      this.$store.commit('addPostponed', id);
+      await this.setFieldDate(payload);
+      this.$store.commit("addPostponed", id);
       this.setDoc();
       setTimeout(() => {
         this.hideTask = true;
@@ -290,26 +278,29 @@ export default {
       let d = new Date();
       d.setDate(d.getDate() - 1);
       let d_today = new Date();
-      let date_today = d_today.toISOString().slice(0,10);
-      if (date_today > doc.due && doc.status != "done" ) {
-          return true
+      let date_today = d_today.toISOString().slice(0, 10);
+      if (date_today > doc.due && doc.status != "done") {
+        return true;
       }
-      return false
+      return false;
     },
     isPostponed: function(id) {
       let list = this.$store.getters.getPostponedTasks;
-      if ( list.includes(id) ) {return true}
-      return false
+      if (list.includes(id)) {
+        return true;
+      }
+      return false;
     },
     isDeleted: function(id) {
       let list = this.$store.getters.getDeletedDocuments;
-      if ( list.includes(id) ) {return true}
-      return false
+      if (list.includes(id)) {
+        return true;
+      }
+      return false;
     },
-    color: function (status) {
-      return this.$store.getters.getStatusColors[status]
+    color: function(status) {
+      return this.$store.getters.getStatusColors[status];
     },
-  }
-}
-
+  },
+};
 </script>

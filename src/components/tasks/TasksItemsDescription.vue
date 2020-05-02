@@ -1,7 +1,13 @@
 <template lang="pug">
 v-dialog(v-model="dialog" scrollable max-width="400px")
   template(v-slot:activator="{ on }")
-    span(v-text="taskDescription(task.description)" v-on="on")
+    v-list-item(v-on="on")
+      v-list-item-icon
+        v-icon mdi-comment
+      v-list-item-content
+        v-list-item-subtitle(
+          v-text="taskDescription(task.description)" 
+        )
   v-card
     v-card-title
       span(class="headline") Edit description
@@ -22,46 +28,44 @@ v-dialog(v-model="dialog" scrollable max-width="400px")
 </template>
 
 <script>
-import pouchMixin from '@/mixins/pouchMixin'
+import pouchMixin from "@/mixins/pouchMixin";
 
 export default {
-  name: 'TasksItemsDescription',
-  components: {
-  },
+  name: "TasksItemsDescription",
+  components: {},
   mixins: [pouchMixin],
   props: ["task"],
   data: () => ({
-    dialog:false,
-    newValue: null
+    dialog: false,
+    newValue: null,
   }),
   computed: {
     value: {
-        get () {
-          return this.task.description
-        },
-        set (val) {
-          this.newValue = val;
-        }
-    }
+      get() {
+        return this.task.description;
+      },
+      set(val) {
+        this.newValue = val;
+      },
+    },
   },
   methods: {
-    setTaskField: async function () {
+    setTaskField: async function() {
       await this.setFieldGeneric({
         _id: this.task._id,
-        field: 'description',
-        value: this.newValue
+        field: "description",
+        value: this.newValue,
       });
       this.dialog = false;
-      this.$emit('set-doc')
+      this.$emit("set-doc");
     },
     taskDescription: function(txt) {
       let t = txt;
       if (t == null || t.length == 0) {
-          t = "No description";
+        t = "No description";
       }
-      return t
-    }
-  }
+      return t;
+    },
+  },
 };
-
 </script>
