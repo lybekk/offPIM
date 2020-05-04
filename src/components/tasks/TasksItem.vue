@@ -85,7 +85,7 @@ div(v-if="!hideTask")
             )
               v-icon mdi-dots-vertical-circle
           v-card
-            v-card-title(class="secondary")
+            v-card-title
               tasks-items-title(
                 v-bind:id='doc._id'
                 v-bind:title='doc.title'
@@ -110,12 +110,15 @@ div(v-if="!hideTask")
                       @set-status="setTaskStatus"
                     )
               v-divider(inset width="80%")
-              tasks-items-dates(
-                v-bind:task='doc'
-                v-bind:is-overdue='isOverdue(doc)'
-                v-bind:is-deleted='isDeleted(doc._id)'
-                @set-doc="setDoc()"
+              div(
+                v-for="field in ['due','start','end']"
+                :key="field"
               )
+                form-datetime(
+                  v-bind:doc='doc'
+                  :field-name="field"
+                  @set-doc="setDoc()"
+                )
               v-divider(inset width="80%")
               tasks-items-tags(
                 v-bind:task='doc'
@@ -151,7 +154,8 @@ div(v-if="!hideTask")
                     td(v-text="doc._id")
                 v-col
                   main-delete-button(v-bind:document-id='doc._id')
-            v-card-actions
+            //- may be removed 
+            //-v-card-actions
               div(class="text-left")
                 v-tooltip(top)
                   template(v-slot:activator='{ on }')
@@ -189,6 +193,7 @@ import TasksItemsProject from "@/components/tasks/TasksItemsProject.vue";
 import TasksItemsTags from "@/components/tasks/TasksItemsTags.vue";
 import TasksItemsPriority from "@/components/tasks/TasksItemsPriority.vue";
 import TasksItemsDates from "@/components/tasks/TasksItemsDates.vue";
+import FormDatetime from "@/components/form/formDatetime.vue";
 import MainDeleteButton from "@/components/MainDeleteButton.vue";
 import pouchMixin from "@/mixins/pouchMixin";
 
@@ -203,6 +208,7 @@ export default {
     TasksItemsProject,
     TasksItemsTags,
     TasksItemsPriority,
+    FormDatetime,
   },
   mixins: [pouchMixin],
   props: ["docid"],
@@ -222,8 +228,6 @@ export default {
       const progress =
         100 - 100 / this.statusList.findIndex((status) => status === s);
       return s === "done" ? 100 : progress;
-
-      //return
     },
   },
   mounted() {

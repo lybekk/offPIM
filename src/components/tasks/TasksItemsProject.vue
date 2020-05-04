@@ -1,6 +1,5 @@
 <template lang="pug">
     v-dialog(v-model="dialog" scrollable max-width="300px")
-      //-v-list(two-line)
       template(v-slot:activator="{ on }")
         v-list-item(@click="")
           v-list-item-content(v-on="on")
@@ -94,6 +93,7 @@ export default {
 
       this.dialog = false;
       this.$emit('set-doc')
+
     },
     showProject(id) {
       this.$router.push(`/tasks/project/${id}`);

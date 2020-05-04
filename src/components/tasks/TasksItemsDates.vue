@@ -1,5 +1,6 @@
 <template lang="pug">
 v-list(two-line)
+  //- Deprecated. This component will be removed, in favor of formDatetime
   v-subheader.text--secondary.warning--text(v-if='task.postponed > 5')
     | Task postponed {{ task.postponed }} times.
   //- TODO Need this? Due: { headerDue }}
