@@ -5,11 +5,9 @@ title: Roadmap
 * TOC
 {:toc}
 
-## On the horizon:
-* Better Dashboard (with Chart.js)
-* Project management in Tasks app
+## On the horizon
 * Tasks app
-    * Projects
+    * Project management
     * View notes attached to project
     * Eisenhower matrix
 * Personal finance
@@ -20,8 +18,13 @@ title: Roadmap
     * Emergency Preparedness
     * Collectibles
 * Contacts app
+* Maps
+    * Logbook entries visible in map
+    * Retrieval of contacts addresses
+* Dashboard
+    * Text-to-speech(TTS) reading of status report
 
-## Time permitting:
+## Time permitting
 
 * Export to a format following the structure of [The big book of everything](http://www.erikdewey.com/bigbookmkIIIa.pdf)
 * Android/iOS app (using couchbase lite)

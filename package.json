@@ -21,6 +21,7 @@
     "chart.js": "^2.9.3",
     "core-js": "^3.6.4",
     "debug": "^4.1.1",
+    "leaflet": "^1.6.0",
     "nano": "^8.2.2",
     "pouchdb": "^7.2.1",
     "pouchdb-authentication": "^1.1.3",
