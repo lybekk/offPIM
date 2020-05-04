@@ -20,13 +20,16 @@
       )
         span(class="mr-2") Docs
         v-icon mdi-open-in-new
-    v-app-bar(app)
+    v-app-bar(
+      app
+      elevate-on-scroll
+    )
       v-app-bar-nav-icon(
         @click.stop="drawer = !drawer"
       )
       div(class="d-flex align-center")
         span(
-          class="title"
+          class="headline"
           @click.stop="drawer = !drawer"
         ) offPIM
       v-tabs(
@@ -108,7 +111,8 @@ export default {
   },
   created () {},
   mounted () {
-    this.startupcheck()
+    this.$store.commit('loadLocalSettings');
+    this.startupcheck();
     this.$vuetify.theme.dark = localStorage.getItem('darkMode');
   },
   methods: {

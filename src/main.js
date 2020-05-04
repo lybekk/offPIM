@@ -7,8 +7,9 @@ import './registerServiceWorker'
 
 
 import PouchDB from 'pouchdb-browser'
+import PouchDBFind from 'pouchdb-find'
 
-PouchDB.plugin(require('pouchdb-find'));
+PouchDB.plugin(PouchDBFind);
 
 /* eslint-disable no-unused-vars */
 window.db = new PouchDB('vault');

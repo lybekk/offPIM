@@ -35,7 +35,7 @@ v-content
       v-col
         v-card
           v-card-title Tasks
-          //v-card-text(
+          //-v-card-text(
             v-if="isNoTasks"
             ) No unfinished tasks
           v-card-text
@@ -57,8 +57,7 @@ v-content
                     v-progress-linear(
                       v-if="this.$store.getters.getTasksAggregate.initiated && taskProgress.visible"
                       :color="taskProgress.color"
-                      :buffer-value="taskProgress.buffer"
-                      :value="taskProgress.value"
+                      :value="taskProgress.value" 
                     )
               v-row(
                 align="center"
