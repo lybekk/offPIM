@@ -60,6 +60,11 @@ const routes = [
     */
   },
   {
+    path: '/maps',
+    name: 'maps',
+    component: () => import(/* webpackChunkName: "maps" */ '../views/Maps.vue')
+  },
+  {
     path: '/messages',
     name: 'messages',
     component: () => import(/* webpackChunkName: "messages" */ '../views/Messages.vue')
@@ -77,7 +82,7 @@ const routes = [
   {
     path: '/themes',
     name: 'themes',
-    component: () => import(/* webpackChunkName: "tools" */ '../views/Themes.vue')
+    component: () => import(/* webpackChunkName: "themes" */ '../views/Themes.vue')
   },
   {
     path: '/tools',

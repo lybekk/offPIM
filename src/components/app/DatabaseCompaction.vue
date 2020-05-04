@@ -33,15 +33,19 @@ export default {
             if ( this.whatdb == 'remoteDB') {
               result = await window.remoteDB.compact();
             } else {
+              this.$store.commit('showSnackbar', {
+                text: 'Local compaction may take a while. Feel free to get things done. Just don\'t close the browser.', 
+                color: 'info' 
+              })
               result = await window.db.compact();
             }
             if (result.ok) {
               this.compactingDone = true;
             }
             this.compactInProgress = false;
-            console.log(result)
           } catch (err) {
             console.log(err);
+            //- TODO send to system/debug log
             this.compactInProgress = false;
           }
         },

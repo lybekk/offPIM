@@ -13,7 +13,7 @@
       v-card
         v-card-title Remote database settings
         v-card-text
-          v-expansion-panels(:value="2")
+          v-expansion-panels(:value="3")
             v-expansion-panel
               v-expansion-panel-header.subtitle-1 Info
               v-expansion-panel-content
@@ -25,6 +25,25 @@
                   li Note: User/admin must have permission to upload design documents
                   li Leave username blank if credentials are in the url
             v-expansion-panel
+              v-expansion-panel-header.subtitle-1 Settings
+              v-expansion-panel-content
+                p(
+                  v-if="!$store.getters.remoteDBIsOnline"
+                  class="warning--text"
+                ) Connect to remote database to enable this:
+                v-switch(
+                  v-model="settingLiveSync"
+                  label="Sync continuously to remoteDB. Requires refresh. Syncs 5 seconds after offPIM starts."
+                  hide-details
+                  :disabled="!$store.getters.remoteDBIsOnline"
+                )
+                v-switch(
+                  v-model="settingRetrySync"
+                  label="Retry if sync fails (I.E. due to connection issues)."
+                  :disabled="!settingLiveSync"
+                  hide-details
+                )
+            v-expansion-panel
               v-expansion-panel-header.subtitle-1 Actions
               v-expansion-panel-content
                 v-list
@@ -32,43 +51,44 @@
             v-expansion-panel
               v-expansion-panel-header.subtitle-1 Authentication
               v-expansion-panel-content
-                v-card
-                  v-card-text
-                    v-row
-                      v-col(cols="12")
-                        v-text-field(
-                            v-model="remoteDBUrl"
-                            :color="getColor"
-                            label="Remote database URL"
-                            class="text-capitalize"
-                            outlined
-                            shaped
-                        )
-                      v-col(cols="12" sm="6")
-                        v-text-field(
-                          v-model="username"
-                          label="Username"
-                          outlined
-                          shaped
-                        )
-                      v-col(cols="12" sm="6")
-                        v-text-field(
-                          v-model="password"
-                          :append-icon="show1 ? 'mdi-eye' : 'mdi-eye-off'"
-                          :type="show1 ? 'text' : 'password'"
-                          name="pwd"
-                          label="Password"
-                          outlined
-                          shaped
-                          @click:append="show1 = !show1"
-                        )
-                      v-col(cols="12")
-                        v-checkbox(
-                          v-model="saveConnectionDetails"
-                          label="Save settings in browser"
-                        )
+                v-row
+                  v-col(cols="12")
+                    v-text-field(
+                        v-model="remoteDBUrl"
+                        :color="getColor"
+                        label="Remote database URL"
+                        class="text-capitalize"
+                        hide-details
+                        outlined
+                        shaped
+                    )
+                  v-col(cols="12" sm="6")
+                    v-text-field(
+                      v-model="username"
+                      label="Username"
+                      hide-details
+                      outlined
+                      shaped
+                    )
+                  v-col(cols="12" sm="6")
+                    v-text-field(
+                      v-model="password"
+                      :append-icon="show1 ? 'mdi-eye' : 'mdi-eye-off'"
+                      :type="show1 ? 'text' : 'password'"
+                      name="pwd"
+                      label="Password"
+                      hide-details
+                      outlined
+                      shaped
+                      @click:append="show1 = !show1"
+                    )
+                  v-col(cols="12")
+                    v-checkbox(
+                      v-model="saveConnectionDetails"
+                      label="Save settings in browser"
+                    )
                 v-row(v-if="connectionResultMessage")
-                  p(class="error--text") {{ connectionResultMessage }}
+                  p(:class="getColor+'--text'") {{ connectionResultMessage }}
         v-card-actions
           v-btn(
             small
@@ -100,7 +120,7 @@ export default {
     username: null,
     password: null,
     show1: false,
-    connectionOK: null,
+    //connectionOK: null,
     connectionResultMessage: null,
     saveConnectionDetails: false,
   }),
@@ -115,9 +135,28 @@ export default {
         }
       }
     },
+    settingLiveSync: {
+      get() {
+        return this.$store.getters.localSettings.liveSync
+      },
+      set(val) {
+        this.$store.commit(
+          'setLocalSetting', { key: 'liveSync', value: val}
+        )
+      }
+    },
+    settingRetrySync: {
+      get() {
+        return this.$store.getters.localSettings.retrySync
+      },
+      set(val) {
+        this.$store.commit(
+          'setLocalSetting', { key: 'retrySync', value: val}
+        )
+      }
+    },
     getColor () {
       let c = this.$store.getters.remoteDBIsOnline;
-      console.log(c);
       return  c == false ? 'error'
             : c == true ? 'success'
             : ''
@@ -154,7 +193,6 @@ export default {
       window.remoteDB = await new PouchDB(options);
       try {
         const response = await window.remoteDB.info();
-        console.log('Connection response: ', response)
         if (response.db_name) {
           v.commit('showSnackbar', { text:'Remote DB connected.', color:'success' });
           if(this.saveConnectionDetails) {

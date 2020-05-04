@@ -67,5 +67,8 @@ export default {
     return state.dialogItemDetailed
   },
 
+  localSettings: state => {
+    return state.localSettings
+  },
 
 }

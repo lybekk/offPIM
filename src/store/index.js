@@ -21,6 +21,10 @@ export default new Vuex.Store({
     leftDrawer: false,
     loaderActive: false,
     remoteDBIsOnline: false,
+    localSettings: {
+      liveSync: false,
+      retrySync: false,
+    },
     remoteDBSettings: {
       name: null, // I.E. 'http://localhost:5984/vault'
       auth: {

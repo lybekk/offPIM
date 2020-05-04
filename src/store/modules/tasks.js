@@ -99,7 +99,6 @@ const tasks = {
                     include_docs: false
                 };
                 let data = await window.db.query('offpim/tasks-due', options);
-                console.log('Fix this. Tasks aggregation DUE test: ', data);
                 data.rows.forEach(doc => {
                     if (doc.key > todayDate && doc.key < dayAfterTomorrowDate) {
                         aggregate.tomorrow += doc.value

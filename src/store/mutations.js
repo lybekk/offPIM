@@ -102,4 +102,27 @@ export default {
     state.localDBInfo = payload
   },
 
+  loadLocalSettings(state) {
+    const s = window.localStorage.getItem('offpimLocalSettings');
+    if (s) {
+      const j = JSON.parse( s );
+      state.localSettings = j;
+    }
+  },
+
+  setLocalSetting(state, payload) {
+    const k = payload.key;
+    const v = payload.value;
+
+    let s = window.localStorage.getItem('offpimLocalSettings');
+    if (!s) {
+      window.localStorage.setItem('offpimLocalSettings', JSON.stringify({}) )
+    }
+    const j = JSON.parse( s );
+    j[k] = v;
+    window.localStorage.setItem('offpimLocalSettings', JSON.stringify(j) );
+    state.localSettings[k] = v;
+  }
+
+
 }

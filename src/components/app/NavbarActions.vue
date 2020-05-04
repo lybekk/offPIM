@@ -17,7 +17,7 @@
           @click="updateLastSync"
         )
           v-icon(v-if="!remoteDBIsOnline") mdi-cloud-off-outline
-          v-icon(v-else) mdi-cloud-sync
+          v-icon(v-else color="primary") mdi-cloud-sync
       v-card
         v-list
           v-list-item
@@ -110,6 +110,12 @@ export default {
   },
   mounted() {
     this.updateLastSync();
+
+    setTimeout(() => {
+      if (this.$store.getters.localSettings.liveSync) {
+        this.syncDatabase()
+      }
+    }, 5000);
   },
   methods: {
     connectRemote: async function() {
@@ -145,8 +151,11 @@ export default {
       this.pending.push = 0;
       this.pending.pull = 0;
       this.archivedDocumentsSkippedDuringSync = 0;
+      const settings = this.$store.getters.localSettings;
+
       PouchDB.sync(window.db, window.remoteDB, {
-        live: false,
+        live: settings.liveSync,
+        retry: settings.retrySync,
         push: {},
         pull: {
           filter: function(doc) {
@@ -190,6 +199,7 @@ export default {
         })
         .on("denied", function(err) {
           // a document failed to replicate (e.g. due to permissions)
+          // TODO - send to log
           console.log("DENIED HAPPENED: ", err);
         })
         .on("complete", function(info) {
@@ -234,6 +244,7 @@ export default {
         .on("error", function(err) {
           dis.syncInProgress = false;
           console.log("Error syncing: ", err);
+          // TODO - send to log
           // set localStorage sync did not finish
           vuex.commit("showSnackbar", {
             text: 'Something went wrong during sync. Is the Remote DB reachable? ' + err,
