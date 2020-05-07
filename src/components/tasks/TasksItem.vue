@@ -52,6 +52,13 @@ div(v-if="!hideTask")
           v-bind:task='doc'
           @set-doc="setDoc()"
         )
+        span
+          v-chip(
+            v-if='isOverdue'
+            small
+            label
+            color='error'
+          ) {{ overdueAmount(doc.due) }} Overdue 
         v-spacer
         v-tooltip(top)
           template(v-slot:activator='{ on }')
@@ -125,28 +132,28 @@ div(v-if="!hideTask")
                 @set-doc="setDoc()"
               )
               v-divider
-                v-col
-                  div
-                    span
-                      v-chip(
-                        v-if='isOverdue(doc)'
-                        small
-                        label
-                        color='error'
-                      ) {{ overdueAmount(doc.due) }} Overdue 
-                      v-chip(
-                        v-if="doc.status == 'done'"
-                        small
-                        label
-                        color='success'
-                      ) Done
-                      v-chip(
-                        v-if='isPostponed(doc._id)'
-                        small
-                        label
-                        color='info'
-                      ) Postponed
-                    //- (TODO) x-Small btn with brackets for viewing raw document (tied to app - general tool for editing json)
+              v-col
+                div
+                  span
+                    v-chip(
+                      v-if='isOverdue'
+                      small
+                      label
+                      color='error'
+                    ) {{ overdueAmount(doc.due) }} Overdue 
+                    v-chip(
+                      v-if="doc.status == 'done'"
+                      small
+                      label
+                      color='success'
+                    ) Done
+                    v-chip(
+                      v-if='isPostponed(doc._id)'
+                      small
+                      label
+                      color='info'
+                    ) Postponed
+                  //- (TODO) x-Small btn with brackets for viewing raw document (tied to app - general tool for editing json)
               v-row
                 v-col
                   tr(class="font-weight-thin")
@@ -229,6 +236,16 @@ export default {
         100 - 100 / this.statusList.findIndex((status) => status === s);
       return s === "done" ? 100 : progress;
     },
+    isOverdue: function() {
+      let d = new Date();
+      d.setDate(d.getDate() - 1);
+      let d_today = new Date();
+      let date_today = d_today.toISOString().slice(0, 10);
+      if (date_today > this.doc.due && this.doc.status != "done") {
+        return true;
+      }
+      return false;
+    },
   },
   mounted() {
     this.setDoc();
@@ -277,16 +294,6 @@ export default {
       setTimeout(() => {
         this.hideTask = true;
       }, 400);
-    },
-    isOverdue: function(doc) {
-      let d = new Date();
-      d.setDate(d.getDate() - 1);
-      let d_today = new Date();
-      let date_today = d_today.toISOString().slice(0, 10);
-      if (date_today > doc.due && doc.status != "done") {
-        return true;
-      }
-      return false;
     },
     isPostponed: function(id) {
       let list = this.$store.getters.getPostponedTasks;

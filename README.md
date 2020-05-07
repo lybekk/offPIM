@@ -17,7 +17,7 @@ In an age where everything is about collaboration and sharing... This is a count
 Features:
 * Local storage in browser. No server needed
 * Sync back and forth to an external database (supporting the CouchDB replication protocol). Full master-master replication
-* Export to json
+* Export/import to/from JSON
 * Apps
     * Task management
     * Notes
@@ -29,8 +29,13 @@ Features:
 * Themes
 * Open source. No proprietary technologies. No external requests. No tracking.
 
-## Try
-[Try a live version of offPIM](https://offpim.app/) (or use it permanently, as it works just as it will anywhere else). You may close the browser and tabs. Your data will still be there.
+## Use now
+[Use a live version of offPIM](https://offpim.app/) (or use it permanently, as it works just as it will anywhere else). You may close the browser and tabs. Your data will still be stored in your browser.
+
+| Host        | Build status    |
+| ----------- |:-------------:|
+| Netlify     | [![Netlify Status](https://api.netlify.com/api/v1/badges/ac368203-f0ac-4934-9fc2-dc4e68bb3d1d/deploy-status)](https://app.netlify.com/sites/offpim/deploys) |
+
 
 * **PS:** Your data never leaves your browser, as it uses [PouchDB](https://pouchdb.com/), an in-browser database. The data entered into offPIM will neaver touch the server it's hosted on.
 * **PS2:** The downside to this however, is that the data will disappear if the browser cache/data gets deleted during an upgrade or the like. Remember to back up and/or synchronize regularly, as is crucial for all valuable data.
