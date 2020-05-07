@@ -31,7 +31,6 @@ const routes = [
         name: 'tasksProject',
         component: () => import(/* webpackChunkName: "tasksList" */ '../views/tasks/Project.vue'),
         props: true
-        //component: () => import(/* webpackChunkName: "tasks" */ '../views/Tasks.vue'),
       },
       {
         path: 'completed_projectless',
@@ -49,15 +48,6 @@ const routes = [
     path: '/logbook',
     name: 'logbook',
     component: () => import(/* webpackChunkName: "logbook" */ '../views/Logbook.vue')
-    /*
-    children: [
-      {
-        path: 'tag',
-        name: 'logbookTag',
-        component: () => import('../views/logbook/Items.vue'),
-      }
-    ]
-    */
   },
   {
     path: '/maps',
@@ -73,6 +63,11 @@ const routes = [
     path: '/setup',
     name: 'setup',
     component: () => import(/* webpackChunkName: "setup" */ '../views/Setup.vue')
+  },
+  {
+    path: '/settings',
+    name: 'settings',
+    component: () => import(/* webpackChunkName: "settings" */ '../views/Settings.vue')
   },
   {
     path: '/inventory',

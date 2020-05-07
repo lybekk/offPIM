@@ -65,6 +65,7 @@ export default {
   computed: {
   },
   created () {
+    this.$store.commit('setLeftDrawer', false)
   },
   mounted () {
   },

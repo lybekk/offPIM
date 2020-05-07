@@ -5,21 +5,19 @@
       app
     )
       navbar-apps
-      v-switch(
-        v-model="isDarkMode" 
-        class="ma-2" 
-        label="Dark mode" 
-        dense 
-        color=""
-      )
-      v-btn(
-        href="https://lybekk.github.io/offpim/"
+      v-divider
+      v-list-item(
+        link 
+        href="https://lybekk.github.io/offPIM/"
         target="_blank"
         rel="noreferrer"
-        text
-      )
-        span(class="mr-2") Docs
-        v-icon mdi-open-in-new
+        )
+        v-list-item-icon
+          v-icon mdi-book-information-variant
+        v-list-item-content
+          v-list-item-title Docs
+        v-list-item-action
+          v-icon mdi-open-in-new
     v-app-bar(
       app
       elevate-on-scroll
@@ -28,10 +26,17 @@
         @click.stop="drawer = !drawer"
       )
       div(class="d-flex align-center")
-        span(
-          class="headline"
-          @click.stop="drawer = !drawer"
-        ) offPIM
+        v-slide-x-transition(:hide-on-leave="true")
+          span(
+            v-if="this.$route.name == 'welcome'"
+            class="headline" 
+          ) offPIM
+          v-btn(
+            v-else  
+            icon
+            to="/"
+          )
+            v-icon mdi-apps
       v-tabs(
         fixed-tabs
         background-color="transparent"
@@ -94,19 +99,6 @@ export default {
     },
     loading() {
       return this.$store.getters.loaderState
-    },
-    isDarkMode: {
-      get() {
-        return this.$vuetify.theme.dark
-      },
-      set(state) {
-        if (state) {
-          localStorage.setItem('darkMode', true);
-        } else {
-          localStorage.removeItem('darkMode');
-        }
-        this.$vuetify.theme.dark = state
-      }
     }
   },
   created () {},

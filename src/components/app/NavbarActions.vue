@@ -32,9 +32,9 @@
               v-list-item-subtitle(v-else)
                 div(v-if="pending.push != 0 || pending.pull != 0")
                   span Remaining: 
-                  span(class="warning--text") Sending {{ pending.push }}
+                  span(class="warning--text") Push {{ pending.push }}
                   span  |  
-                  span(class="info--text") Retrieving {{ pending.pull }}
+                  span(class="info--text") Pull {{ pending.pull }}
                 div(v-else) ...
         v-divider
         v-list(two-line)
@@ -77,12 +77,12 @@
 <script>
 import pouchMixin from "@/mixins/pouchMixin";
 import LocalDatabaseListItem from "@/components/app/LocalDatabaseListItem";
-import PouchDB from 'pouchdb-browser';
+import PouchDB from "pouchdb-browser";
 
 export default {
   name: "NavbarActions",
   components: {
-    LocalDatabaseListItem
+    LocalDatabaseListItem,
   },
   mixins: [pouchMixin],
   data: () => ({
@@ -90,38 +90,42 @@ export default {
     lastSync: "Never",
     pending: {
       pull: 0,
-      push: 0
+      push: 0,
     },
     syncInProgress: false,
     archivedDocumentsSkippedDuringSync: 0,
   }),
   computed: {
     syncIcon() {
-    let x = this.$store.getters.remoteDBIsOnline;
-    return !x ? 'mdi-lan-disconnect'
-         : this.syncInProgress ? 'mdi-lan-connect'
-         : 'mdi-lan-pending';
+      let x = this.$store.getters.remoteDBIsOnline;
+      return !x
+        ? "mdi-lan-disconnect"
+        : this.syncInProgress
+        ? "mdi-lan-connect"
+        : "mdi-lan-pending";
       //if time to kill -> make it alternate between :mdi-lan-connect mdi-lan-pending
       // using method -> while-loop
     },
     remoteDBIsOnline() {
       return this.$store.getters.remoteDBIsOnline;
-    }
+    },
   },
   mounted() {
     this.updateLastSync();
 
     setTimeout(() => {
       if (this.$store.getters.localSettings.liveSync) {
-        this.syncDatabase()
+        this.syncDatabase();
       }
     }, 5000);
   },
   methods: {
     connectRemote: async function() {
-      const isConnected = await this.$store.dispatch('remoteDBConnectivityCheck');
+      const isConnected = await this.$store.dispatch(
+        "remoteDBConnectivityCheck"
+      );
       if (!isConnected) {
-        this.$store.commit('setGenericStateBooleanTrue', 'dbConnectionDialog')
+        this.$store.commit("setGenericStateBooleanTrue", "dbConnectionDialog");
       }
     },
     updateLastSync: function() {
@@ -134,7 +138,7 @@ export default {
       let dDue = new Date(ls);
       let dNow = new Date();
       let diff = dNow - dDue;
-      
+
       if (diff < 3600000) {
         time = Math.floor(diff / 60000);
         granularity = time === 1 ? "minute" : "minutes";
@@ -168,13 +172,13 @@ export default {
                   }
                 })
                 .catch(function() {
-                  dis.archivedDocumentsSkippedDuringSync++
+                  dis.archivedDocumentsSkippedDuringSync++;
                 });
             } else {
               return true;
             }
-          }
-        }
+          },
+        },
       })
         .on("change", function(info) {
           console.log("Change happenend: ", info); // this is here for stability testing
@@ -224,7 +228,7 @@ export default {
           vuex.commit("showSnackbar", {
             text: txt,
             color: "success",
-            timeout: 6000
+            timeout: 6000,
           });
           setTimeout(() => {
             if (!localStorage.getItem("lastSync")) {
@@ -232,7 +236,7 @@ export default {
                 text:
                   "After the very first sync, loading data for the first time may be slow, due to indexing.",
                 color: "info",
-                timeout: 8000
+                timeout: 8000,
               });
             }
           }, 6500);
@@ -247,11 +251,13 @@ export default {
           // TODO - send to log
           // set localStorage sync did not finish
           vuex.commit("showSnackbar", {
-            text: 'Something went wrong during sync. Is the Remote DB reachable? ' + err,
-            color: "error"
+            text:
+              "Something went wrong during sync. Is the Remote DB reachable? " +
+              err,
+            color: "error",
           });
         });
-    }
-  }
+    },
+  },
 };
 </script>
