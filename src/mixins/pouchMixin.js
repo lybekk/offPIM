@@ -38,20 +38,31 @@ export default {
         },
 
         putDoc: async function (doc, snackbarText = false) {
-            const response = await window.db.put(doc);
-            if (response.ok) {
-              // Consider using global snackbar for response.ok instead. Less invasive
-              let txt;
-              if (snackbarText) {
-                txt = snackbarText
-              } else {
-                txt = 'Document update OK'
-              }
-              this.$store.commit('showSnackbar', { text:txt, color:'success' })
-              return response
-            } else {
-                this.errorHandler( {type:'error',text:'Document update failed' + response} )
-                //this.$store.commit('addAlert', {type:'error',text:'Document update failed' + response })
+            try {
+                const silent = snackbarText == 'silent' ? true : false;
+                const response = await window.db.put(doc);
+                if (response.ok) {
+                  // Consider using global snackbar for response.ok instead. Less invasive
+                  let txt;
+    
+                if (snackbarText) {
+                    txt = snackbarText
+                  } else {
+                    txt = 'Document update OK'
+                  }
+    
+                  if (!silent) {
+                      this.$store.commit('showSnackbar', { text:txt, color:'success' })
+                  }
+                  return response
+                } else {
+                    if (!silent) {
+                        this.errorHandler( {type:'error',text:'Document update failed' + response} )
+                    }
+                    //this.$store.commit('addAlert', {type:'error',text:'Document update failed' + response })
+                }
+            } catch (error) {
+               return error 
             }
         },
 

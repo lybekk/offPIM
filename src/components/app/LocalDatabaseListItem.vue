@@ -28,7 +28,7 @@
               :value="destroyInProgress"
               color="warning"
             )
-              v-card()
+              v-card
                 v-card-text
                   v-row
                     v-col Destroying local database. This may take a while if it's a large database.
@@ -70,7 +70,6 @@
                               div(
                                 v-if="backupPreparing"
                               )
-                                // Ready:
                                 a(
                                   id="linkReadyContainer"
                                   class="backupLink"
@@ -121,7 +120,7 @@ import DatabaseCompaction from "@/components/app/DatabaseCompaction.vue";
 export default {
   name: "LocalDatabaseListItem",
   components: {
-    DatabaseCompaction
+    DatabaseCompaction,
   },
   data: () => ({
     dialog: false,
@@ -136,18 +135,26 @@ export default {
       this.backupPreparing = true; // backup not really ready at this time. Used for proper feedback
       const backup = await window.db.allDocs({
         include_docs: true,
-        attachments: true
       });
       const blob = await URL.createObjectURL(
-        new Blob([JSON.stringify(backup.rows, null, 2)], {
-          type: "application/json"
-        })
+        new Blob(
+          [
+            JSON.stringify(
+              backup.rows.map(({ doc }) => doc),
+              null,
+              2
+            ),
+          ],
+          {
+            type: "application/json",
+          }
+        )
       );
       const link = document.getElementById("linkReadyContainer");
       link.href = blob;
       link.innerText = "Save backup file";
-      link.classList.add('backupLinkDone'); // classlist mutation can be replaced by ternary operator
-      
+      link.classList.add("backupLinkDone"); // classlist mutation can be replaced by ternary operator
+
       this.backupDone = true;
     },
     destroyLocalDB: async function() {
@@ -159,26 +166,26 @@ export default {
         try {
           this.destroyInProgress = true;
           let result = await window.db.destroy();
-          console.log('db destroy result: ', result)
+          console.log("db destroy result: ", result);
           console.log("Local PouchDB Database destroyed");
           this.$store.commit("showSnackbar", {
-            text: 'Local database destroyed. Reloading offPIM',
-            color: "warning"
+            text: "Local database destroyed. Reloading offPIM",
+            color: "warning",
           });
           localStorage.removeItem("lastSync");
           setTimeout(() => {
-              window.location.reload();
+            window.location.reload();
           }, 600);
         } catch (err) {
           this.$store.commit("showSnackbar", {
             text: err,
-            color: "error"
+            color: "error",
           });
           console.log(err);
         }
       }
-    }
-  }
+    },
+  },
 };
 </script>
 
@@ -192,7 +199,6 @@ export default {
   display: block;
   border-style: solid;
   border-color: #ffffff26;
-  color:inherit;
+  color: inherit;
 }
-
 </style>
