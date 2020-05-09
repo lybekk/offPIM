@@ -114,11 +114,12 @@ export default {
     const k = payload.key;
     const v = payload.value;
 
+
     let s = window.localStorage.getItem('offpimLocalSettings');
-    if (!s) {
+    if (s == null) {
       window.localStorage.setItem('offpimLocalSettings', JSON.stringify({}) )
     }
-    const j = JSON.parse( s );
+    const j = JSON.parse( window.localStorage.getItem('offpimLocalSettings') );
     j[k] = v;
     window.localStorage.setItem('offpimLocalSettings', JSON.stringify(j) );
     state.localSettings[k] = v;

@@ -30,14 +30,27 @@
             v-col
               v-list
                 v-subheader Move task to project:
-                v-list-item-group(color="primary")
-                  //- Filter list with input field
-                  v-list-item(
-                    v-for="(value, key) in openProjects"
-                    :key="key"
-                    @click="setTaskField(value)"
-                  )
-                    v-list-item-title(v-text="key")
+                v-data-iterator(
+                  :items="openProjects"
+                  :search="search"
+                )
+                  template(v-slot:header)
+                    //-v-toolbar
+                    v-text-field(
+                      v-model="search"
+                      clearable
+                      hide-details
+                      prepend-inner-icon="mdi-magnify"
+                      label="Search"
+                    )
+                  template(v-slot:default="props")
+                    v-list-item-group(color="primary")
+                      v-list-item(
+                        v-for="item in props.items"
+                        :key="item._id"
+                        @click="setTaskField(item._id)"
+                      )
+                        v-list-item-title(v-text="item.title")
 </template>
 
 <script>
@@ -51,18 +64,13 @@ export default {
   props: ["task"],
   data: () => ({
     dialog:false,
-    projectName: null
+    projectName: null,
+    search: '',
   }),
   computed: {
     openProjects: function () {
-      console.log('Getting project list. Runs multiple times... Optimize')
-      const proj = this.$store.getters.getOpenProjects;
-      const arr = {};
-      proj.forEach(p => {
-        arr[ p.title ] = p._id
-      });
-      //arr.sort();
-      return arr
+      // TODO - Getting project list. Runs multiple times... Optimize. Hand off project list & getter to Vuex
+      return this.$store.getters.getOpenProjects;
     }
   },
   mounted () {

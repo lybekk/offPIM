@@ -1,8 +1,6 @@
 <template lang="pug">
 div(v-if="!hideTask")
-    v-card(
-      :color="isPostponed(doc._id) ? 'secondary darken-2' : ''"
-    )
+    v-card
       v-card-title(
         :class="[ doc.status == 'done' ? 'body-1 success--text' : 'body-1 font-weight-regular' ]"
         @click="sheet = !sheet"
@@ -59,6 +57,12 @@ div(v-if="!hideTask")
             label
             color='error'
           ) {{ overdueAmount(doc.due) }} Overdue 
+          v-chip(
+            v-if='isPostponed(doc._id)'
+            small
+            label
+            color='info'
+          ) Postponed
         v-spacer
         v-tooltip(top)
           template(v-slot:activator='{ on }')
@@ -234,7 +238,7 @@ export default {
       const s = this.doc.status;
       const progress =
         100 - 100 / this.statusList.findIndex((status) => status === s);
-      return s === "done" ? 100 : progress;
+      return s === 'done' || s === 'cancelled' ? 100 : progress;
     },
     isOverdue: function() {
       let d = new Date();

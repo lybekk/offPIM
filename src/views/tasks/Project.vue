@@ -1,9 +1,5 @@
 <template lang="pug">
 v-container(fluid)
-    //- Project stats
-        Time since created
-        Number of tasks in project
-        tasks done/cancelled vs open tasks (pie chart?)
     v-card(elevation="0")
         v-card-title(
             class="headline"
@@ -20,7 +16,13 @@ v-container(fluid)
                   :value="statusValuePercent(key)"
                   :color="$store.getters.getStatusColors[key]"
                 ) {{ value }}
-                p(class="overline") {{ key }}
+                v-switch(
+                  v-model="tasksFilter"
+                  class="overline"
+                  :value="key"
+                  :label="key"
+                  :color="$store.getters.getStatusColors[key]"
+                )
             v-spacer
             tasks-project-archival(
                 v-bind:project="details"
@@ -28,56 +30,53 @@ v-container(fluid)
                 @get-project="getProject"
             )
     v-row
-        v-col
+        v-col(cols="12")
             TasksItem(
                 v-if="details._id"
                 v-bind:docid="details._id"
             )
-    v-card(
-      v-if="this.$store.getters.loaderState"
-      elevation="0"
-    )
-        v-card-text
-            v-row
-                v-col(cols="1") Getting tasks
-                v-col
-                    v-progress-linear(
-                      color="warning"
-                      buffer-value="0"
-                      stream
-                    )
-    v-card(
-      v-else
-      elevation="0"
-    )
-        v-card-title(
-          class="headline"
-        ) {{ tasks.length }} Tasks in project 
-          span(class="font-weight-thin") {{ details.project }}
     v-skeleton-loader(
       :loading="this.$store.getters.loaderState"
       class="mx-auto"
       transition="scale-transition"
-      type="article"
+      type="sentences"
     )
-        v-data-iterator(
-            :items="tasks"
-            :loading="this.$store.getters.loaderState"
-            loading-text="Getting tasks"
-            no-data-text="No tasks matching request"
-        )
-            //- don't use group-by="status". Reorders tasks on status change, making task lose fokus
-            template(v-slot:default="props")
-                v-row
-                    v-col(
-                    v-for="doc in props.items"
-                    :key="doc._id"
-                    cols="12"
-                    sm="12"
-                    md="12"
-                    lg="6"
-                    )
-                        TasksItem(v-bind:docid="doc._id")
+      v-card(
+        elevation="0"
+      )
+        //-v-else
+        v-card-title(
+          class="headline"
+        ) {{ tasks.length }} Tasks in 
+          span(class="font-weight-thin") {{ details.project }}
+        v-card-subtitle(
+          class="subtitle font-weight-thin"
+        ) Showing {{ filteredTasks.length }} 
+    //-v-skeleton-loader(
+    v-skeleton-loader(
+      :loading="this.$store.getters.loaderState"
+      class="mx-auto"
+      transition="scale-transition"
+      type="list-item-avatar-three-line"
+    )
+      v-data-iterator(
+          :items="filteredTasks"
+          :loading="this.$store.getters.loaderState"
+          loading-text="Getting tasks"
+          no-data-text="No tasks matching request"
+      )
+        //- don't use group-by="status". Reorders tasks on status change, making task lose fokus
+        template(v-slot:default="props")
+          v-row
+            v-col(
+            v-for="doc in props.items"
+            :key="doc._id"
+            cols="12"
+            sm="12"
+            md="12"
+            lg="6"
+            )
+              TasksItem(v-bind:docid="doc._id")
 </template>
 
 <script>
@@ -94,6 +93,8 @@ export default {
   mixins: [pouchMixin],
   props: ["projectid"],
   data: () => ({
+    showClosedTasks: false,
+    tasksFilter: ['wait', 'plan', 'todo', 'next', 'doing'],
     details: {
     },
     tasks: [],
@@ -109,6 +110,12 @@ export default {
     statusesLoading: true
   }),
   computed: {
+    filteredTasks: function() {
+        const t = this.tasksFilter;
+        return this.tasks.filter(function (el) {
+          return t.includes(el.status);
+        });
+    },
   },
   watch: {
     $route(to) {
@@ -135,7 +142,6 @@ export default {
         const filteredArray = this.tasks.filter( obj => obj.status === key )
         this.statuses[key] = filteredArray.length
       }
-      //consider charts.js or vuetify circular progress 
     },
     getProject: async function() {
       this.details = {};
