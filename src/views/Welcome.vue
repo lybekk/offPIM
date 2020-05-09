@@ -23,12 +23,11 @@
           )
             v-icon(
               v-text="link.icon" 
-              
               color="primary"
               :size="hover ? '9vw' : '8vw'"
             )
             v-scroll-y-reverse-transition
-              v-overlay(v-if="hover" absolute color="primary")
+              v-overlay(v-if="hover && $vuetify.breakpoint.mdAndUp" absolute color="primary")
                 span(v-text="link.text")
 </template>
 
