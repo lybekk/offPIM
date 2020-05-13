@@ -23,8 +23,12 @@ Features:
     * Notes
     * Journalling/logging
     * Messaging (Used for general purpose information between devices and such, or whatever you feel like)
+    * Search (Under development)
     * Personal Finances (Under development)
     * Inventory (Under development)
+    * Maps (Under development)
+    * Search
+        * Find items in offPIM by searching
 * Progressive web app (PWA)
 * Themes
 * Open source. No proprietary technologies. No external requests. No tracking.
@@ -56,9 +60,12 @@ Features:
 
 ## Installation
 
-*Two flavors are currently available*
+*Three flavors are currently available*
 
-1. **Desktop-app (Electron)**
+1. **Official app online**
+    1. Visit [https://offpim.app](offpim.app)
+
+2. **Desktop-app (Electron)**
     1. [Download the app for your operating system](#downloads) (currently Linux only)
     2. Make it executable `$ chmod a+x path-to-file/offpim_desktop.AppImage`
     3. and run! `$ ./path-to-file/offpim_desktop.AppImage`
@@ -67,7 +74,7 @@ Features:
 
 *OR*
 
-2. **Self-hosted static bundle (SPA)**
+3. **Self-hosted static bundle (SPA)**
     1. [Download](#downloads) and unzip contents in any directory (even root) on any HTTP-server.
 
     **Note:** Suitable for placing on a private VPS served by Apache, or any other http-server (I.E. python http.server or Node.js http.createServer)
@@ -143,8 +150,10 @@ Creators and maintainers of:
 * [CouchDB](https://couchdb.apache.org/)
 * [Vue](https://vuejs.org/)
 * [Vuetify - Vue JS component framework](https://vuetifyjs.com/en/)
-* [Nano - NPM library for CouchDB](https://www.npmjs.com/package/nano)
 * [Electron](https://www.electronjs.org/)
+* [Chart.js](https://www.chartjs.org/)
+* [Lunr.js](https://lunrjs.com/)
+* [Nano - NPM library for CouchDB](https://www.npmjs.com/package/nano)
 
 ## License
 MIT

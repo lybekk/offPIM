@@ -71,4 +71,12 @@ export default {
     return state.localSettings
   },
 
+  rawDocumentViewerDialog: state => {
+    return state.rawDocumentViewerDialog
+  },
+
+  rawDocumentViewerDocument: state => {
+    return state.rawDocumentViewerDocument
+  },
+
 }

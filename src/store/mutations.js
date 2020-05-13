@@ -123,7 +123,11 @@ export default {
     j[k] = v;
     window.localStorage.setItem('offpimLocalSettings', JSON.stringify(j) );
     state.localSettings[k] = v;
-  }
+  },
 
+  setRawDocumentViewerDocument(state, payload) {
+    state.rawDocumentViewerDocument = payload;
+    state.rawDocumentViewerDialog = true;
+  },
 
 }

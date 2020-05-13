@@ -22,6 +22,7 @@
     "core-js": "^3.6.4",
     "debug": "^4.1.1",
     "leaflet": "^1.6.0",
+    "lunr": "^2.3.8",
     "nano": "^8.2.2",
     "pouchdb": "^7.2.1",
     "pouchdb-authentication": "^1.1.3",

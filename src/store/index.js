@@ -37,8 +37,6 @@ export default new Vuex.Store({
     dbConnectionEstablished: false,
     dbConnectionDialog: false,
     dialogItemDetailed: false,
-    errors: [],
-    alerts: [],
     navItems: [],
     deleted: [],
     snackbar: {
@@ -49,7 +47,22 @@ export default new Vuex.Store({
       color: ''
     },
     totals: {},
-    tagList: []
+    tagList: [],
+
+    // Raw Document/JSON viewer
+    rawDocumentViewerDialog: false,
+    rawDocumentViewerDocument: { _id: null },
+
+    // Session logs
+    sessionLogs: {
+      debug: [],
+      info: [],
+      warn: [],
+      error: [],
+    },
+    errors: [], // may be removed
+    alerts: [], // may be removed
+
   },
   actions,
   mutations,

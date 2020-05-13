@@ -75,6 +75,11 @@ const routes = [
     component: () => import(/* webpackChunkName: "inventory" */ '../views/Inventory.vue')
   },
   {
+    path: '/search',
+    name: 'search',
+    component: () => import(/* webpackChunkName: "search" */ '../views/Search.vue')
+  },
+  {
     path: '/themes',
     name: 'themes',
     component: () => import(/* webpackChunkName: "themes" */ '../views/Themes.vue')

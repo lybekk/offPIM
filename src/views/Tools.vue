@@ -15,7 +15,17 @@ v-content
       )
         p(class="text-center display-3") Tools.
     v-row
-      v-col
+      v-col(cols="12" sm="6")
+        v-card
+          v-card-title
+            span(class="title font-weight-light") Lookup document by ID
+          v-card-text
+            v-text-field(
+              v-model="idLookup"
+              append-outer-icon="mdi-send"
+              @click:append-outer="$store.dispatch('setRawDocumentViewerDocument', idLookup)"
+            )
+      v-col(cols="12" sm="6")
         v-card
           v-card-title
             span(class="title font-weight-light") UUID Generator
@@ -45,45 +55,46 @@ v-content
               v-col(cols="12" sm="6")
                 v-text-field(
                   v-model="dateConverterInput"
+                  solo
                   label="Enter date string"
                 )
               v-col(cols="12" sm="6")
                 v-text-field(
                   :value="dateConverterResult"
-                  label="Result"
-                  solo
+                  label="Result"                  
                   readonly
                 )
 </template>
 
 <script>
-
 export default {
-  name: 'tools',
-  components: {
-  },
+  name: "tools",
+  components: {},
   data: () => ({
-    generatedUUID: '',
-    dateConverterInput: null
+    generatedUUID: "",
+    dateConverterInput: null,
+    idLookup: null,
   }),
   computed: {
-    dateConverterResult: function () {
+    dateConverterResult: function() {
       const x = this.dateConverterInput;
       const y = new Date(x);
-      return y.toISOString()
-    }
+      return y.toISOString();
+    },
   },
-  created () {
-  },
-  mounted () {
-  },
+  created() {},
+  mounted() {},
   methods: {
     generateUUID: function() {
-      this.generatedUUID = "xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx".replace(/[xy]/g, function(c) {
-        var r = Math.random() * 16 | 0, v = c == "x" ? r : (r & 0x3 | 0x8);
-        return v.toString(16);
-        });
-    }
+      this.generatedUUID = "xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx".replace(
+        /[xy]/g,
+        function(c) {
+          var r = (Math.random() * 16) | 0,
+            v = c == "x" ? r : (r & 0x3) | 0x8;
+          return v.toString(16);
+        }
+      );
+    },
   },
-}
+};
 </script>
