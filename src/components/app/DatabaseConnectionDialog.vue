@@ -1,5 +1,4 @@
 <template lang="pug">
-
   v-row(justify="center")
     v-dialog(
       v-model="dialog" 
@@ -103,120 +102,126 @@
 </template>
 
 <script>
-import DatabaseRemoteAuthentication from "@/components/app/DatabaseRemoteAuthentication.vue"; //will be removed
 import DatabaseCompaction from "@/components/app/DatabaseCompaction.vue";
 
-import PouchDB from 'pouchdb-browser'
-PouchDB.plugin(require('pouchdb-find'));
+import PouchDB from "pouchdb-browser";
+PouchDB.plugin(require("pouchdb-find"));
 
 export default {
-  name: 'DatabaseConnectionDialog',
+  name: "DatabaseConnectionDialog",
   components: {
-    DatabaseRemoteAuthentication, //will be removed
-    DatabaseCompaction
+    DatabaseCompaction,
   },
   data: () => ({
     remoteDBUrl: null,
     username: null,
     password: null,
     show1: false,
-    //connectionOK: null,
     connectionResultMessage: null,
     saveConnectionDetails: false,
   }),
   computed: {
     dialog: {
       get() {
-        return this.$store.getters.dbConnectionDialog
+        return this.$store.getters.dbConnectionDialog;
       },
       set(val) {
         if (!val) {
-          this.$store.commit('setGenericStateBooleanFalse', 'dbConnectionDialog')
+          this.$store.commit(
+            "setGenericStateBooleanFalse",
+            "dbConnectionDialog"
+          );
         }
-      }
+      },
     },
     settingLiveSync: {
       get() {
-        return this.$store.getters.localSettings.liveSync
+        return this.$store.getters.localSettings.liveSync;
       },
       set(val) {
-        this.$store.commit(
-          'setLocalSetting', { key: 'liveSync', value: val}
-        )
-      }
+        this.$store.commit("setLocalSetting", { key: "liveSync", value: val });
+      },
     },
     settingRetrySync: {
       get() {
-        return this.$store.getters.localSettings.retrySync
+        return this.$store.getters.localSettings.retrySync;
       },
       set(val) {
-        this.$store.commit(
-          'setLocalSetting', { key: 'retrySync', value: val}
-        )
-      }
+        this.$store.commit("setLocalSetting", { key: "retrySync", value: val });
+      },
     },
-    getColor () {
+    getColor() {
       let c = this.$store.getters.remoteDBIsOnline;
-      return  c == false ? 'error'
-            : c == true ? 'success'
-            : ''
-    }
+      return c == false ? "error" : c == true ? "success" : "";
+    },
   },
-  mounted () {
-    this.startup()
+  mounted() {
+    this.startup();
   },
   methods: {
-    removeRemoteDBConnection: async function () {
-      this.$store.commit('showSnackbar', { text:'Removed remote DB connection. Reloading offPIM', color:'warning' });
+    removeRemoteDBConnection: async function() {
+      this.$store.commit("showSnackbar", {
+        text: "Removed remote DB connection. Reloading offPIM",
+        color: "warning",
+      });
       this.remoteDBUrl = null; // for cosmetic purposes
-      this.$store.commit('setGenericStateBooleanFalse', 'remoteDBIsOnline');
-      localStorage.removeItem('remoteDBOptions');
+      this.$store.commit("setGenericStateBooleanFalse", "remoteDBIsOnline");
+      localStorage.removeItem("remoteDBOptions");
       setTimeout(() => {
         window.location.reload();
       }, 400);
     },
-    setValues: async function () {
+    setValues: async function() {
       let v = this.$store;
       let r = this.remoteDBUrl;
-      if (!r || r === '') {
-        v.commit('showSnackbar', { text:'Remote DB URL not set', color:'info' });
-        return
+      if (!r || r === "") {
+        v.commit("showSnackbar", {
+          text: "Remote DB URL not set",
+          color: "info",
+        });
+        return;
       }
       let options = { name: r };
       let u = this.username;
       if (u && u.length > 1) {
         options.auth = {
           username: u,
-          password: this.password
+          password: this.password,
         };
       }
       window.remoteDB = await new PouchDB(options);
       try {
         const response = await window.remoteDB.info();
         if (response.db_name) {
-          v.commit('showSnackbar', { text:'Remote DB connected.', color:'success' });
-          if(this.saveConnectionDetails) {
-            localStorage.setItem('remoteDBOptions', JSON.stringify( { name: r, ...options.auth } ) ); // options.name gets consumed by PouchDB
+          v.commit("showSnackbar", {
+            text: "Remote DB connected.",
+            color: "success",
+          });
+          if (this.saveConnectionDetails) {
+            localStorage.setItem(
+              "remoteDBOptions",
+              JSON.stringify({ name: r, ...options.auth })
+            ); // options.name gets consumed by PouchDB
           }
-          v.commit('setGenericStateBooleanTrue', 'remoteDBIsOnline');
+          v.commit("setGenericStateBooleanTrue", "remoteDBIsOnline");
           this.dialog = false;
         } else {
-          throw { message: 'Something went wrong. See console for details'}
+          throw { message: "Something went wrong. See console for details" };
         }
-        this.connectionResultMessage = 'Connected';
-      } catch(error) {
-        console.log('Connection failed: ', error)
-        if(error.status === 401) {
+        this.connectionResultMessage = "Connected";
+      } catch (error) {
+        console.log("Connection failed: ", error);
+        if (error.status === 401) {
           this.connectionResultMessage = error.message;
         } else {
           this.connectionResultMessage = JSON.stringify(error); // duplicated for the time being. Further testing required
-          v.commit('showSnackbar', { text:error, color:'error' });
+          v.commit("showSnackbar", { text: error, color: "error" });
         }
       }
     },
     startup: async function() {
-      const rDB = localStorage.getItem('remoteDBOptions');
-      if ( rDB ) {
+      const rDB = localStorage.getItem("remoteDBOptions");
+      if (rDB) {
         const options = JSON.parse(rDB);
         this.remoteDBUrl = options.name;
         this.username = options.username ? options.username : null;
@@ -225,23 +230,24 @@ export default {
         this.setValues();
       }
     },
-    requestAuthCookie: async function() { // not used for the time being, as pouchdb handles authentication well
-      let urlSplit = this.remoteDBUrl.split('/');
+    requestAuthCookie: async function() {
+      // not used for the time being, as pouchdb handles authentication well
+      let urlSplit = this.remoteDBUrl.split("/");
       urlSplit.pop();
-      let sessionUrl = urlSplit.join('/') + "/_session";
+      let sessionUrl = urlSplit.join("/") + "/_session";
 
       const form = { name: this.username, password: this.password };
-      const response = await fetch( sessionUrl, {
+      const response = await fetch(sessionUrl, {
         method: "POST",
         body: JSON.stringify(form),
         credentials: "include",
         headers: {
-          "Content-Type": "application/json"
-        }
+          "Content-Type": "application/json",
+        },
       });
       const result = await response.json();
       if (response.ok) {
-        this.authMsg = 'Authenticated';
+        this.authMsg = "Authenticated";
       } else if (response.status == 401) {
         this.authMsg = "Incorrect credentials";
       } else {
@@ -249,6 +255,6 @@ export default {
         this.authMsg = "Something went wrong. See console.";
       }
     },
-  }
+  },
 };
 </script>

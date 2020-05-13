@@ -50,6 +50,13 @@
               v-list-item-title(class="text-capitalize" v-text="tag.key")
             v-list-item-action
               v-chip(small v-text="tag.value")
+        v-subheader Misc
+        v-list-item(
+        )
+          v-list-item-icon
+            v-icon mdi-report
+          v-list-item-content
+            v-list-item-title Session messages
     v-content
       v-toolbar
         v-text-field(

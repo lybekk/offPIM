@@ -18,7 +18,8 @@ const messages = {
                     context.commit('setMessagesUnreadCount', data.rows[0].value);
                 }
             } catch (error) {
-                context.commit('showSnackbar', { text: error });
+                console.log(error)
+                // TODO - send to log/notification instead. Here, snackbar affects user perception negatively during first launch.
             }
         }
     },

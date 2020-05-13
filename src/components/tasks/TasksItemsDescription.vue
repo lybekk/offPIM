@@ -1,16 +1,18 @@
 <template lang="pug">
 v-dialog(v-model="dialog" scrollable max-width="400px")
   template(v-slot:activator="{ on }")
-    v-list-item(v-on="on")
+    v-list-item(v-on="on" )
       v-list-item-icon
         v-icon mdi-comment
       v-list-item-content
-        v-list-item-subtitle(
+        pre(
           v-text="taskDescription(task.description)" 
+          class="body-1"
+          
         )
+          //-style="white-space: pre-wrap;"
   v-card
     v-card-title
-      span(class="headline") Edit description
     v-card-text
       v-container
         v-textarea(
@@ -18,7 +20,6 @@ v-dialog(v-model="dialog" scrollable max-width="400px")
           label="Description"
           rows="3"
           auto-grow
-          filled
           dense
         )
     v-card-actions

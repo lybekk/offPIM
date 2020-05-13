@@ -6,17 +6,10 @@
             v-list-item-title Project
             v-list-item-subtitle(v-text="projectName")
       v-card
+        v-card-title Set project
+        v-card-subtitle(v-if="task.project") Current: {{ projectName }}
         v-card-text
           v-row(justify="center")
-            v-col
-              v-card
-                v-card-title Set project
-                v-card-text(v-if="task.project")
-                  v-list(two-line)
-                    v-list-item
-                      v-list-item-content
-                        v-list-item-title Current
-                        v-list-item-subtitle(v-text="projectName")
             v-col(v-if="task.project")
               v-btn(
                 block
@@ -33,9 +26,9 @@
                 v-data-iterator(
                   :items="openProjects"
                   :search="search"
+                  sort-by="title"
                 )
                   template(v-slot:header)
-                    //-v-toolbar
                     v-text-field(
                       v-model="search"
                       clearable
@@ -54,59 +47,58 @@
 </template>
 
 <script>
-import pouchMixin from '@/mixins/pouchMixin'
+import pouchMixin from "@/mixins/pouchMixin";
 
 export default {
-  name: 'TasksItemsProject',
-  components: {
-  },
+  name: "TasksItemsProject",
+  components: {},
   mixins: [pouchMixin],
   props: ["task"],
   data: () => ({
-    dialog:false,
+    dialog: false,
     projectName: null,
-    search: '',
+    search: "",
   }),
   computed: {
-    openProjects: function () {
+    openProjects: function() {
       // TODO - Getting project list. Runs multiple times... Optimize. Hand off project list & getter to Vuex
       return this.$store.getters.getOpenProjects;
-    }
+    },
   },
-  mounted () {
-    this.getProjectName()
+  mounted() {
+    this.getProjectName();
   },
   methods: {
-    getProjectName: async function () {
-      if (this.task.type == 'project') {return}
+    getProjectName: async function() {
+      if (this.task.type == "project") {
+        return;
+      }
       const p = this.task.project;
-      if (!p || p==null || p=='' || p==='undefined') {
-        this.projectName = 'No project asssigned';
+      if (!p || p == null || p == "" || p === "undefined") {
+        this.projectName = "No project asssigned";
       } else {
         try {
-          const projectDoc = await this.getDoc( p );
-          this.projectName = projectDoc.title
+          const projectDoc = await this.getDoc(p);
+          this.projectName = projectDoc.title;
         } catch {
-          this.projectName = 'Assigned: ' + p + ', but unable to lookup project'
+          this.projectName =
+            "Assigned: " + p + ", but unable to lookup project";
         }
       }
     },
-    setTaskField: async function (project) {
-
+    setTaskField: async function(project) {
       await this.setFieldGeneric({
         _id: this.task._id,
-        field: 'project',
-        value: project
+        field: "project",
+        value: project,
       });
 
       this.dialog = false;
-      this.$emit('set-doc')
-
+      this.$emit("set-doc");
     },
     showProject(id) {
       this.$router.push(`/tasks/project/${id}`);
     },
-  }
+  },
 };
-
 </script>

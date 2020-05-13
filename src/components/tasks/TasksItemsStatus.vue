@@ -13,6 +13,7 @@ v-slider(
         v-btn(
           rounded
           v-on="on"
+          :color="$store.getters.getStatusColors[task.status]"
         ) {{ task.status }}
       v-list
         v-list-item(

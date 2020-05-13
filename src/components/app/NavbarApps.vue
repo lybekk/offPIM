@@ -22,7 +22,7 @@ v-list
       v-list-item-title Notes
   v-list-item(link to="/logbook")
     v-list-item-action
-      v-icon mdi-home
+      v-icon mdi-book-open
     v-list-item-content
       v-list-item-title Logbook
   v-list-item(link to="/messages")
@@ -35,6 +35,11 @@ v-list
           :value="badgeMessagesUnread != 0"
           bordered
         )
+  v-list-item(link to="/search")
+    v-list-item-action
+      v-icon mdi-magnify
+    v-list-item-content
+      v-list-item-title Search
   v-divider
   v-list
     v-list-item(link to="/tools")

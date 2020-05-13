@@ -51,12 +51,10 @@ div(v-if="!hideTask")
           @set-doc="setDoc()"
         )
         span
-          v-chip(
-            v-if='isOverdue'
-            small
-            label
-            color='error'
-          ) {{ overdueAmount(doc.due) }} Overdue 
+          v-tooltip(v-if='isOverdue' top)
+            template(v-slot:activator='{ on }')
+              v-icon(color='error' v-on='on') mdi-clock-alert
+            span {{ overdueAmount(doc.due) }} Overdue 
           v-chip(
             v-if='isPostponed(doc._id)'
             small
@@ -165,35 +163,7 @@ div(v-if="!hideTask")
                     td(v-text="doc._id")
                 v-col
                   main-delete-button(v-bind:document-id='doc._id')
-            //- may be removed 
-            //-v-card-actions
-              div(class="text-left")
-                v-tooltip(top)
-                  template(v-slot:activator='{ on }')
-                    v-btn(
-                      fab
-                      small
-                      :outlined="doc.status != 'done'"
-                      class="ma-2"
-                      :color="color(doc.status)"
-                      v-on='on'
-                      @click="setTaskStatus('done')"
-                    )
-                      v-icon mdi-check
-                  span Mark done
-                v-tooltip(top)
-                  template(v-slot:activator='{ on }')
-                    v-btn(
-                      fab
-                      small
-                      :outlined="!isPostponed(doc._id)"
-                      color='info'
-                      class="ma-2"
-                      v-on='on'
-                      @click='postponeTask(doc._id)'
-                    )
-                      v-icon mdi-update
-                  span Postpone until tomorrow
+
 </template>
 
 <script>

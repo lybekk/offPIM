@@ -1,5 +1,6 @@
 <template lang="pug">
 v-content
+  //- Not in use. Functionality moved to App.vue
   v-container(fluid)
   p(class="headline") Setup
   v-stepper(v-model="e6" vertical)
@@ -41,10 +42,10 @@ v-content
       v-card(v-if="design_offpim_mango_indexes")
         p Mango query index document up to date
         p(color="success--text") Setup complete
-        v-btn(to="/" color="success") Go to Dashboard
+        v-btn(to="/" color="success") OK
   v-card(v-if="design_offpim && design_offpim_mango_indexes")
     v-card-title Setup success
-    v-btn(to="/dashboard" color="primary") Go to Dashboard
+    v-btn(to="/" color="primary") OK
   div(class="text-center")
     v-dialog(
       v-model="authDialog"
@@ -91,8 +92,8 @@ v-content
 </template>
 
 <script>
-import OffPIMDesignDoc from '@/components/designdocs/offpim_design_doc.json'
-import MangoDesignDoc from '@/components/designdocs/mango_indexes.json'
+//import OffPIMDesignDoc from '@/components/designdocs/offpim_design_doc.json'
+//import MangoDesignDoc from '@/components/designdocs/mango_indexes.json'
 
 export default {
   name: "setup",
@@ -125,8 +126,9 @@ export default {
   },
   created() {},
   mounted() {
-    this.insertDesignDocument(OffPIMDesignDoc, "offpim");
-    this.insertDesignDocument(MangoDesignDoc, "offpim_mango_indexes");
+    // "Turned off". Moved to App.vue
+    //this.insertDesignDocument(OffPIMDesignDoc, "offpim");
+    //this.insertDesignDocument(MangoDesignDoc, "offpim_mango_indexes");
   },
   methods: {
     insertDesignDocument: async function(serverDoc, docId) {
@@ -144,7 +146,6 @@ export default {
             throw 'Failed inserting design document ' + docId
           }
         } else if (s.version == dbDoc.version) {
-          //this.OffPIMDesignDocumentSuccess = true;
           this[`design_${docId}`] = true;
         }
       } catch (err) {
@@ -154,33 +155,6 @@ export default {
         console.log("Insert result: ", result);
       }
     },
-
-    requestAuthCookie: async function() {
-      const urlDB = this.$store.getters.urlDBRoot;
-      const form = { name: this.username, password: this.password };
-      const response = await fetch(urlDB + "_session", {
-        method: "POST",
-        body: JSON.stringify(form),
-        credentials: "include",
-        headers: {
-          "Content-Type": "application/json"
-        }
-      });
-      const result = await response.json();
-      if (response.ok) {
-        this.authenticated = true;
-        this.authMsg = null;
-        this.authDialog = false;
-        this.offpimDoc.authenticationRequired = false;
-        this.mangoDoc.authenticationRequired = false;
-      } else if (response.status == 401) {
-        this.authMsg = "Incorrect credentials";
-      } else {
-        console.log(result);
-        this.authMsg = "Something went wrong. See console.";
-      }
-    }
-
   }
 };
 </script>

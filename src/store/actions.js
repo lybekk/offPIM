@@ -70,38 +70,19 @@ export default {
     return data;
   },
 
-  startupIndexCheck: async function (context, payload) {
-    const localVersion = payload.version;
-    const dbDoc = await window.db.get(`_design/${payload.doc}`); // databaseDesignDoc
-    if (localVersion > dbDoc.version) {
-      console.log('Design document version in app is higher than the one in the database. Redirecting to setup');
+  startupIndexCheck: async function (context, payload) {    
+    try {
+      const localVersion = payload.version;
+      const dbDoc = await window.db.get(`_design/${payload.doc}`); // databaseDesignDoc
+      if (localVersion > dbDoc.version) {
+        console.log('Design document version in app is higher than the one in the database. Attempting design doc insert');
+        return false
+      }
+      return true
+    } catch (error) {
+      console.log('Design doc ' + payload.doc + ' not in local database: ', error)
       return false
     }
-    return true
-
-  },
-
-  startupIndexCheck_OLD: async function (context, payload) {
-    const dDoc = payload;
-    const docs = {
-      offpimMain: ["indexes/offpim_design_doc.json", "offpim"],
-      mango: ["indexes/mango_indexes.json", "offpim_mango_indexes"]
-    };
-    const getServerDesignDoc = await fetch(docs[dDoc][0]);
-    const serverDesignDoc = await getServerDesignDoc.json();
-
-    const urlDB = context.getters.urlDB;
-
-    const getDatabaseDesignDoc = await fetch(urlDB + '_design/' + docs[dDoc][1]);
-    const databaseDesignDoc = await getDatabaseDesignDoc.json();
-
-    if (serverDesignDoc.version > databaseDesignDoc.version) {
-      console.log('offPIM Server design document version is higher than the one in the database. Redirecting to setup');
-      if (this.$route.matched[0].name != 'setup') {
-        this.$router.push('setup')
-      }
-    }
-
   },
 
   remoteDBConnectivityCheck: async function (context) {
@@ -131,5 +112,18 @@ export default {
     const result = await window.db.info();
     context.commit('localDBInfo', result)
   },
+
+  setRawDocumentViewerDocument: async function (context, docId) {
+    try {      
+      context.commit(
+        'setRawDocumentViewerDocument', 
+        await window.db.get(docId)
+        )
+    } catch (error) {
+      this.commit('showSnackbar', { text: 'Could not find document', color: 'warning', log: error });
+      // TODO - send to debug
+      console.log(error)
+    }
+  }
 
 }

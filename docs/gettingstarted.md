@@ -9,6 +9,10 @@ Getting offPIM up and running can be done in several ways.
 
 ## Installation
 
+### The very easy way - Official app online
+
+1. Visit [https://offpim.app](offpim.app)
+
 ### The easy way - Desktop app
 
 * "offPIM-Electron" is currently only built and tested on Linux (though it is possible to build for another OS yourself)

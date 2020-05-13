@@ -7,7 +7,8 @@ v-dialog(
     width="500"
 )
   template(v-slot:activator="{ on }")
-    v-btn(color="primary" v-on="on") Archive project
+    v-btn(v-if="project.archived" disabled) Project archived
+    v-btn(v-else color="primary" v-on="on") Archive project
   v-card
     v-toolbar
       v-btn(icon dark @click="dialog = false")
@@ -39,7 +40,7 @@ export default {
   props: ["project", "tasks"],
   data: () => ({
     dialog: false,
-    circularProgressValue: 0
+    circularProgressValue: 0,
   }),
   methods: {
     executeArchival: async function() {
@@ -65,7 +66,7 @@ export default {
         doc.status = "done";
       }
       this.putDoc(doc);
-    }
-  }
+    },
+  },
 };
 </script>

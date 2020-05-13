@@ -15,6 +15,7 @@
           v-on="on"
           :loading="syncInProgress"
           @click="updateLastSync"
+          aria-label="Sync dialog"
         )
           v-icon(v-if="!remoteDBIsOnline") mdi-cloud-off-outline
           v-icon(v-else color="primary") mdi-cloud-sync

@@ -78,6 +78,17 @@ v-content
                   lg="3"
                 )
                   chart-tasks-today
+                v-col(
+                  md="6"
+                  lg="3"
+                )
+                  v-card
+                    v-list
+                      v-list-item
+                        v-list-item-content
+                          v-list-item-title(class="subtitle") Open tasks
+                        v-list-item-action
+                          v-list-item-action-text(class="title") {{ $store.getters.getTotals.tasks }}
   v-footer 
     v-container
       v-row

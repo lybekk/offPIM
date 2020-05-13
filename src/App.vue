@@ -24,6 +24,7 @@
     )
       v-app-bar-nav-icon(
         @click.stop="drawer = !drawer"
+        aria-label="Apps menu"
       )
       div(class="d-flex align-center")
         v-slide-x-transition(:hide-on-leave="true")
@@ -52,7 +53,6 @@
         bottom
         color="primary"
       )
-    AlertBox
     v-scroll-x-transition(mode="out-in")
       router-view
     v-snackbar(
@@ -62,15 +62,16 @@
       :color="snackbar.color"
       bottom
     ) {{ snackbar.text }}
-    DatabaseConnectionDialog
+    database-connection-dialog
+    raw-document-viewer
 
 </template>
 
 <script>
 import NavbarApps from '@/components/app/NavbarApps.vue'
 import NavbarActions from '@/components/app/NavbarActions.vue'
-import AlertBox from '@/components/app/AlertBox.vue'
 import DatabaseConnectionDialog from '@/components/app/DatabaseConnectionDialog.vue'
+import RawDocumentViewer from '@/components/app/RawDocumentViewer.vue'
 
 import offPIMDesignDoc from '@/components/designdocs/offpim_design_doc.json'
 import MangoDesignDoc from '@/components/designdocs/mango_indexes.json'
@@ -80,8 +81,9 @@ export default {
   components: {
     NavbarApps,
     NavbarActions,
-    AlertBox,
-    DatabaseConnectionDialog
+    //AlertBox, - Will be replaced with more subtler ephemeral notifications
+    DatabaseConnectionDialog,
+    RawDocumentViewer
   },
   data: () => ({
   }),
@@ -93,7 +95,7 @@ export default {
       set(state) {
         this.$store.commit('setLeftDrawer', state)
       }
-    },    
+    },
     snackbar() {
       return this.$store.state.snackbar
     },
@@ -116,18 +118,42 @@ export default {
       try {
         const pDoc = await v.dispatch( 'startupIndexCheck', { doc: 'offpim', version: offPIMDesignDoc.version } )
         const mDoc = await v.dispatch( 'startupIndexCheck', { doc: 'offpim_mango_indexes', version: MangoDesignDoc.version } )
+        console.log(pDoc)
         if (!pDoc || !mDoc) {
-          this.$router.push('/setup')
+          await this.insertDesignDocument(offPIMDesignDoc, "offpim");
+          await this.insertDesignDocument(MangoDesignDoc, "offpim_mango_indexes");
         }
         v.dispatch('setTotals')
         v.dispatch('setMessagesUnreadCount');
       } catch(err) {
-        console.log('Design docs not up to date. Redirecting to setup: ',err)
-        this.$router.push('/setup')
+        console.log('Something went wrong during design doc verification: ',err)
       }
 
     },
+    insertDesignDocument: async function(serverDoc, docId) {
+      console.log('Checking design document version for doc: ', docId)
+      const s = serverDoc; // serverDesignDoc / design doc included in this version of offpim
 
+      try {
+        const dbDoc = await window.db.get(`_design/${docId}`); // databaseDesignDoc
+        if (s.version > dbDoc.version) {
+          s._rev = dbDoc._rev;
+          const response = await window.db.put(s); // may require confirmation
+          if (response.ok) {
+            this[`design_${docId}`] = true;
+          } else {
+            throw 'Failed inserting design document ' + docId
+          }
+        } else if (s.version == dbDoc.version) {
+          this[`design_${docId}`] = true;
+        }
+      } catch (err) {
+        console.log(docId, " doc does not exist. Attempting insert");
+        const result = await window.db.put(s);
+        this[`design_${docId}`] = true;
+        console.log("Insert result: ", result);
+      }
+    },
   }
 };
 </script>
