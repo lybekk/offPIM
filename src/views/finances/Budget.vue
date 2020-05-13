@@ -1,70 +1,164 @@
 <template lang="pug">
-v-content
-  v-container(fluid)
+  v-container
+    v-tabs(
+        :vertical="$vuetify.breakpoint.mdAndUp"
+        color="primary"
+        center-active
+    )
+        v-tab(href="#tab-income") Income
+        v-tab(href="#tab-expenses") Expenses
+        v-tab(href="#tab-contracts") Contracts
+        v-tab-item(
+          v-for="tab in tabsIncomeExpenses"
+          :key="tab.name"
+          :id="tab.id"
+        )
+          v-container
+            v-card(flat)
+              v-card-title
+                v-spacer
+                v-text-field(
+                  v-model="tab.searchModel"
+                  append-icon="mdi-magnify"
+                  label="Search"
+                  single-line
+                  hide-details
+                  )
+              v-card-text
+                v-data-iterator(
+                    :items="$store.getters.getBudget( tab.name )"
+                    :loading="$store.getters.loaderState"
+                    
+                    class="elevation-0"
+                    :items-per-page="10"
+                    :search="tab.searchModel"    
+                    
+
+                    loading-text="Looking..."
+                    no-data-text="None found"
+                )
+                  template(v-slot:default="props")
+                    v-list(three-line)
+                      v-list-item(
+                        v-for="doc in props.items"
+                        :key="doc._id"
+                        @click=""
+                        )
+                        v-list-item-content
+                          //- Label/name (in dialog)
+                          v-list-item-title(v-text="doc.name" class="title font-weight-regular primary--text")
+                          v-list-item-subtitle(v-text="doc.institution" class="subtitle-1")
+                          v-list-item-subtitle(v-text="doc.description")
+                          //- TODO - Include description field in dialog
+                        v-list-item-action
+                          v-list-item-action-text(
+                            v-text="doc.amount"
+                            :class="`body-1 ${getColor(doc.amount)}--text text--accent-2`"
+                            )
+                          v-list-item-action-text(
+                            v-text="doc.category"
+                            class="text-capitalize"
+                            )
+                            //- Alternative
+                            //-v-chip(
+                              label
+                              :text-color="getColor(doc.amount) + ' lighten-5'"
+                              :color="getColor(doc.amount) + ' '"
+                              ) { doc.amount }}
+                            //-:class="body-1 error--text"
+                            //-:text-color="getColor(doc.balance) + ' darken-4'"
+                            //-:color="getColor(doc.balance) + ' lighten-5'"
+                      //-v-divider
+
+
+              br
+              //-v-data-table(
+                :headers="headers"
+                :items="this.$store.getters.getBudget('income')"
+                :items-per-page="10"
+                :search="searchIncome"
+                class="elevation-1"
+                :loading="this.$store.getters.loaderState"
+                loading-text="Looking for transactions"
+                no-data-text="No transactions matching request"
+                )
+                //-template(v-slot:item.description="{ item }")
+                  v-btn(
+                    text
+                    @click="openDoc(item)"
+                  )
+                    v-icon mdi-text
+                  span(v-text="item.description")
+                //-v-card-text
+                    v-list
+                        v-list-item
+                            v-list-item-content
+                                v-switch(
+                                    v-model="isDarkMode" 
+                                    class="ma-2" 
+                                    label="Dark mode" 
+                                )
+        //-v-tab-item#tab-expenses
+            v-card(flat)
+              v-card-title Expenses (grouped)
+                v-spacer
+                v-text-field(
+                  v-model="searchExpense"
+                  append-icon="mdi-magnify"
+                  label="Search"
+                  single-line
+                  hide-details
+                )
+              v-data-table(
+                :headers="headers"
+                :items="this.$store.getters.getBudget('expense')"
+                :items-per-page="10"
+                :search="searchExpense"
+                class="elevation-1"
+                :loading="this.$store.getters.loaderState"
+                loading-text="Looking for transactions"
+                no-data-text="No transactions matching request"
+              )
+
+
+
+
+
+                //-template(v-slot:item.description="{ item }")
+                  v-btn(
+                    text
+                    @click="openDoc(item)"
+                  )
+                    v-icon mdi-text
+                  span(v-text="item.description")
+                //-v-card-text
+                    v-list
+                        v-subheader Browser
+                        v-list-item(@click="refreshCache")
+                            v-list-item-icon
+                                v-icon mdi-cached
+                            v-list-item-content
+                                v-list-item-title Refresh cache
+                                    //v-btn(
+                                        color="primary"
+                                        @click="refreshCache"
+                                        ) Refresh cache
+                                v-list-item-subtitle Useful if a new version of offPIM is available
+                        v-subheader Local Database
+                        database-compaction(whatdb="localDB")
+                        local-database-import
+        v-tab-item#tab-contracts
+          v-card(flat)
+            v-card-title Contracts/Subscriptions/Memberships
+            v-card-text Work in progress
+    //-v-content
     //-span Under construction
-    //h3 Budgeting and cash flow forecasting
-    h3 Income
-    v-card
-      v-card-title <!-- data.length? -->
-        v-spacer
-        v-text-field(
-          v-model="searchIncome"
-          append-icon="mdi-magnify"
-          label="Search"
-          single-line
-          hide-details
-        )
-      v-data-table(
-        :headers="headers"
-        :items="this.$store.getters.getBudget('income')"
-        :items-per-page="10"
-        :search="searchIncome"
-        class="elevation-1"
-        :loading="this.$store.getters.loaderState"
-        loading-text="Looking for transactions"
-        no-data-text="No transactions matching request"
-      )
-        //-template(v-slot:item.description="{ item }")
-          v-btn(
-            text
-            @click="openDoc(item)"
-          )
-            v-icon mdi-text
-          span(v-text="item.description")
-    h3 Expenses (grouped)
-    v-card
-      v-card-title <!-- data.length? -->
-        v-spacer
-        v-text-field(
-          v-model="searchExpense"
-          append-icon="mdi-magnify"
-          label="Search"
-          single-line
-          hide-details
-        )
-      v-data-table(
-        :headers="headers"
-        :items="this.$store.getters.getBudget('expense')"
-        :items-per-page="10"
-        :search="searchExpense"
-        class="elevation-1"
-        :loading="this.$store.getters.loaderState"
-        loading-text="Looking for transactions"
-        no-data-text="No transactions matching request"
-      )
-        //-template(v-slot:item.description="{ item }")
-          v-btn(
-            text
-            @click="openDoc(item)"
-          )
-            v-icon mdi-text
-          span(v-text="item.description")
-    h3 Contracts/Subscriptions/Memberships
-    //p recurring expenses
-    //p historical (archived)
-    //p delete or archive (in data table)
+    //-h3 Budgeting and cash flow forecasting
+    //-p recurring expenses
+    //-p historical (archived)
+    //-p delete or archive (in data table)
     //-pre(v-text="budgetStructureTemporary")
-    //
+    //-
       Liabilities??
       budget
       type for accounts (subscriptions/memberships? services?)
@@ -82,6 +176,22 @@ export default {
   data: () => ({
     searchIncome: null,
     searchExpense: null,
+    tabsIncomeExpenses: [
+      {
+        name: 'income',
+        id: 'tab-income',
+        //searchModel: 'searchIncome' // may be null?
+        searchModel: null // may be null?
+      },
+      {
+        name: 'expenses',
+        id: 'tab-expenses',
+        //searchModel: 'searchIncome' // may be null?
+        searchModel: null // may be null?
+      }
+    ],
+
+    /*
     headers: [
       { text: 'Label', value: 'name' },
       { text: 'Institution', value: 'institution' },
@@ -89,6 +199,8 @@ export default {
       { text: 'Category', value: 'category' },
       { text: 'Description', value: 'description' },
     ]
+    */
+    
   }),
   computed: {
     /*
@@ -112,6 +224,9 @@ export default {
   beforeDestroy() {
   },
   methods: {
+    getColor: function(number) {
+      return (number >= 0) ? "success" : "error";
+    },
   }
 }
 

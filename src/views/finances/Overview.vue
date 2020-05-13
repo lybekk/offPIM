@@ -1,6 +1,6 @@
 <template lang="pug">
-v-content
   v-container(fluid)
+    //-v-content
     span Under construction
     p bank accounts & investment
     p credit
@@ -12,6 +12,8 @@ v-content
           label
           :color="getColor(this.$store.getters.getFinancialAggregates.valueAccounts)"
         )
+    p One-time expenses go in transactions(href)
+    p recurring expenses go in (subscriptions or liabilities?)
 </template>
 <script>
 export default {

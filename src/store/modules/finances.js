@@ -4,7 +4,8 @@ const finances = {
             valueAccounts: 0
         },
         budget: {
-            income: []
+            income: [],
+            expenses: [],
         },
         financeTypes: {
             "account": {

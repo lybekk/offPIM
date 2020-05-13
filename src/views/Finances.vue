@@ -1,30 +1,52 @@
 <template lang="pug">
-v-container(fluid)
   v-content
-    v-container(fluid)
-      v-toolbar
-        v-toolbar-title(
-          v-text="routeName"
-          class="text-capitalize"
+    //-v-container(fluid)
+    v-toolbar
+      //- v-if="$vuetify.breakpoint.mdAndDown"
+      v-tabs(
+        v-model="tab"
+        center-active
+        icons-and-text
+        show-arrows
         )
-        v-spacer
-        v-btn(
-          @click="refreshData"
-          color="primary"
-        ) Refresh
-        v-spacer
-        form-new
-      //v-scale-transition(mode="out-in")
+        v-tab(
+          v-for="link in links"
+          :key="link.name"
+          :to="link.route"
+          ) {{ link.name }}
+          v-icon {{ link.icon }}
+          //-span 
+          //-span(v-if="link.route == tab") {{ link.name }}
+      //-v-spacer
+      form-new
+      //- TODO - New finance entry needs placement
+    v-container(fluid)
       v-scroll-y-transition(mode="out-in")
         router-view
-      p One-time expenses go in transactions(href)
-      p recurring expenses go in (subscriptions or liabilities?)
-  v-bottom-navigation(
+        //-v-toolbar-title(
+          v-text="routeName"
+          class="text-capitalize"
+          )
+        //-v-btn(
+          @click="refreshData"
+          color="primary"
+          ) Refresh
+        //-v-scale-transition(mode="out-in")
+  //-v-bottom-navigation(
+    app
+    :input-value="showNav"
+    grow
+    )
+    v-spacer
+    form-new
+    v-spacer
+  //-v-bottom-navigation(
     app
     v-model="bottomNav"
     :input-value="showNav"
     grow
-  )
+    )
+    //- Bottom navigation -> mobile only
     v-btn(value="financesOverview" to="/finances/overview")
       span Overview
       v-icon mdi-poll
@@ -53,8 +75,36 @@ export default {
     source: String,
   },
   data: () => ({
-    showNav: false,
-    bottomNav:null,
+    tab: null,
+    //showNav: false,
+    //bottomNav:null,
+    links: [
+      {
+        name: 'Overview',
+        route: '/finances/overview',
+        icon: 'mdi-poll',
+      },
+      {
+        name: 'Budget',
+        route: '/finances/budget',
+        icon: 'mdi-finance',
+      },
+      {
+        name: 'Transactions',
+        route: '/finances/transactions',
+        icon: 'mdi-transfer',
+      },
+      {
+        name: 'Accounts',
+        route: '/finances/accounts',
+        icon: 'mdi-bank',
+      },
+      {
+        name: 'Assets',
+        route: '/finances/assets',
+        icon: 'mdi-cash',
+      },
+    ]
   }),
   computed: {
     routeName: function() {
@@ -68,7 +118,9 @@ export default {
     setTimeout(()=>{
       this.showNav = true;
     }, 300);
+    /* Reimplement
     this.$store.dispatch('getFinancialAggregates')
+    */
   },
   beforeDestroy() {
     this.showNav = false; 

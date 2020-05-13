@@ -1,12 +1,16 @@
 <template lang="pug">
+
 v-content(fluid)
     v-speed-dial(
+        bottom
         v-model="fab"
-        absolute
         right
+
         direction="left"
         transition="slide-y-reverse-transition"
     )
+        //-right
+        //-absolute
         template(v-slot:activator)
             v-btn(
                 v-model="fab"
