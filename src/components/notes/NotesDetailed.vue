@@ -57,12 +57,6 @@
                                             multiple
                                             chips
                                         )
-                    v-col
-                        h3 Raw document:
-                        code(
-                            class="grey darken-4 cyan--text" 
-                            v-text="JSON.stringify(selectedNote, null, 2)"
-                        )
 
 </template>
 

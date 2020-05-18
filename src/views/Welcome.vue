@@ -7,7 +7,8 @@
       justify="center"
     )
       v-col(
-        v-for="link in links"
+        v-for="link,i in links"
+        :key="i"
         cols="12"
         sm="3"
         class="text-center"
@@ -15,20 +16,22 @@
         v-hover(v-slot:default="{ hover }")
           v-btn(
             icon
+            color="transparent"
             :to="link.link"
             x-large
             height="10vw"
             width="10vw"
-            :elevation="hover ? 16 : 1"
+            :elevation="hover ? 4 : 1"
           )
             v-icon(
               v-text="link.icon" 
               color="primary"
-              :size="hover ? '9vw' : '8vw'"
+              :size="hover ? '8.5vw' : '8vw'"
             )
             v-scroll-y-reverse-transition
               v-overlay(v-if="hover && $vuetify.breakpoint.mdAndUp" absolute color="primary")
                 span(v-text="link.text")
+
 </template>
 
 <script>

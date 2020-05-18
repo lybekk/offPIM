@@ -9,7 +9,6 @@
         nav
         dense
       )
-        notes-newnoteform
         v-list-item(
           link 
           @click="getNotesByTag()"
@@ -94,28 +93,26 @@ import pouchMixin from "@/mixins/pouchMixin";
 
 import NotesItem from "@/components/notes/NotesItem.vue";
 import NotesDetailed from "@/components/notes/NotesDetailed.vue";
-import NotesNewnoteform from "@/components/notes/NotesNewnoteform.vue";
 
 export default {
   name: "notes",
   components: {
     NotesItem,
-    NotesDetailed,
-    NotesNewnoteform,
+    NotesDetailed
   },
   mixins: [pouchMixin],
   props: {
-    source: String,
+    source: String
   },
   data: () => ({
     noteList: [],
     drawer: false,
-    selectedNote: {},
+    selectedNote: {}
   }),
   computed: {
     tagsList: function() {
       return this.$store.getters.getTagList;
-    },
+    }
   },
   created() {},
   beforeDestroy() {
@@ -156,11 +153,11 @@ export default {
           productivity: true,
           type: "note",
           created: { $lte: now },
-          $or: [{ archived: { $exists: false } }, { archived: false }],
+          $or: [{ archived: { $exists: false } }, { archived: false }]
         },
         limit: count,
         sort: [{ created: "desc" }],
-        use_index: "offpim_mango_indexes",
+        use_index: "offpim_mango_indexes"
       };
 
       try {
@@ -169,8 +166,8 @@ export default {
       } catch (error) {
         vstore.commit("showSnackbar", { text: error });
       }
-    },
-  },
+    }
+  }
 };
 </script>
 

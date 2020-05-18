@@ -40,7 +40,8 @@ export default {
         putDoc: async function (doc, snackbarText = false) {
             try {
                 const silent = snackbarText == 'silent' ? true : false;
-                const response = await window.db.put(doc);
+                const response = doc._id ? await window.db.put(doc) : await window.db.post(doc);
+
                 if (response.ok) {
                   // Consider using global snackbar for response.ok instead. Less invasive
                   let txt;
@@ -48,7 +49,7 @@ export default {
                 if (snackbarText) {
                     txt = snackbarText
                   } else {
-                    txt = 'Document update OK'
+                    txt = doc._id ? 'Document updated' : 'Document created';
                   }
     
                   if (!silent) {
@@ -62,6 +63,7 @@ export default {
                     //this.$store.commit('addAlert', {type:'error',text:'Document update failed' + response })
                 }
             } catch (error) {
+                console.log(error) // TODO - send to debug log
                return error 
             }
         },

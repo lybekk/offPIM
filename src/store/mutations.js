@@ -130,4 +130,8 @@ export default {
     state.rawDocumentViewerDialog = true;
   },
 
+  appBarTabs(state, payload) {
+    state.appBarTabs = payload;
+  },
+
 }

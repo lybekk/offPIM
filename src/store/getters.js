@@ -79,4 +79,13 @@ export default {
     return state.rawDocumentViewerDocument
   },
 
+  buttonFormNewHidden: state => {
+    return state.buttonFormNewHidden
+  },
+
+  appBarTabs: state => {
+    return state.appBarTabs
+  },
+  
+
 }

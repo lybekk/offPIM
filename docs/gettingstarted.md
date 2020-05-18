@@ -15,10 +15,23 @@ Getting offPIM up and running can be done in several ways.
 
 ### The easy way - Desktop app
 
-* "offPIM-Electron" is currently only built and tested on Linux (though it is possible to build for another OS yourself)
+1. Download the app for your operating system. [Linux](https://lybekk.tech/downloads/offpim_desktop.AppImage). [Windows](https://lybekk.tech/downloads/offpim_desktop.exe)
+*Windows*
+2. Double-click offpim_desktop.exe to install
+3. Open the app from the start menu.
+*Linux*
+2. Make it executable `$ chmod a+x path-to-file/offpim_desktop.AppImage`
+3. and run! `$ ./path-to-file/offpim_desktop.AppImage`
+*Mac*
+2. Currently no app for Mac OS
+
+**Note:** "offPIM-Electron" is currently only built and tested on Windows(10) and Linux(Ubuntu), though it is possible to build for another OS yourself.
+
+
 1. Download [this AppImage file](https://lybekk.tech/downloads/offpim_desktop.AppImage)
 2. Make it executable `$ chmod a+x path-to-file/offpim_desktop.AppImage`
 3. and run! `$ ./path-to-file/offpim_desktop.AppImage`
+
 
 ### The still-easy-but-requires-a-few-more-steps way (for techies)
 

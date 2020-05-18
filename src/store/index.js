@@ -20,6 +20,7 @@ export default new Vuex.Store({
     data: [],
     leftDrawer: false,
     loaderActive: false,
+    buttonFormNewHidden: true,
     remoteDBIsOnline: false,
     localSettings: {
       liveSync: false,
@@ -49,6 +50,8 @@ export default new Vuex.Store({
     totals: {},
     tagList: [],
 
+    // Main App - Global
+    appBarTabs: [],
     // Raw Document/JSON viewer
     rawDocumentViewerDialog: false,
     rawDocumentViewerDocument: { _id: null },

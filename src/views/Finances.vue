@@ -18,7 +18,6 @@
           //-span 
           //-span(v-if="link.route == tab") {{ link.name }}
       //-v-spacer
-      form-new
       //- TODO - New finance entry needs placement
     v-container(fluid)
       v-scroll-y-transition(mode="out-in")
@@ -64,13 +63,9 @@
       v-icon mdi-cash
 </template>
 <script>
-import FormNew from '@/components/finances/FormNew.vue'
 
 export default {
   name: 'finances',
-  components: {
-    FormNew
-  },
   props: {
     source: String,
   },
@@ -111,8 +106,6 @@ export default {
       const x = this.$route.name;
       return x.replace("finances", "")
     }
-  },
-  created: function () {
   },
   mounted () {
     setTimeout(()=>{

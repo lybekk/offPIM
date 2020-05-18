@@ -35,9 +35,6 @@ v-content
       v-col
         v-card
           v-card-title Tasks
-          //-v-card-text(
-            v-if="isNoTasks"
-            ) No unfinished tasks
           v-card-text
             v-container(fluid)
               v-row
@@ -78,6 +75,12 @@ v-content
                   lg="3"
                 )
                   chart-tasks-today
+                // TODO - Work in progress - lighter variant of status chart
+                //v-col(
+                  md="6"
+                  lg="3"
+                  )
+                  metrics-statuses
                 v-col(
                   md="6"
                   lg="3"
@@ -151,11 +154,15 @@ import ChartTasksToday from "@/components/charts/ChartTasksToday.vue"
 import formatMixin from '@/mixins/formatMixin'
 import { mapGetters } from 'vuex'
 
+import MetricsStatuses from "@/components/tasks/MetricsStatuses.vue"
+
+
 export default {
   name: 'dashboard',
   components: {
     ChartTaskStatuses,
-    ChartTasksToday
+    ChartTasksToday,
+    MetricsStatuses
   },
   mixins: [formatMixin],
   data: () => ({

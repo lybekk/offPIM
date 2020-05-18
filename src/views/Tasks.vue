@@ -9,7 +9,6 @@ v-content
       nav
       dense
     )
-      tasks-newtaskform
       v-list-item(link to="/tasks/list/today")
           v-list-item-icon
             v-icon mdi-timer-sand-empty
@@ -121,12 +120,10 @@ v-content
 
 <script>
 import ProjectList from '@/components/tasks/ProjectList.vue'
-import TasksNewtaskform from '@/components/tasks/TasksNewtaskform.vue'
 
 export default {
   name: 'tasks',
   components: {
-    TasksNewtaskform,
     ProjectList
   },
   props: {

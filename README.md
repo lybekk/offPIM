@@ -52,6 +52,10 @@ Features:
         <img src="assets/img/logo_linux.png" alt="Linux" width="32">
         Linux
     </a>
+    <a href="https://lybekk.tech/downloads/offpim_desktop.exe" class="btn">
+        <img src="assets/img/logo_windows.png" alt="Windows" width="32">
+        Windows
+    </a>
     <a href="https://lybekk.tech/downloads/offpim_self_hosted.zip" class="btn">
         <img src="assets/img/logo_self_hosted.png" alt="Self-hosted" width="32">
         Self-hosted
@@ -66,11 +70,17 @@ Features:
     1. Visit [https://offpim.app](offpim.app)
 
 2. **Desktop-app (Electron)**
-    1. [Download the app for your operating system](#downloads) (currently Linux only)
+    1. [Download the app for your operating system](#downloads)
+    *Windows*
+    2. Double-click offpim_desktop.exe to install
+    3. Open the app from the start menu.
+    *Linux*
     2. Make it executable `$ chmod a+x path-to-file/offpim_desktop.AppImage`
     3. and run! `$ ./path-to-file/offpim_desktop.AppImage`
+    *Mac*
+    2. Currently no app for Mac OS
 
-    **Note:** "offPIM-Electron" is currently only built and tested on Linux (though it is possible to build for another OS yourself)
+    **Note:** "offPIM-Electron" is currently only built and tested on Windows(10) and Linux(Ubuntu), though it is possible to build for another OS yourself.
 
 *OR*
 

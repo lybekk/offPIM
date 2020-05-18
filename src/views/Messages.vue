@@ -70,7 +70,6 @@
         v-app-bar-nav-icon(
           @click.stop="drawerRight = !drawerRight"
         )
-        messages-newmessageform
       messages-messagelist(
         v-bind:message-list="messageList"
         v-bind:search="search"
@@ -86,7 +85,6 @@
 <script>
 import MessagesMessagelist from "@/components/MessagesMessagelist.vue";
 import MessagesReader from "@/components/MessagesReader.vue";
-import MessagesNewmessageform from "@/components/MessagesNewmessageform.vue";
 import pouchMixin from "@/mixins/pouchMixin";
 
 export default {
@@ -94,7 +92,6 @@ export default {
   components: {
     MessagesMessagelist,
     MessagesReader,
-    MessagesNewmessageform,
   },
   mixins: [pouchMixin],
   props: {
@@ -141,8 +138,6 @@ export default {
   created: function() {},
   mounted() {
     this.$store.dispatch("setMessagesUnreadCount");
-    //this.getMessagesByTag("untagged");
-    //this.getMessagesByTag("readNotTrue");
     this.getMessagesByTag(false);
     this.getMessagesTagList();
     setTimeout(() => {

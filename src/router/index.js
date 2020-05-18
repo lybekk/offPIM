@@ -11,6 +11,39 @@ const routes = [
     component: Welcome
   },
   {
+    path: '/new',
+    name: 'formsNew',
+    redirect: { name: 'formsNewTask' },
+    component: () => import(/* webpackChunkName: "forms" */ '../views/Forms.vue'),
+    children: [
+      {
+        path: 'task',
+        name: 'formsNewTask',
+        component: () => import(/* webpackChunkName: "forms" */ '../views/forms/Task.vue')
+      },
+      {
+        path: 'note',
+        name: 'formsNewNote',
+        component: () => import(/* webpackChunkName: "forms" */ '../views/forms/Note.vue')
+      },
+      {
+        path: 'log',
+        name: 'formsNewLog',
+        component: () => import(/* webpackChunkName: "forms" */ '../views/forms/Log.vue')
+      },
+      {
+        path: 'message',
+        name: 'formsNewMessage',
+        component: () => import(/* webpackChunkName: "forms" */ '../views/forms/Message.vue')
+      },
+      {
+        path: 'finance',
+        name: 'formsNewFinance',
+        component: () => import(/* webpackChunkName: "forms" */ '../views/forms/Finance.vue')
+      },
+    ]
+  },
+  {
     path: '/dashboard',
     name: 'dashboard',
     component: () => import(/* webpackChunkName: "dashboard" */ '../views/Dashboard.vue')
@@ -98,27 +131,27 @@ const routes = [
       {
         path: 'overview',
         name: 'financesOverview',
-        component: () => import('../views/finances/Overview.vue'),
+        component: () => import(/* webpackChunkName: "finances" */ '../views/finances/Overview.vue'),
       },
       {
         path: 'budget',
         name: 'budget',
-        component: () => import('../views/finances/Budget.vue'),
+        component: () => import(/* webpackChunkName: "finances" */ '../views/finances/Budget.vue'),
       },
       {
         path: 'transactions',
         name: 'transactions',
-        component: () => import('../views/finances/Transactions.vue'),
+        component: () => import(/* webpackChunkName: "finances" */ '../views/finances/Transactions.vue'),
       },
       {
         path: 'accounts',
         name: 'accounts',
-        component: () => import('../views/finances/Accounts.vue'),
+        component: () => import(/* webpackChunkName: "finances" */ '../views/finances/Accounts.vue'),
       },
       {
         path: 'assets',
         name: 'assets',
-        component: () => import('../views/finances/Assets.vue'),
+        component: () => import(/* webpackChunkName: "finances" */ '../views/finances/Assets.vue'),
       }
     ]
   }
