@@ -52,8 +52,21 @@
                 fab
                 @click="$store.commit('setGenericStateBooleanTrue', 'dbConnectionDialog')"
               )
-                v-icon(color="primary") mdi-database-edit
-          local-database-list-item
+                v-icon(color="primary") mdi-cogs
+          v-list-item
+            v-list-item-avatar
+              v-icon mdi-database
+            v-list-item-content
+              v-list-item-title Local DB
+            v-list-item-action
+              v-btn(
+                icon 
+                small 
+                fab
+                color="primary"
+                :to="{ name: 'settings' }"
+              )
+                v-icon mdi-cogs
         v-card-actions
           v-spacer
           v-tooltip(bottom)
@@ -77,13 +90,11 @@
 
 <script>
 import pouchMixin from "@/mixins/pouchMixin";
-import LocalDatabaseListItem from "@/components/app/LocalDatabaseListItem";
 import PouchDB from "pouchdb-browser";
 
 export default {
   name: "NavbarActions",
   components: {
-    LocalDatabaseListItem,
   },
   mixins: [pouchMixin],
   data: () => ({
