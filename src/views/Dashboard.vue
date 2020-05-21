@@ -85,13 +85,13 @@ v-content
                   md="6"
                   lg="3"
                 )
-                  v-card
+                  v-card(elevation="1")
                     v-list
                       v-list-item
                         v-list-item-content
                           v-list-item-title(class="subtitle") Open tasks
                         v-list-item-action
-                          v-list-item-action-text(class="title") {{ $store.getters.getTotals.tasks }}
+                          v-list-item-action-text(class="title") {{ totalOpenTasks }}
   v-footer 
     v-container
       v-row
@@ -235,7 +235,12 @@ export default {
         return false
       }
       return true
-    }
+    },
+    totalOpenTasks() {
+      const s = this.$store.getters.getTaskStatuses;
+      let sum = s.wait + s.plan + s.todo + s.next + s.doing;
+      return sum
+    },
   },
   created () {
     },
