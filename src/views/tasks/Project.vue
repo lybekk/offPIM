@@ -170,7 +170,11 @@ export default {
         this.tasks = data.docs;
         this.fillCircles();
       } catch (error) {
-        this.$store.commit("addAlert", { type: "error", text: error });
+        this.$store.dispatch("infoBridge", {
+          text: "Getting tasks failed",
+          color: "error",
+          error: error
+        });
       }
       this.$store.commit("loaderInactive");
     }

@@ -1,7 +1,5 @@
 const logs = {
     state: {
-        //data: [],
-        //chronologyLoading: false
     },
     mutations: {
         /*

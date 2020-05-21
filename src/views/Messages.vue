@@ -52,11 +52,12 @@
               v-chip(small v-text="tag.value")
         v-subheader Misc
         v-list-item(
+          @click="getSessionLogs()"
         )
           v-list-item-icon
-            v-icon mdi-report
+            v-icon mdi-console
           v-list-item-content
-            v-list-item-title Session messages
+            v-list-item-title System messages
     v-content
       v-toolbar
         v-text-field(
@@ -91,11 +92,11 @@ export default {
   name: "messages",
   components: {
     MessagesMessagelist,
-    MessagesReader,
+    MessagesReader
   },
   mixins: [pouchMixin],
   props: {
-    source: String,
+    source: String
   },
   data: () => ({
     drawerRight: false,
@@ -104,7 +105,7 @@ export default {
     activeTag: null,
     activeMessageId: null,
     messageReaderDialog: false,
-    search: "",
+    search: ""
   }),
   computed: {
     totalMessages: function() {
@@ -132,8 +133,7 @@ export default {
         return false;
       }
       return this.messageList[index];
-      //},
-    },
+    }
   },
   created: function() {},
   mounted() {
@@ -163,20 +163,25 @@ export default {
         }
         this.getMessagesTagList();
       } catch (error) {
-        vuex.commit("showSnackbar", { text: error });
+        vuex.dispatch("infoBridge", {
+          color: "error",
+          text: error,
+          level: "error"
+        });
       }
       vuex.commit("loaderInactive");
     },
     getMessagesTagList: async function() {
       try {
         var result = await window.db.query("offpim/messages-tag-count", {
-          group: true,
+          group: true
         });
         this.tags = result.rows;
-      } catch (err) {
-        this.$store.commit("addAlert", {
-          type: "error",
-          text: "Failed fetching message tags: " + err,
+      } catch (error) {
+        this.$store.dispatch("infoBridge", {
+          color: "error",
+          text: "Failed fetching message tags: " + error,
+          level: "error"
         });
       }
     },
@@ -187,9 +192,20 @@ export default {
         const index = this.messageList.findIndex(({ _id }) => _id === item._id);
         let msg = this.messageList[index];
         msg.read = true;
-        this.putDoc(msg);
+        this.putDoc(msg, "silent");
       }
     },
-  },
+
+    getSessionLogs: function() {
+      this.messageList = [];
+      let logs = this.$store.getters.sessionLogs;
+      logs.forEach(log => {
+        this.messageList.push({
+          sender: "offPIM Info Bridge",
+          body: JSON.stringify(log)
+        });
+      });
+    }
+  }
 };
 </script>

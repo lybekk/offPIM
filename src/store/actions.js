@@ -5,19 +5,20 @@ export default {
     })
     context.commit('setTotals', response)
   },
-  addError(context) {
-    context.commit('addError')
-  },
+
   deleteDocument: async function (context, docId) {
     let result;
     try {
       var doc = await window.db.get(docId);
       var response = await window.db.remove(doc);
       this.commit('addDeleted', docId)
-      this.commit('showSnackbar', { text: 'Document deleted', color: 'error' })
-      console.log('Doc delete result: ', response); // TODO - send to log
+      this.dispatch("infoBridge", {
+        text: 'Document deleted',
+        color: 'info',
+        error: docId + ' Doc delete result: ' + response,
+      });
     } catch (error) {
-      context.commit('addAlert', { type: 'error', text: 'Deleting document failed: ' + error })
+      this.dispatch("infoBridge", { color: 'error', text: 'Deleting document failed: ', level: 'error', error: error });
       result = error
     }
     return await result;
@@ -45,14 +46,14 @@ export default {
         } else {
           txt = 'Document update OK'
         }
-        this.commit('showSnackbar', { text: txt, color: 'success' })
+        this.dispatch("infoBridge", { color: 'success', text: txt });
       } else {
         const errtxt = 'Document update failed' + response;
         throw errtxt
       }
       return await response;
     } catch (error) {
-      this.commit('addAlert', { type: 'error', text: error })
+      this.dispatch("infoBridge", { color: 'error', text: 'Document operation failed', level: 'error', error: error });
     }
   },
 
@@ -70,7 +71,7 @@ export default {
     return data;
   },
 
-  startupIndexCheck: async function (context, payload) {    
+  startupIndexCheck: async function (context, payload) {
     try {
       const localVersion = payload.version;
       const dbDoc = await window.db.get(`_design/${payload.doc}`); // databaseDesignDoc
@@ -90,14 +91,13 @@ export default {
       const response = await window.remoteDB.info();
       if (response.db_name) {
         context.commit('setGenericStateBooleanTrue', 'remoteDBIsOnline');
-        this.commit('showSnackbar', { text: 'Remote database connection successful', color: 'success' });
+        context.dispatch("infoBridge", { color: 'success', text: 'Remote database connection successful' });
         context.dispatch('remoteDBInfo');
         return true
       }
     } catch (error) {
-      // TODO Send to log (requires logging feature)
       // TODO Advise troubleshooting steps (network/curl, CORS )
-      this.commit('showSnackbar', { text: 'Remote database connection unsuccessful', color: 'error', log: error });
+      context.dispatch("infoBridge", { color: 'warning', text: 'Remote database connection unsuccessful', level: 'warn', error: error });
       context.commit('setGenericStateBooleanFalse', 'remoteDBIsOnline');
       return false
     }
@@ -114,15 +114,13 @@ export default {
   },
 
   setRawDocumentViewerDocument: async function (context, docId) {
-    try {      
+    try {
       context.commit(
-        'setRawDocumentViewerDocument', 
+        'setRawDocumentViewerDocument',
         await window.db.get(docId)
-        )
+      )
     } catch (error) {
-      this.commit('showSnackbar', { text: 'Could not find document', color: 'warning', log: error });
-      // TODO - send to debug
-      console.log(error)
+      context.dispatch("infoBridge", { color: 'warning', text: 'Could not find document', level: 'warn', error: error });
     }
   },
 
@@ -132,9 +130,46 @@ export default {
   },
 
   refreshDoc: async function (context, docId) {
-     const doc = await context.dispatch('getDoc', docId);
-     context.commit('refreshDoc', doc)
+    const doc = await context.dispatch('getDoc', docId);
+    context.commit('refreshDoc', doc)
 
+  },
+
+  /**
+   * Distributes internal offPIM logs, messages and notifications.
+   * All object sent to infoBridge will be logged to sessionLogs.
+   * If object contains color: 'string', it will be sent to snackbar
+   * @param {*} context 
+   * @param {*} obj 
+   */
+  infoBridge: function (context, obj) {
+    obj.created = new Date().toISOString();
+
+    if (obj.color) {
+      context.commit("showSnackbar", obj);
+    }
+
+    if (obj.color && !obj.level) {
+      const translation = {
+        primary: 'info',
+        info: 'info',
+        secondary: 'info',
+        success: 'success',
+        error: 'error',
+        warning: 'warn',
+      };
+      obj.level = translation[obj.color];
+    }
+
+    if (!obj.level) {
+      obj.level = 'info';
+    }
+
+    if (obj.level === 'error') {
+      console.warn('offPIM Info Bridge reports an error: ', JSON.stringify(obj));
+    }
+
+    context.commit('addSessionLog', obj)
   },
 
 }

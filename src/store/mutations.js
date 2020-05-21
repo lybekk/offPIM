@@ -63,19 +63,7 @@ export default {
     state.loaderActive = true;
 
   },
-  addAlert(state, payload) {
-    let p = payload;
-    let alert = {
-      type: p.type,
-      text: p.text,
-      alert: true
-    };
-    state.alerts.push(alert);
-    console.log('offPIM reported an error: ', p.text);
-  },
-  deleteAlert(state, payload) {
-    state.alerts.splice(payload, 1)
-  },
+
   addDeleted(state, docId) {
     state.deleted.push(docId);
   },
@@ -107,7 +95,7 @@ export default {
   loadLocalSettings(state) {
     const s = window.localStorage.getItem('offpimLocalSettings');
     if (s) {
-      const j = JSON.parse( s );
+      const j = JSON.parse(s);
       state.localSettings = j;
     }
   },
@@ -119,11 +107,11 @@ export default {
 
     let s = window.localStorage.getItem('offpimLocalSettings');
     if (s == null) {
-      window.localStorage.setItem('offpimLocalSettings', JSON.stringify({}) )
+      window.localStorage.setItem('offpimLocalSettings', JSON.stringify({}))
     }
-    const j = JSON.parse( window.localStorage.getItem('offpimLocalSettings') );
+    const j = JSON.parse(window.localStorage.getItem('offpimLocalSettings'));
     j[k] = v;
-    window.localStorage.setItem('offpimLocalSettings', JSON.stringify(j) );
+    window.localStorage.setItem('offpimLocalSettings', JSON.stringify(j));
     state.localSettings[k] = v;
   },
 
@@ -151,5 +139,8 @@ export default {
     Vue.set(state.data, index, doc)
   },
 
+  addSessionLog(state, doc) {
+    state.sessionLogs.push(doc)
+  },
 
 }

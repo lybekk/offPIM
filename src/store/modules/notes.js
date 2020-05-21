@@ -18,8 +18,11 @@ const notes = {
                     group: true
                 });
                 context.commit('setTagList', result)
-            } catch (err) {
-                context.commit('addAlert', { type: 'error', text: err })
+            } catch (error) {
+                this.$store.dispatch("infoBridge", {
+                    text: error,
+                    color: "error",
+                });
             }
 
         },

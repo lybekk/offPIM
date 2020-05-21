@@ -134,7 +134,11 @@ export default {
         let data = await this.getMango(mango);
         vstore.commit("addDataArray", data.docs);
       } catch (error) {
-        vstore.commit("showSnackbar", { text: error });
+        vstore.dispatch("infoBridge", {
+          color: "error",
+          text: error,
+          level: "error"
+        });
       }
     }
   }

@@ -85,7 +85,7 @@ export default {
                 this.inventoryItems = data.docs;
                 //vstore.commit('addNotes', data)
             } catch (error) {
-                v.commit('showSnackbar', { text:error });
+                v.dispatch("infoBridge", { color:'error', text: error, level:'error' });
             }
             v.commit('loaderInactive');
         }

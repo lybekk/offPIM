@@ -54,17 +54,17 @@
 import DatabaseCompaction from "@/components/app/DatabaseCompaction.vue";
 
 export default {
-    name: 'settingsremotedb',
-    components: {
-        DatabaseCompaction
-        },
+  name: "settingsremotedb",
+  components: {
+    DatabaseCompaction
+  },
   data: () => ({
-        remoteTips: [
-        "Leave username blank if credentials are in the url",
-        "Use full url, with <kbd>http</kbd> or <kbd>https</kbd>, including database name (I.E. <kbd>http://localhost:5984/vault</kbd>), to a CouchDB compatible database server to enable synchronization. Credentials may be included in url: <kbd>http://user:pass@domain:port/db</kbd> (less secure)",
-        "If username:password not in url, provide credentials in form",
-        "Note: User/admin must have permission to upload design documents"
-        ]
+    remoteTips: [
+      "Leave username blank if credentials are in the url",
+      "Use full url, with <kbd>http</kbd> or <kbd>https</kbd>, including database name (I.E. <kbd>http://localhost:5984/vault</kbd>), to a CouchDB compatible database server to enable synchronization. Credentials may be included in url: <kbd>http://user:pass@domain:port/db</kbd> (less secure)",
+      "If username:password not in url, provide credentials in form",
+      "Note: User/admin must have permission to upload design documents"
+    ]
   }),
   computed: {
     settingLiveSync: {
@@ -73,7 +73,7 @@ export default {
       },
       set(val) {
         this.$store.commit("setLocalSetting", { key: "liveSync", value: val });
-      },
+      }
     },
     settingRetrySync: {
       get() {
@@ -81,14 +81,15 @@ export default {
       },
       set(val) {
         this.$store.commit("setLocalSetting", { key: "retrySync", value: val });
-      },
-    },
+      }
+    }
   },
   methods: {
     removeRemoteDBConnection: async function() {
-      this.$store.commit("showSnackbar", {
-        text: "Removed remote DB connection. Reloading offPIM",
+      this.$store.dispatch("infoBridge", {
         color: "warning",
+        text: "Removed remote DB connection. Reloading offPIM",
+        level: "warn"
       });
       this.remoteDBUrl = null; // for cosmetic purposes
       this.$store.commit("setGenericStateBooleanFalse", "remoteDBIsOnline");
@@ -96,7 +97,7 @@ export default {
       setTimeout(() => {
         window.location.reload();
       }, 400);
-    },
+    }
   }
-}
+};
 </script>

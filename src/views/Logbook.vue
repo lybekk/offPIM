@@ -117,7 +117,7 @@ export default {
         this.logList = data.docs;
         v.commit("loaderInactive");
       } catch (error) {
-        v.commit("showSnackbar", { text: error });
+        v.dispatch("infoBridge", { color:'error', text: error, level:'error' });
       }
 
     },

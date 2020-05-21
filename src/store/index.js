@@ -56,15 +56,10 @@ export default new Vuex.Store({
     rawDocumentViewerDialog: false,
     rawDocumentViewerDocument: { _id: null },
 
-    // Session logs
-    sessionLogs: {
-      debug: [],
-      info: [],
-      warn: [],
-      error: [],
-    },
-    errors: [], // may be removed
-    alerts: [], // may be removed
+    /**
+     * Session logs - used for debugging and general logging
+     */
+    sessionLogs: [],
 
   },
   actions,

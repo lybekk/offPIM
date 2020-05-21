@@ -56,7 +56,10 @@ export default {
         this.$emit("add-logs", data.docs);
         this.chronologyLoading = false;
       } catch (error) {
-        this.$store.commit("showSnackbar", { text: error });
+        this.$store.dispatch("infoBridge", {
+          text: error,
+          color: 'error'
+        });
       }
     },
     getLogsYears: async function() {
@@ -71,8 +74,11 @@ export default {
           this.dateTree.push({ id: y.key, name: x, children: [] });
         });
         this.chronologyLoading = false;
-      } catch (err) {
-        this.$store.commit("addAlert", { type: "error", text: err });
+      } catch (error) {
+        this.$store.dispatch("infoBridge", {
+          text: error,
+          color: "error",
+        });
       }
     },
     async getChildren(item) {

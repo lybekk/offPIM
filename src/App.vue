@@ -125,6 +125,10 @@ export default {
   },
   created() {},
   mounted() {
+    this.$store.dispatch("infoBridge", {
+      text: "offPIM mounted",
+      level: "debug"
+    });
     this.$store.commit("loadLocalSettings");
     this.startupcheck();
     this.$vuetify.theme.dark = localStorage.getItem("darkMode");

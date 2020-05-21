@@ -67,7 +67,6 @@
 </template>
 
 <script>
-
 import PouchDB from "pouchdb-browser";
 PouchDB.plugin(require("pouchdb-find"));
 
@@ -79,7 +78,7 @@ export default {
     password: null,
     show1: false,
     connectionResultMessage: null,
-    saveConnectionDetails: false,
+    saveConnectionDetails: false
   }),
   computed: {
     dialog: {
@@ -93,12 +92,12 @@ export default {
             "dbConnectionDialog"
           );
         }
-      },
+      }
     },
     getColor() {
       let c = this.$store.getters.remoteDBIsOnline;
       return c == false ? "error" : c == true ? "success" : "";
-    },
+    }
   },
   mounted() {
     this.startup();
@@ -108,9 +107,9 @@ export default {
       let v = this.$store;
       let r = this.remoteDBUrl;
       if (!r || r === "") {
-        v.commit("showSnackbar", {
-          text: "Remote DB URL not set",
+        v.dispatch("infoBridge", {
           color: "info",
+          text: "Remote DB URL not set"
         });
         return;
       }
@@ -119,16 +118,16 @@ export default {
       if (u && u.length > 1) {
         options.auth = {
           username: u,
-          password: this.password,
+          password: this.password
         };
       }
       window.remoteDB = await new PouchDB(options);
       try {
         const response = await window.remoteDB.info();
         if (response.db_name) {
-          v.commit("showSnackbar", {
+          v.dispatch("infoBridge", {
             text: "Remote DB connected.",
-            color: "success",
+            color: "success"
           });
           if (this.saveConnectionDetails) {
             localStorage.setItem(
@@ -148,8 +147,10 @@ export default {
           this.connectionResultMessage = error.message;
         } else {
           this.connectionResultMessage = JSON.stringify(error); // duplicated for the time being. Further testing required
-          // TODO - send to debug log - error
-          v.commit("showSnackbar", { text: 'Remote DB Unreachable', color: "warning" });
+          v.dispatch("infoBridge", {
+            text: "Remote DB Unreachable",
+            color: "warning"
+          });
         }
       }
     },
@@ -163,7 +164,7 @@ export default {
 
         this.setValues();
       }
-    },
-  },
+    }
+  }
 };
 </script>

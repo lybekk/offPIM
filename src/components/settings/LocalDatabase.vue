@@ -74,11 +74,11 @@ import DatabaseCompaction from "@/components/app/DatabaseCompaction.vue";
 import LocalDatabaseImport from "@/components/settings/LocalDatabaseImport.vue";
 
 export default {
-    name: 'settingslocaldb',
-    components: {
-        DatabaseCompaction,
-        LocalDatabaseImport
-        },
+  name: "settingslocaldb",
+  components: {
+    DatabaseCompaction,
+    LocalDatabaseImport
+  },
   data: () => ({
     backupPreparing: false,
     backupDone: false,
@@ -88,25 +88,27 @@ export default {
       "Compacting may take a while, depending on number of documents in local DB.",
       "Performance tips:",
       "* Archive completed projects, tasks and notes.",
-      "* Destroy local database (sync to remote or backup first) before doing a full resync to only sync back unarchived items",
+      "* Destroy local database (sync to remote or backup first) before doing a full resync to only sync back unarchived items"
     ]
   }),
   computed: {
     activeFab() {
       let t = this.trashIconClicked;
       return {
-        icon: t ? 'mdi-radioactive': 'mdi-database-remove',
-        color: t ? 'yellow lighten-2' : 'transparent',
-        title: t ? 'Are you sure?' : 'Destroy local database',
-        subtitle: t ? 'Click nuke icon to proceed' : 'Remote DB will be left intact',
-      }
+        icon: t ? "mdi-radioactive" : "mdi-database-remove",
+        color: t ? "yellow lighten-2" : "transparent",
+        title: t ? "Are you sure?" : "Destroy local database",
+        subtitle: t
+          ? "Click nuke icon to proceed"
+          : "Remote DB will be left intact"
+      };
     }
   },
   methods: {
     backupLocalDB: async function() {
       this.backupPreparing = true; // backup not really ready at this time. Used for proper feedback
       const backup = await window.db.allDocs({
-        include_docs: true,
+        include_docs: true
       });
       const blob = await URL.createObjectURL(
         new Blob(
@@ -115,10 +117,10 @@ export default {
               backup.rows.map(({ doc }) => doc),
               null,
               2
-            ),
+            )
           ],
           {
-            type: "application/json",
+            type: "application/json"
           }
         )
       );
@@ -132,7 +134,7 @@ export default {
     destroyLocalDB: async function() {
       if (!this.trashIconClicked) {
         this.trashIconClicked = true;
-        return
+        return;
       }
       if (
         window.confirm(
@@ -144,25 +146,24 @@ export default {
           let result = await window.db.destroy();
           console.log("db destroy result: ", result);
           console.log("Local PouchDB Database destroyed");
-          this.$store.commit("showSnackbar", {
+          this.$store.dispatch("infoBridge", {
             text: "Local database destroyed. Reloading offPIM",
-            color: "warning",
+            color: "warning"
           });
           localStorage.removeItem("lastSync");
           setTimeout(() => {
             window.location.reload();
           }, 600);
-        } catch (err) {
-          this.$store.commit("showSnackbar", {
-            text: err,
-            color: "error",
+        } catch (error) {
+          this.$store.dispatch("infoBridge", {
+            text: error,
+            color: "error"
           });
-          console.log(err);
         }
       }
-    },
+    }
   }
-}
+};
 </script>
 
 <style scoped>

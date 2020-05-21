@@ -61,22 +61,17 @@ import pouchMixin from "@/mixins/pouchMixin";
 export default {
   name: "tasksList",
   components: {
-    TasksItem,
+    TasksItem
   },
   mixins: [pouchMixin],
   props: {
-    source: String,
+    source: String
   },
   data: () => ({
-    search: '',
-    sortBy: 'due',
-    keys: [
-      'Due',
-      'Status',
-      'Priority',
-      'Project',
-    ],
-    tasks: [],
+    search: "",
+    sortBy: "due",
+    keys: ["Due", "Status", "Priority", "Project"],
+    tasks: []
   }),
   computed: {
     list: function() {
@@ -85,14 +80,14 @@ export default {
         return x;
       }
       return "";
-    },
+    }
   },
   watch: {
     $route(to) {
       if (to) {
         this.getTaskList();
       }
-    },
+    }
   },
   created() {},
   mounted() {
@@ -107,11 +102,11 @@ export default {
       let mango = {
         selector: {
           productivity: true,
-          type: "task",
+          type: "task"
         },
         limit: 50,
         use_index: "offpim_mango_indexes",
-        fields: ["_id"],
+        fields: ["_id"]
       };
       if (list.slice(0, 6) == "status") {
         this.processQuery(
@@ -168,19 +163,22 @@ export default {
           endkey: endKey,
           limit: 50,
           reduce: false,
-          include_docs: true,
+          include_docs: true
         })
         .then(function(data) {
-          data.rows.forEach((row) => {
-            context.tasks.push( row.doc );
+          data.rows.forEach(row => {
+            context.tasks.push(row.doc);
           });
           context.$store.commit("loaderInactive");
         })
-        .catch(function(err) {
-          context.$store.commit("showSnackbar", { text: err });
-          console.log(err);
+        .catch(function(error) {
+          this.$store.dispatch("infoBridge", {
+            color: "error",
+            text: error,
+            level: "error"
+          });
         });
-    },
-  },
+    }
+  }
 };
 </script>

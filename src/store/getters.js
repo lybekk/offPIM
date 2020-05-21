@@ -19,12 +19,8 @@ export default {
     return state.remoteDBIsOnline
   },
 
-  getAlerts: state => {
-    return state.alerts
-  },
-
   getDeletedDocuments: state => {
-      return state.deleted
+    return state.deleted
   },
 
   isDeleted: (state) => (id) => {
@@ -56,7 +52,7 @@ export default {
   },
 
   getDataItemIndex: (state) => (id) => {
-    return state.data.findIndex( ({ _id }) => _id === id );
+    return state.data.findIndex(({ _id }) => _id === id);
   },
 
   dbConnectionDialog: state => {
@@ -86,6 +82,9 @@ export default {
   appBarTabs: state => {
     return state.appBarTabs
   },
-  
+
+  sessionLogs: state => {
+    return state.sessionLogs
+  },
 
 }

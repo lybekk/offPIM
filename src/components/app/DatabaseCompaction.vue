@@ -23,7 +23,7 @@ export default {
   props: ["whatdb"],
   data: () => ({
     compactInProgress: false,
-    compactingDone: false,
+    compactingDone: false
   }),
   methods: {
     compactDB: async function() {
@@ -34,10 +34,10 @@ export default {
         if (this.whatdb == "remoteDB") {
           result = await window.remoteDB.compact();
         } else {
-          this.$store.commit("showSnackbar", {
-            text:
-              "Local compaction may take a while. Feel free to get things done. Just don't close the browser.",
+          this.$store.dispatch("infoBridge", {
             color: "info",
+            text:
+              "Local compaction may take a while. Feel free to get things done. Just don't close the browser."
           });
           result = await window.db.compact();
         }
@@ -45,12 +45,15 @@ export default {
           this.compactingDone = true;
         }
         this.compactInProgress = false;
-      } catch (err) {
-        console.log(err);
-        //- TODO send to system/debug log
+      } catch (error) {
+        this.$store.dispatch("infoBridge", {
+          color: "error",
+          text: this.whatdb + " database compaction failed",
+          error: error
+        });
         this.compactInProgress = false;
       }
-    },
-  },
+    }
+  }
 };
 </script>

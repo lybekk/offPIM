@@ -36,24 +36,24 @@ export default {
     tree: [],
     treeActive: [],
     treeOpen: [],
-    letters: [],
+    letters: []
   }),
   computed: {
     items() {
-      const children = this.letters.map((letter) => ({
+      const children = this.letters.map(letter => ({
         id: letter,
         name: this.getName(letter),
-        children: this.getChildren(letter),
+        children: this.getChildren(letter)
       }));
 
       return [
         {
           id: 1,
           name: "Tags",
-          children,
-        },
+          children
+        }
       ];
-    },
+    }
   },
   watch: {
     tags(val) {
@@ -72,7 +72,7 @@ export default {
           return acc;
         }, [])
         .sort();
-    },
+    }
   },
   mounted() {},
   methods: {
@@ -80,12 +80,15 @@ export default {
       if (this.tags.length) return;
       try {
         var result = await window.db.query("offpim/logs-tag-count", {
-          group: true,
+          group: true
         });
         this.tags = result.rows;
         return;
-      } catch (err) {
-        this.$store.commit("addAlert", { type: "error", text: err });
+      } catch (error) {
+        this.$store.dispatch("infoBridge", {
+          text: error,
+          color: "error"
+        });
       }
     },
     getChildren(letter) {
@@ -97,7 +100,7 @@ export default {
         tags.push({
           ...tag,
           name: this.getName(tag.key),
-          id: tag.key,
+          id: tag.key
         });
       }
 
@@ -117,10 +120,10 @@ export default {
             //realm: "logs",
             logbook: true,
             tags: {
-              $in: [tag],
-            },
+              $in: [tag]
+            }
           },
-          limit: 100,
+          limit: 100
         };
         if (tag == "inbox" || tag == "untagged") {
           mango.selector.tags = [];
@@ -131,14 +134,17 @@ export default {
           this.$emit("add-logs", data.docs);
           this.$store.commit("loaderInactive");
         } catch (error) {
-          this.$store.commit("showSnackbar", { text: error });
+          this.$store.dispatch("infoBridge", {
+            text: error,
+            color: "error"
+          });
         }
       }
     },
     tagCount: function(item) {
-      const x = this.tags.find((tag) => tag.key === item.key);
+      const x = this.tags.find(tag => tag.key === item.key);
       return x.value;
-    },
-  },
+    }
+  }
 };
 </script>

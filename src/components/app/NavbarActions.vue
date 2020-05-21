@@ -255,7 +255,7 @@ export default {
               , and received ${pulledDocs} in ${pullDiff}s`;
           }
 
-          vuex.commit("showSnackbar", {
+          vuex.dispatch("infoBridge", {
             text: txt,
             color: "success",
             timeout: 6000,
@@ -263,9 +263,8 @@ export default {
 
           setTimeout(() => {
             if (!localStorage.getItem("lastSync")) {
-              vuex.commit("showSnackbar", {
-                text:
-                  "After the very first sync, loading data for the first time may be slow, due to indexing.",
+              vuex.dispatch("infoBridge", {
+                text: "After the very first sync, loading data for the first time may be slow, due to indexing.",
                 color: "info",
                 timeout: 8000,
               });
@@ -278,15 +277,15 @@ export default {
         })
         .on("error", function(err) {
           dis.syncInProgress = false;
-          console.log("Error syncing: ", err);
-          // TODO - send to log
-          // set localStorage sync did not finish
-          vuex.commit("showSnackbar", {
+          // TODO: set localStorage sync did not finish
+          vuex.dispatch("infoBridge", {
             text:
               "Something went wrong during sync. Is the Remote DB reachable? " +
               err,
             color: "error",
+            error: err
           });
+
         });
     },
 
@@ -317,10 +316,10 @@ export default {
     },
     buttonLiveSync: function() {
       let txt = this.remoteDBIsOnline ? 'Live-sync is working' : 'No contact with remote database';
-          this.$store.commit("showSnackbar", {
-            text: txt,
-            color: this.remoteDBIsOnline ? 'success' : 'warning',
-          });
+      this.$store.dispatch("infoBridge", {
+        text: txt,
+        color: this.remoteDBIsOnline ? 'success' : 'warning',
+      });
     },
 
   },

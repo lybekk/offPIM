@@ -116,7 +116,10 @@ const tasks = {
                 context.commit('setTasksAggregate', { key: 'tomorrow', value: aggregate.tomorrow });
                 context.commit('setTasksAggregate', { key: 'overdue', value: aggregate.overdue });
             } catch (error) {
-                context.commit('addAlert', { type: 'error', text: 'Task aggregation: ' + error })
+                context.dispatch("infoBridge", {
+                    text: 'Task aggregation: ' + error,
+                    color: "error",
+                });
             }
 
             try {
@@ -131,8 +134,11 @@ const tasks = {
                 console.log('Fix this. Tasks aggregation tasks done today test: ', data) //dataDoneToday
                 context.commit('setTasksAggregate', { key: 'doneToday', value: data.rows.length });
                 context.commit('setTasksAggregate', { key: 'initiated', value: true });
-            } catch (err) {
-                context.commit('addAlert', { type: 'error', text: 'Task aggregation: ' + err })
+            } catch (error) {
+                context.dispatch("infoBridge", {
+                    text: 'Task aggregation: ' + error,
+                    color: "error",
+                });
             }
             return true
         },
@@ -151,7 +157,10 @@ const tasks = {
                 }
                 context.commit('addOpenProjects', projects)
             } catch (error) {
-                context.commit('addAlert', { type: 'error', text: 'Fetching open projects: ' + error })
+                context.dispatch("infoBridge", {
+                    text: 'Fetching open projects: ' + error,
+                    color: "error",
+                });
             }
         },
 
@@ -175,8 +184,11 @@ const tasks = {
                 data.rows.forEach((aggregate) => {
                     context.commit('setTaskPriorities', aggregate)
                 });
-            }).catch(function (err) {
-                context.commit('addAlert', { type: 'error', text: 'Getting task priorities failed' + err })
+            }).catch(function (error) {
+                context.dispatch("infoBridge", {
+                    text: 'Getting task priorities failed' + error,
+                    color: "error",
+                });
             });
 
         },
@@ -243,7 +255,10 @@ const tasks = {
 
                 }).catch(function (error) {
                     context.commit('toggleLoader');
-                    context.commit('addAlert', { type: 'error', text: 'Getting tasks failed: ' + error })
+                    context.dispatch("infoBridge", {
+                        text: 'Getting tasks failed: ' + error,
+                        color: "error",
+                    });
                 });
 
         },
@@ -254,8 +269,11 @@ const tasks = {
                 });
                 context.commit('setTagList', result)
 
-            } catch (err) {
-                context.commit('addAlert', { type: 'error', text: 'Failed fetching tasks tag count: ' + err })
+            } catch (error) {
+                context.dispatch("infoBridge", {
+                    text: 'Failed fetching tasks tag count: ' + error,
+                    color: "error",
+                });
             }
 
         }

@@ -111,8 +111,11 @@ const finances = {
                 response.rows.forEach((aggregate) => {
                     context.commit('setFinancialAggregates', aggregate)
                 });
-            } catch (err) {
-                context.commit('addAlert', { type: 'error', text: err })
+            } catch (error) {
+                this.$store.dispatch("infoBridge", {
+                    text: error,
+                    color: "error",
+                  });
             }
 
         }
