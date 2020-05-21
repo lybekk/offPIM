@@ -5,7 +5,6 @@
     max-width="50vw"
     transition="dialog-bottom-transition"
   )
-    //-scrollable ?
     v-card(
       :disabled="isDeleted(msg._id)"
     )
@@ -31,14 +30,14 @@
             v-list-item-subtitle.subtitle-1 Recipient:
               span(class="subtitle" v-text="msg.recipient")
           v-list-item-action(@click="$store.commit('setGenericStateBooleanFalse', 'dialogItemDetailed');")
-            //-v-list-item-action(@click="$store.commit('setReaderDialog', false)")
             v-btn(text)
               v-icon mdi-close
       v-card-text
-        pre(v-text="msg.body")
-        br
-        hr
         v-row
+          v-col(cols="12")
+            span(v-text="msg.body")
+          v-col(cols="12")
+            v-divider
           v-col.body-1 Created: 
             time(v-text="new Date(this.msg.created)")
           v-col.body-1 ID: 

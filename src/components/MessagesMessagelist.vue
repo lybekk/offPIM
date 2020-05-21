@@ -1,39 +1,46 @@
 <template lang="pug">
   v-container
-    v-data-table(
-      v-model="selectedMessages"
+    br
+    v-data-iterator(
       :search="search"
-      :headers="headers"
       :items="messageList"
+      :loading="$store.getters.loaderState"
+      loading-text="Looking..."
       :items-per-page="10"
-      class="elevation-1"
       no-data-text="No messages"
       item-key="_id"
-      show-select
-      dense
     )
-      template(v-slot:item.read="{ item }")
-        v-icon(v-text="isRead(item.read)")
-      template(v-slot:item.subject="{ item }")
-        div(class="msgLink" @click="$emit('read-message', item)")
-          a {{ item.subject }}
-      template(v-slot:item.sender="{ item }")
-        div(class="msgLink" @click="$emit('read-message', item)")
-          a {{ item.sender }}
-      template(v-slot:item.actions="{ item }")
-        v-btn(
-          v-if="isDeleted(item._id)" 
-          text 
-          x-small 
-          disabled
-        ) Deleted
-        v-btn(
-          v-else 
-          text 
-          icon 
-          @click="deleteMsg(item._id)"
-        )
-          v-icon mdi-delete
+      template(v-slot:default="props")
+        v-list(two-line)
+          v-list-item(
+            v-for="doc in props.items"
+            :key="doc._id"
+            link
+            )
+            v-list-item-icon(
+              @click="$emit('read-message', doc)"
+            )
+              v-icon(v-text="isRead(doc.read)")
+            v-list-item-content(
+              @click="$emit('read-message', doc)"
+            )
+              v-list-item-title(v-text="doc.sender" class="title font-weight-regular primary--text")
+              v-list-item-subtitle(v-text="doc.subject" class="subtitle-1")
+              v-list-item-subtitle(v-text="doc.body")
+            v-list-item-action
+              v-btn(
+                v-if="isDeleted(doc._id)"
+                text 
+                x-small 
+                disabled
+              ) Deleted
+              v-btn(
+                v-else 
+                text 
+                icon 
+                @click="deleteMsg(doc._id)"
+              )
+                v-icon mdi-delete
 </template>
 
 <script>
