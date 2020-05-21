@@ -1,11 +1,8 @@
 <template lang="pug">
-  div(class="text-center")
     v-menu(
       v-model="menu"
       :close-on-content-click="false"
-      :nudge-width="200"
       transition="slide-y-transition"
-      offset-y
       bottom
       left
     )
@@ -13,9 +10,25 @@
         v-btn(
           icon
           v-on="on"
-          :loading="syncInProgress"
           @click="updateLastSync"
           aria-label="Sync dialog"
+        )
+          v-icon(color="primary") mdi-dots-vertical
+        v-btn(
+          v-if="$store.getters.localSettings.liveSync"
+          icon
+          :loading="syncInProgress"
+          @click="buttonLiveSync"
+        )
+          v-icon(v-if="!remoteDBIsOnline") mdi-cloud-off-outline
+          v-icon(v-else color="success") mdi-cloud-sync
+        v-btn(
+          v-else
+          icon
+          :loading="syncInProgress"
+          @click="syncDatabase"
+          :disabled="$store.getters.localSettings.liveSync"
+          aria-label="Sync button"
         )
           v-icon(v-if="!remoteDBIsOnline") mdi-cloud-off-outline
           v-icon(v-else color="primary") mdi-cloud-sync
@@ -39,34 +52,25 @@
                 div(v-else) ...
         v-divider
         v-list(two-line)
-          v-list-item
+          v-list-item(
+            color="primary"
+            @click="$store.commit('setGenericStateBooleanTrue', 'dbConnectionDialog')"
+          )
             v-list-item-avatar
               v-icon mdi-cloud
             v-list-item-content
               v-list-item-title Remote DB
+              //- TODO - Fix name. Legacy code. Get name from remoteDBinfo
               v-list-item-subtitle(v-text="this.$store.getters.remoteDBSettings.name")
             v-list-item-action
-              v-btn(
-                icon 
-                small 
-                fab
-                @click="$store.commit('setGenericStateBooleanTrue', 'dbConnectionDialog')"
-              )
-                v-icon(color="primary") mdi-cogs
-          v-list-item
+              v-icon(color="primary") mdi-cogs
+          v-list-item(:to="{ name: 'settings' }")
             v-list-item-avatar
-              v-icon mdi-database
+              v-icon(color="primary") mdi-database
             v-list-item-content
               v-list-item-title Local DB
             v-list-item-action
-              v-btn(
-                icon 
-                small 
-                fab
-                color="primary"
-                :to="{ name: 'settings' }"
-              )
-                v-icon mdi-cogs
+              v-icon(color="primary") mdi-cogs
         v-card-actions
           v-spacer
           v-tooltip(bottom)
@@ -83,8 +87,11 @@
                 color="primary"
                 @click="syncDatabase"
                 block
+                :disabled="$store.getters.localSettings.liveSync"
                 :loading="syncInProgress"
-              ) Sync
+              )
+                span(v-if="$store.getters.localSettings.liveSync") Live-sync On
+                span(v-else) Sync
             span Avoid closing browser window during syncing
 </template>
 
@@ -98,6 +105,7 @@ export default {
   },
   mixins: [pouchMixin],
   data: () => ({
+    banner: true,
     menu: false,
     lastSync: "Never",
     pending: {
@@ -160,6 +168,7 @@ export default {
       }
       this.lastSync = `${time} ${granularity} since last sync`;
     },
+
     syncDatabase: function() {
       const vuex = this.$store;
       const dis = this;
@@ -169,23 +178,17 @@ export default {
       this.archivedDocumentsSkippedDuringSync = 0;
       const settings = this.$store.getters.localSettings;
 
+      const archivedDocsForSyncPhase2 = [];
+
       PouchDB.sync(window.db, window.remoteDB, {
         live: settings.liveSync,
         retry: settings.retrySync,
         push: {},
         pull: {
           filter: function(doc) {
+            // TODO - Test archiving on another offPIM instance
             if (doc.archived) {
-              window.db
-                .get(doc._id)
-                .then(function(localDoc) {
-                  if (doc._rev > localDoc._rev) {
-                    return true;
-                  }
-                })
-                .catch(function() {
-                  dis.archivedDocumentsSkippedDuringSync++;
-                });
+              archivedDocsForSyncPhase2.push(doc._id)
             } else {
               return true;
             }
@@ -205,6 +208,17 @@ export default {
             console.log("Pause happened. Sync success");
             dis.syncInProgress = false;
           }
+
+          if (dis.$store.getters.localSettings.liveSync) {
+            if (archivedDocsForSyncPhase2.length) {
+              dis.syncPhase2(archivedDocsForSyncPhase2)
+            }
+            localStorage.setItem("lastSync", new Date().toJSON());
+            dis.updateLastSync();
+          }
+
+          
+
         })
         .on("active", function() {
           // replicate resumed (e.g. new changes replicating, user went back online)
@@ -219,6 +233,9 @@ export default {
           console.log("DENIED HAPPENED: ", err);
         })
         .on("complete", function(info) {
+          if (archivedDocsForSyncPhase2.length) {
+            dis.syncPhase2(archivedDocsForSyncPhase2)
+          }
           console.log("Done syncing:", info);
           // push
           const pushedDocs = info.push.docs_written;
@@ -237,11 +254,13 @@ export default {
             txt = `Sent ${pushedDocs} documents to remote database in ${pushDiff}s
               , and received ${pulledDocs} in ${pullDiff}s`;
           }
+
           vuex.commit("showSnackbar", {
             text: txt,
             color: "success",
             timeout: 6000,
           });
+
           setTimeout(() => {
             if (!localStorage.getItem("lastSync")) {
               vuex.commit("showSnackbar", {
@@ -270,6 +289,40 @@ export default {
           });
         });
     },
+
+    /**
+      * A second sync phase, updating documents archived on remoteDB or 
+      * another instance source (i.e. offPIM on another device)
+      */
+    syncPhase2: async function(allArchivedDocIds) {
+
+      try {
+        const allLocalIds = await window.db.allDocs()
+        .then( function(docs) {
+            return docs.rows.map(a => a.id);
+        })
+        let docsToResync = allArchivedDocIds.filter(id => allLocalIds.includes(id));
+
+        if (docsToResync.length) {
+          var result = await window.db.replicate.from(window.remoteDB, {
+            doc_ids: docsToResync
+          });
+          console.log('Result from Sync Phase 2: ', result)
+        }
+
+      } catch (err) {
+        console.log('Sync phase 2 failed: ', err);
+      }
+
+    },
+    buttonLiveSync: function() {
+      let txt = this.remoteDBIsOnline ? 'Live-sync is working' : 'No contact with remote database';
+          this.$store.commit("showSnackbar", {
+            text: txt,
+            color: this.remoteDBIsOnline ? 'success' : 'warning',
+          });
+    },
+
   },
 };
 </script>

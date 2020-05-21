@@ -52,6 +52,14 @@
           v-row(v-if="connectionResultMessage")
             p(:class="getColor+'--text'") {{ connectionResultMessage }}
         v-card-actions
+          v-btn(
+            text
+            color="primary"
+            :to="{ name: 'settings' }"
+            @click="dialog = false"
+          )
+            v-icon mdi-cogs
+            span Settings
           v-spacer
           v-btn(text @click="dialog = false") Cancel
           v-btn(color="primary" text @click="setValues") Connect
@@ -156,33 +164,6 @@ export default {
         this.setValues();
       }
     },
-    /*
-    requestAuthCookie: async function() {
-      // not used for the time being, as pouchdb handles authentication well
-      let urlSplit = this.remoteDBUrl.split("/");
-      urlSplit.pop();
-      let sessionUrl = urlSplit.join("/") + "/_session";
-
-      const form = { name: this.username, password: this.password };
-      const response = await fetch(sessionUrl, {
-        method: "POST",
-        body: JSON.stringify(form),
-        credentials: "include",
-        headers: {
-          "Content-Type": "application/json",
-        },
-      });
-      const result = await response.json();
-      if (response.ok) {
-        this.authMsg = "Authenticated";
-      } else if (response.status == 401) {
-        this.authMsg = "Incorrect credentials";
-      } else {
-        console.log(result);
-        this.authMsg = "Something went wrong. See console.";
-      }
-    },
-    */
   },
 };
 </script>

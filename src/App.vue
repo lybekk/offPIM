@@ -46,8 +46,7 @@
         color="transparent"
       )
         v-tab(@click.stop="drawer = !drawer")
-      //- TODO - Dedicated sync-icon here
-      NavbarActions
+      navbar-actions
       template(v-slot:extension)
         v-tabs(
           align-with-title
