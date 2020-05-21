@@ -124,6 +124,17 @@ export default {
       // TODO - send to debug
       console.log(error)
     }
-  }
+  },
+
+  getDoc: async function (context, docId) {
+    // TODO WAIT - When using remote as primary. use window.remoteDB
+    return await window.db.get(docId);
+  },
+
+  refreshDoc: async function (context, docId) {
+     const doc = await context.dispatch('getDoc', docId);
+     context.commit('refreshDoc', doc)
+
+  },
 
 }

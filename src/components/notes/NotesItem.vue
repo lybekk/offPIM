@@ -14,7 +14,6 @@
         v-card-subtitle(
           @click="showSheet"
         ) {{ item.description }}
-
         v-card-actions
           v-spacer
           v-fab-transition
@@ -60,38 +59,36 @@
 </template>
 
 <script>
-import pouchMixin from '@/mixins/pouchMixin'
+import pouchMixin from "@/mixins/pouchMixin";
 
 export default {
-  name: 'NotesItems',
-  components: {
-  },
+  name: "NotesItems",
+  components: {},
   mixins: [pouchMixin],
-  props: ['item'],
+  props: ["item"],
   data: () => ({
     trashIconClicked: false,
     itemsPerPage: 8
   }),
   computed: {
-    trashIcon: function () {
-      if (this.trashIconClicked) {return true}
-      return false
+    trashIcon: function() {
+      if (this.trashIconClicked) {
+        return true;
+      }
+      return false;
     }
   },
   methods: {
-    isDeleted: function (id) {
-      return this.$store.getters.isDeleted(id)
+    isDeleted: function(id) {
+      return this.$store.getters.isDeleted(id);
     },
-    toggleTrashIcon: function () {
-      this.trashIconClicked = !this.trashIconClicked
+    toggleTrashIcon: function() {
+      this.trashIconClicked = !this.trashIconClicked;
     },
-    showSheet: async function () {
-      setTimeout(() => {
-        this.$store.commit('showNoteSheet');
-      }, 200);
-      this.$emit('set-selected-note', this.item._id)
+    showSheet: function() {
+      this.$store.commit("setSelectedNote", this.item);
+      this.$store.commit("dialogItemDetailedShow");
     }
   }
 };
-
 </script>

@@ -1,3 +1,5 @@
+import Vue from 'vue'
+
 export default {
 
   setLeftDrawer(state, payload) {
@@ -133,5 +135,21 @@ export default {
   appBarTabs(state, payload) {
     state.appBarTabs = payload;
   },
+
+  dialogItemDetailedHide: state => {
+    state.dialogItemDetailed = false
+  },
+
+  dialogItemDetailedShow: state => {
+    state.dialogItemDetailed = true
+  },
+
+  refreshDoc(state, doc) {
+    const index = state.data.findIndex(({ _id }) => _id === doc._id);
+    console.log(index)
+    console.log(this)
+    Vue.set(state.data, index, doc)
+  },
+
 
 }

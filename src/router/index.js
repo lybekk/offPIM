@@ -75,7 +75,16 @@ const routes = [
   {
     path: '/notes',
     name: 'notes',
-    component: () => import(/* webpackChunkName: "notes" */ '../views/Notes.vue')
+    component: () => import(/* webpackChunkName: "notes" */ '../views/Notes.vue'),
+    redirect: 'notes/tag/No tag',
+    children: [
+      {
+        path: 'tag/:tag',
+        name: 'notesTag',
+        component: () => import(/* webpackChunkName: "notes" */ '../views/notes/Tag.vue'),
+        props: true
+      },
+    ]    
   },
   {
     path: '/logbook',

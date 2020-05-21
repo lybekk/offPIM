@@ -8,30 +8,13 @@
       v-list(
         nav
         dense
-      )
-        v-list-item(
-          link 
-          @click="getNotesByTag()"
-        )
-          v-list-item-icon
-            v-icon mdi-note-text
-          v-list-item-title Untagged
-        v-list-item(link @click="getLastEntriesByCount(30)")
-          v-list-item-icon
-            v-icon mdi-clock
-          v-list-item-title 30 latest notes
-      v-divider
-      v-list(
-        nav
-        dense
         subheader
       )
-        v-subheader Tags
         v-list-item(
           v-for="(tag, i) in tagsList"
           :key="i"
           link
-          @click="getNotesByTag(tag.key)"
+          :to="{ name: 'notesTag', params: { tag: tag.key }}"
         )
           v-list-item-icon
             v-icon(
@@ -50,54 +33,42 @@
           v-list-item-action
             v-list-item-action-text(v-text="tag.value")
     v-content
+
       v-container(
         class="fill-height"
         fluid
       )
-        v-row
-          v-container(fluid)
-            v-skeleton-loader(
-                :loading="this.$store.getters.loaderState"
-                class="mx-auto"
-                transition="scale-transition"
-                type="article"
+        v-toolbar(
+          flat
+        )
+          v-btn(            
+            color="primary"
+            @click="getNotesByTag()"
+          )
+            v-icon mdi-note-text
+            span Untagged
+          v-spacer
+          v-btn(
+            class="ma-2" 
+            color="primary"
+            rounded 
+            @click="drawer = !drawer"
             )
-              v-data-iterator(
-                :items="noteList"
-                item-key="_id"
-                :items-per-page="10"
-              )
-                template(v-slot:default="props")
-                  v-row
-                    v-col(
-                      v-for="item in props.items"
-                      :key="item._id"
-                      cols="12"
-                      sm="6"
-                      md="4"
-                      lg="3"
-                    )
-                      notes-item(
-                        v-bind:item="item"
-                        @set-selected-note="setSelectedNote"
-                      )
-    notes-detailed(
-      :selected-note="selectedNote"
-      @refresh-doc="refreshDoc"
-    )
-
+            v-icon(left) mdi-tag
+            span Tags
+            v-icon(right) mdi-menu
+        v-row
+          router-view
+    notes-detailed
 </template>
 
 <script>
-import pouchMixin from "@/mixins/pouchMixin";
-
-import NotesItem from "@/components/notes/NotesItem.vue";
 import NotesDetailed from "@/components/notes/NotesDetailed.vue";
+import pouchMixin from "@/mixins/pouchMixin";
 
 export default {
   name: "notes",
   components: {
-    NotesItem,
     NotesDetailed
   },
   mixins: [pouchMixin],
@@ -105,9 +76,7 @@ export default {
     source: String
   },
   data: () => ({
-    noteList: [],
-    drawer: false,
-    selectedNote: {}
+    drawer: false
   }),
   computed: {
     tagsList: function() {
@@ -122,28 +91,29 @@ export default {
     setTimeout(() => {
       this.drawer = true;
     }, 300);
-    this.getNotesByTag();
     this.$store.dispatch("populateTagsList");
   },
   methods: {
-    refreshDoc: async function(id) {
-      const index = this.noteList.findIndex(({ _id }) => _id === id);
-      const x = await this.getDoc(id);
-      this.noteList[index].title = x.title;
-      this.noteList[index].description = x.description;
-      this.noteList[index].archived = x.archived;
-    },
-    setSelectedNote: async function(id) {
-      this.selectedNote = await window.db.get(id);
-    },
-    getNotesByTag: async function(tag = "No tag") {
+    /**
+     * TODO: - Code optimization. emit from Tag.vue to this.
+     */
+    getNotesByTag: async function() {
       try {
-        let data = await this.getQuery("offpim/note-tag-count", tag, tag, true);
-        this.noteList = data;
+        let data = await this.getQuery(
+          "offpim/note-tag-count",
+          "No tag",
+          "No tag",
+          true
+        );
+        this.$store.commit("addDataArray", data);
       } catch (error) {
         this.errorHandler(error);
       }
     },
+
+    /**
+     * Not in use
+     */
     getLastEntriesByCount: async function(count = 30) {
       let vstore = this.$store;
       vstore.commit("loaderActive");
@@ -162,7 +132,7 @@ export default {
 
       try {
         let data = await this.getMango(mango);
-        this.noteList = data.docs;
+        vstore.commit("addDataArray", data.docs);
       } catch (error) {
         vstore.commit("showSnackbar", { text: error });
       }
@@ -170,9 +140,3 @@ export default {
   }
 };
 </script>
-
-<style scoped>
-.flip-list-move {
-  transition: transform 1s;
-}
-</style>

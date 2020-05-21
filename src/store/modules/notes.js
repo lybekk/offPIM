@@ -4,12 +4,11 @@ const notes = {
         showNoteSheet: false
     },
     mutations: {
-        showNoteSheet(state) {
-            state.showNoteSheet = true
+
+        setSelectedNote(state, doc) {
+            state.selectedNote = doc;
         },
-        hideNoteSheet(state) {
-            state.showNoteSheet = false
-        },
+
 
     },
     actions: {
@@ -23,13 +22,10 @@ const notes = {
                 context.commit('addAlert', { type: 'error', text: err })
             }
 
-        }
+        },
+
     },
     getters: {
-
-        noteSheetState: state => {
-            return state.showNoteSheet
-        },
 
         selectedNote: state => {
             return state.selectedNote
