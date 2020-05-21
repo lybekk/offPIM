@@ -1,20 +1,5 @@
 <template lang="pug">
-div(v-if="!hideTask")
-    v-card
-      v-card-title(
-        :class="[ doc.status == 'done' ? 'body-1 success--text' : 'body-1 font-weight-regular' ]"
-        @click="sheet = !sheet"
-      ) {{ doc.title }}
-      v-progress-linear(
-        active
-        rounded
-        absolute
-        top
-        background-color="none"
-        :value="taskProgress"
-        :color="$store.getters.getStatusColors[doc.status]"
-        )
-          //- TODO - map to status-colors
+    v-list-item(link)
       v-fade-transition
         v-overlay(
           v-if='isDeleted(doc._id)'
@@ -23,34 +8,38 @@ div(v-if="!hideTask")
           z-index='3'
         )
           v-btn(text) Deleted
-      v-fade-transition
-        v-overlay(
-          v-if="doc.archived"
-          absolute
-          color="info lighten-2"
-          z-index="3"
-        )
-          v-btn(text) Archived
-      //-v-card-subtitle Use v-if overdue here
-      //-v-card-text v-if postponed x times and additional info
-      v-card-actions
-        div(class="text-center")
-          v-fab-transition
-            v-btn(
-              v-show="doc.status != 'done'"
-              fab
-              small
-              :color="doc.status == 'done' ? 'success' : ''"
-              bottom
-              left
-              @click="setTaskStatus('done')"
+      v-list-item-action
+        v-fab-transition
+          //- TODO: Evaluate replacing fab with icon. Cleaner
+          v-btn(
+            v-show="doc.status != 'done'"
+            icon
+            small
+            :color="doc.status == 'done' ? 'success' : ''"
+            bottom
+            left
+            @click="setTaskStatus('done')"
+          )
+            v-progress-circular(
+              :value="taskProgress"
+              :color="$store.getters.getStatusColors[doc.status]"
             )
-              v-icon mdi-check
-        tasks-items-priority(
-          v-bind:task='doc'
-          @set-doc="setDoc()"
-        )
-        span
+      v-list-item-content(
+        @click="sheet = !sheet"
+      )
+        v-list-item-subtitle(
+          v-text="doc.title" 
+          :class="[ doc.status == 'done' ? 'body-1 success--text' : 'text--primary body-1 font-weight-regular' ]"
+          )
+        v-list-item-subtitle
+          //- INFO: Info chips used for quick (actionable?) details
+          v-chip(
+            v-if="doc.archived"
+            color="info lighten-2"
+            label
+          ) Archived
+          //- TODO - map to status-colors
+          //-v-card-text v-if postponed x times and additional info
           v-tooltip(v-if='isOverdue' top)
             template(v-slot:activator='{ on }')
               v-icon(color='error' v-on='on') mdi-clock-alert
@@ -61,38 +50,36 @@ div(v-if="!hideTask")
             label
             color='info'
           ) Postponed
-        v-spacer
-        v-tooltip(top)
-          template(v-slot:activator='{ on }')
-            v-icon(
-              v-text="doc.description ? 'mdi-comment' : '' "
-              color="secondary"
-              v-on='on'
-            )
-          span(v-text="doc.description")
+          v-tooltip(top)
+            template(v-slot:activator='{ on }')
+              v-icon(
+                v-text="doc.description ? 'mdi-text' : '' "
+                color="secondary"
+                v-on='on'
+              )
+            span(v-text="doc.description")
+      v-list-item-action
+        tasks-items-priority(
+          v-bind:task='doc'
+          @set-doc="setDoc()"
+        )
+        //- TODO - Evaluate the need for this.
         v-tooltip(top)
           template(v-slot:activator='{ on }')
             v-btn(
               icon
               color='info'
-              class="ma-2"
               :disabled="isPostponed(doc._id)"
               v-on='on'
               @click='postponeTask(doc._id)'
             )
               v-icon mdi-update
           span Postpone until tomorrow
-        v-bottom-sheet(
+        v-bottom-sheet( 
           v-model="sheet" 
           :inset="$vuetify.breakpoint.mdAndUp"
           scrollable
         )
-          template(v-slot:activator="{ on }")
-            v-btn(
-              icon
-              v-on="on"
-            )
-              v-icon mdi-dots-vertical-circle
           v-card
             v-card-title
               tasks-items-title(
@@ -189,27 +176,27 @@ export default {
     TasksItemsProject,
     TasksItemsTags,
     TasksItemsPriority,
-    FormDatetime,
+    FormDatetime
   },
   mixins: [pouchMixin],
   props: ["docid"],
   data: () => ({
     doc: {
       title: "",
-      tags: [],
+      tags: []
     },
     fab: false,
     sheet: false,
-    hideTask: false,
-    statusList: ["cancelled", "plan", "wait", "todo", "next", "doing", "done"],
+    statusList: ["cancelled", "plan", "wait", "todo", "next", "doing", "done"]
   }),
   computed: {
     taskProgress: function() {
       const s = this.doc.status;
       const progress =
-        100 - 100 / this.statusList.findIndex((status) => status === s);
-      return s === 'done' || s === 'cancelled' ? 100 : progress;
+        100 - 100 / this.statusList.findIndex(status => status === s);
+      return s === "done" || s === "cancelled" ? 100 : progress;
     },
+
     isOverdue: function() {
       let d = new Date();
       d.setDate(d.getDate() - 1);
@@ -219,7 +206,7 @@ export default {
         return true;
       }
       return false;
-    },
+    }
   },
   mounted() {
     this.setDoc();
@@ -229,7 +216,6 @@ export default {
     setDoc: async function() {
       this.doc = await this.getDoc(this.docid);
     },
-    // TODO copied from former component. For rewrite
     overdueAmount: function(due) {
       let dDue = new Date(due);
       let dNow = new Date();
@@ -260,14 +246,11 @@ export default {
       let payload = {
         _id: id,
         field: "due",
-        value: tom,
+        value: tom
       };
       await this.setFieldDate(payload);
       this.$store.commit("addPostponed", id);
       this.setDoc();
-      setTimeout(() => {
-        this.hideTask = true;
-      }, 400);
     },
     isPostponed: function(id) {
       let list = this.$store.getters.getPostponedTasks;
@@ -285,7 +268,7 @@ export default {
     },
     color: function(status) {
       return this.$store.getters.getStatusColors[status];
-    },
-  },
+    }
+  }
 };
 </script>

@@ -1,32 +1,57 @@
 <template lang="pug">
-v-container
-  v-row
-    v-col
-      v-card
-        v-card-text(class="body-2")
-          span Displaying {{ tasks.length }} tasks from list:
-          span.text-capitalize(v-text="list")
+v-container(
+  :fluid="$vuetify.breakpoint.mdAndDown"
+  )
   v-skeleton-loader(
       :loading="this.$store.getters.loaderState"
       class="mx-auto"
-      transition="scale-transition"
-      type="article"
+      transition="scroll-y-reverse-transition"
+      type="list-item-avatar-two-line"
+      
   )
+    //- INFO - don't use group-by="status". Reorders tasks on status change, making task lose fokus
     v-data-iterator(
         :items="tasks"
+        item-key="_id"
+        :search="search"
         :loading="this.$store.getters.loaderState"
         loading-text="Getting tasks"
         no-data-text="No tasks matching request"
+        :sort-by="sortBy.toLowerCase()"
     )
-      //- don't use group-by="status". Reorders tasks on status change, making task lose fokus
+      template(v-slot:header)
+        v-toolbar(
+          color="transparent"
+          class="mb-1"
+          flat
+          )
+          v-text-field(
+            v-model="search"
+            clearable
+            flat
+            solo-inverted
+            hide-details
+            prepend-inner-icon="mdi-magnify"
+            label="Filter list"
+          )
+          v-spacer
+          v-select(
+            v-model="sortBy"
+            flat
+            solo-inverted
+            hide-details
+            :items="keys"
+            prepend-inner-icon="mdi-sort-variant"
+            label="Sort by"
+          )
+            //-darken-3
       template(v-slot:default="props")
-        v-row
-          v-col(
+        v-list(three-line)
+          tasks-item(
             v-for="doc in props.items"
             :key="doc._id"
-            cols="12"
-          )
-            TasksItem(v-bind:docid="doc._id")
+            v-bind:docid="doc._id"
+            )
 </template>
 
 <script>
@@ -43,6 +68,14 @@ export default {
     source: String,
   },
   data: () => ({
+    search: '',
+    sortBy: 'due',
+    keys: [
+      'Due',
+      'Status',
+      'Priority',
+      'Project',
+    ],
     tasks: [],
   }),
   computed: {
@@ -135,10 +168,11 @@ export default {
           endkey: endKey,
           limit: 50,
           reduce: false,
+          include_docs: true,
         })
         .then(function(data) {
           data.rows.forEach((row) => {
-            context.tasks.push({ _id: row.id });
+            context.tasks.push( row.doc );
           });
           context.$store.commit("loaderInactive");
         })

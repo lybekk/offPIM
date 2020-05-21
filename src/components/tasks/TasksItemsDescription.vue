@@ -3,14 +3,11 @@ v-dialog(v-model="dialog" scrollable max-width="400px")
   template(v-slot:activator="{ on }")
     v-list-item(v-on="on" )
       v-list-item-icon
-        v-icon mdi-comment
+        v-icon mdi-text
       v-list-item-content
-        pre(
+        v-list-item-subtitle(
           v-text="taskDescription(task.description)" 
-          class="body-1"
-          
-        )
-          //-style="white-space: pre-wrap;"
+          )
   v-card
     v-card-title
     v-card-text
@@ -38,7 +35,7 @@ export default {
   props: ["task"],
   data: () => ({
     dialog: false,
-    newValue: null,
+    newValue: null
   }),
   computed: {
     value: {
@@ -47,15 +44,15 @@ export default {
       },
       set(val) {
         this.newValue = val;
-      },
-    },
+      }
+    }
   },
   methods: {
     setTaskField: async function() {
       await this.setFieldGeneric({
         _id: this.task._id,
         field: "description",
-        value: this.newValue,
+        value: this.newValue
       });
       this.dialog = false;
       this.$emit("set-doc");
@@ -66,7 +63,7 @@ export default {
         t = "No description";
       }
       return t;
-    },
-  },
+    }
+  }
 };
 </script>

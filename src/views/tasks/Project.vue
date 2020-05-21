@@ -9,6 +9,7 @@ v-container(fluid)
               v-col(
                 v-for="(value, key) in statuses"
                 :class="[value == 0 ? 'fadedIfStatusZero': '']"
+                :key="value"
               )
                 v-progress-circular(
                   size="100"
@@ -38,13 +39,12 @@ v-container(fluid)
     v-skeleton-loader(
       :loading="this.$store.getters.loaderState"
       class="mx-auto"
-      transition="scale-transition"
+      transition="slide-y-reverse-transition"      
       type="sentences"
     )
       v-card(
         elevation="0"
       )
-        //-v-else
         v-card-title(
           class="headline"
         ) {{ tasks.length }} Tasks in 
@@ -52,7 +52,6 @@ v-container(fluid)
         v-card-subtitle(
           class="subtitle font-weight-thin"
         ) Showing {{ filteredTasks.length }} 
-    //-v-skeleton-loader(
     v-skeleton-loader(
       :loading="this.$store.getters.loaderState"
       class="mx-auto"
@@ -65,7 +64,7 @@ v-container(fluid)
           loading-text="Getting tasks"
           no-data-text="No tasks matching request"
       )
-        //- don't use group-by="status". Reorders tasks on status change, making task lose fokus
+        //- INFO: don't use group-by="status". Reorders tasks on status change, making task lose fokus
         template(v-slot:default="props")
           v-row
             v-col(
@@ -94,9 +93,8 @@ export default {
   props: ["projectid"],
   data: () => ({
     showClosedTasks: false,
-    tasksFilter: ['wait', 'plan', 'todo', 'next', 'doing'],
-    details: {
-    },
+    tasksFilter: ["wait", "plan", "todo", "next", "doing"],
+    details: {},
     tasks: [],
     statuses: {
       wait: 0,
@@ -105,17 +103,17 @@ export default {
       next: 0,
       doing: 0,
       done: 0,
-      cancelled: 0,
+      cancelled: 0
     },
     statusesLoading: true
   }),
   computed: {
     filteredTasks: function() {
-        const t = this.tasksFilter;
-        return this.tasks.filter(function (el) {
-          return t.includes(el.status);
-        });
-    },
+      const t = this.tasksFilter;
+      return this.tasks.filter(function(el) {
+        return t.includes(el.status);
+      });
+    }
   },
   watch: {
     $route(to) {
@@ -132,15 +130,15 @@ export default {
   methods: {
     statusValuePercent: function(key) {
       const x = this.statuses[key];
-      if ( x === 0) return 0;
-      return Math.floor(( x / this.tasks.length ) * 100)
+      if (x === 0) return 0;
+      return Math.floor((x / this.tasks.length) * 100);
     },
-    fillCircles: async function() { //countStatuses
-      const keys = Object.keys( this.statuses );
+    fillCircles: async function() {
+      const keys = Object.keys(this.statuses);
 
       for await (let key of keys) {
-        const filteredArray = this.tasks.filter( obj => obj.status === key )
-        this.statuses[key] = filteredArray.length
+        const filteredArray = this.tasks.filter(obj => obj.status === key);
+        this.statuses[key] = filteredArray.length;
       }
     },
     getProject: async function() {
@@ -150,9 +148,9 @@ export default {
       this.getTasks();
     },
     resetStatuses: function() {
-      for (let x of Object.keys(this.statuses) ) {
+      for (let x of Object.keys(this.statuses)) {
         console.log(x);
-        this.statuses[x] = 0
+        this.statuses[x] = 0;
       }
     },
     getTasks: async function() {
@@ -165,12 +163,12 @@ export default {
           project: this.projectid
         },
         limit: 1000,
-        fields: ["_id","status"]
+        fields: ["_id", "status"]
       };
       try {
         let data = await window.db.find(mango);
         this.tasks = data.docs;
-        this.fillCircles()
+        this.fillCircles();
       } catch (error) {
         this.$store.commit("addAlert", { type: "error", text: error });
       }
@@ -181,7 +179,7 @@ export default {
 </script>
 
 <style scoped>
-  .fadedIfStatusZero {
-    opacity: 0.2;
-  }
+.fadedIfStatusZero {
+  opacity: 0.2;
+}
 </style>

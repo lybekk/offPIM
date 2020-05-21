@@ -1,5 +1,4 @@
 <template lang="pug">
-div(class="text-center")
   v-menu(
     v-model="menu"    
     left
@@ -33,50 +32,47 @@ div(class="text-center")
 </template>
 
 <script>
-import pouchMixin from '@/mixins/pouchMixin'
+import pouchMixin from "@/mixins/pouchMixin";
 
 export default {
-  name: 'TasksItemsPriority',
-  components: {
-  },
+  name: "TasksItemsPriority",
+  components: {},
   mixins: [pouchMixin],
   props: ["task"],
   data: () => ({
     menu: false,
     priorityStarColor: {
-      1:'error',
-      2:'warning',
-      3:'primary',
-      4:'secondary'
+      1: "error",
+      2: "warning",
+      3: "primary",
+      4: "secondary"
     },
     priorityTooltip: {
-      1: 'Important and urgent',
-      2: 'Important but not urgent',
-      3: 'Not important but urgent',
-      4: 'Not important and not urgent'
+      1: "Important and urgent",
+      2: "Important but not urgent",
+      3: "Not important but urgent",
+      4: "Not important and not urgent"
     }
   }),
   computed: {
     radioGroup: {
-        get () {
-          return this.task.priority
-        },
-        set (pri) {
-          this.setTaskField(pri)
-        }
-    },
+      get() {
+        return this.task.priority;
+      },
+      set(pri) {
+        this.setTaskField(pri);
+      }
+    }
   },
   methods: {
-    setTaskField: async function (pri) {
+    setTaskField: async function(pri) {
       await this.setFieldGeneric({
         _id: this.task._id,
-        field: 'priority',
+        field: "priority",
         value: pri
       });
-      this.$emit('set-doc')
-    },
-
+      this.$emit("set-doc");
+    }
   }
 };
-
 </script>

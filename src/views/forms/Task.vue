@@ -194,11 +194,17 @@ export default {
     },
     projectList: function() {
       let pl = this.$store.getters.getOpenProjects;
-      let a = pl.map((obj) => {
+      let arr = pl.map((obj) => {
             return { text: obj.title, value: obj._id };
       });
-      return a;
+      return arr.sort((a, b) => (a.text > b.text) - (a.text < b.text) );
     },
   },
+  mounted () {
+    if (!this.$store.getters.getOpenProjects.length) {
+      this.$store.dispatch('populateOpenProjects');
+    }
+  },
+
 }
 </script>
