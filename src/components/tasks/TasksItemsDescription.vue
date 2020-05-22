@@ -15,6 +15,7 @@ v-dialog(v-model="dialog" scrollable max-width="400px")
         v-textarea(
           v-model="value"
           label="Description"
+          autofocus
           rows="3"
           auto-grow
           dense

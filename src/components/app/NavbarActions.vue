@@ -170,6 +170,13 @@ export default {
     },
 
     syncDatabase: function() {
+
+      if(!this.remoteDBIsOnline) {
+        this.$store.dispatch(
+          "remoteDBConnectivityCheck"
+        );
+      }
+
       const vuex = this.$store;
       const dis = this;
       this.syncInProgress = true;
@@ -280,8 +287,7 @@ export default {
           // TODO: set localStorage sync did not finish
           vuex.dispatch("infoBridge", {
             text:
-              "Something went wrong during sync. Is the Remote DB reachable? " +
-              err,
+              "Something went wrong during sync. Is the Remote DB reachable? ",
             color: "error",
             error: err
           });
@@ -314,7 +320,14 @@ export default {
       }
 
     },
-    buttonLiveSync: function() {
+    buttonLiveSync: async function() {
+      if(!this.remoteDBIsOnline) {
+        await this.$store.dispatch(
+          "remoteDBConnectivityCheck"
+        );
+      }
+
+
       let txt = this.remoteDBIsOnline ? 'Live-sync is working' : 'No contact with remote database';
       this.$store.dispatch("infoBridge", {
         text: txt,

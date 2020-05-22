@@ -31,6 +31,7 @@
                   template(v-slot:header)
                     v-text-field(
                       v-model="search"
+                      autofocus
                       clearable
                       hide-details
                       prepend-inner-icon="mdi-magnify"

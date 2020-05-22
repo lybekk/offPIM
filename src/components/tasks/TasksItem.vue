@@ -16,8 +16,6 @@
             icon
             small
             :color="doc.status == 'done' ? 'success' : ''"
-            bottom
-            left
             @click="setTaskStatus('done')"
           )
             v-progress-circular(

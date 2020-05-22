@@ -13,6 +13,7 @@ v-dialog(v-model="dialog" scrollable max-width="400px")
       v-container
         v-text-field(
           v-model="value"
+          autofocus
           label="Title"
         )
     v-card-actions
