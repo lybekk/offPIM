@@ -31,17 +31,15 @@
                             v-radio(label="Todo" value="todo")
                             v-radio(label="Next" value="next")
                             v-radio(label="Doing" value="doing")
-                    v-col(v-if="newTask.type == 'task'" cols="6")
-                        v-overflow-btn(
+                    v-col(v-if="newTask.type == 'task'" cols="12" sm="6")
+                        v-select(
                             v-model="newTask.project"
-                            class="my-2"
                             :items="projectList"
                             label="Project"
                             item-text="text"
                             item-value="value"
-                            editable
                         )
-                    v-col(cols="6")
+                    v-col(cols="12" sm="6")
                         v-combobox(
                             v-model="newTask.tags"
                             :items="tagsListItems"
