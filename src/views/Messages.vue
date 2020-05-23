@@ -200,9 +200,14 @@ export default {
       this.messageList = [];
       let logs = this.$store.getters.sessionLogs;
       logs.forEach(log => {
+        let body = '';
+        for (var key of Object.keys(log)) {
+            body += key + ": " + log[key] + '\n';
+        }
+
         this.messageList.push({
           sender: "offPIM Info Bridge",
-          body: JSON.stringify(log)
+          body: body
         });
       });
     }

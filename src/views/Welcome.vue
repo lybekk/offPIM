@@ -1,11 +1,13 @@
 <template lang="pug">
+v-content
   v-container(
     class="fill-height"
-  )
+    )
     v-row(
       align="center"
       justify="center"
-    )
+      :no-gutters="$vuetify.breakpoint.smAndUp"
+      )
       v-col(
         v-for="link,i in links"
         :key="i"
@@ -19,8 +21,8 @@
             color="transparent"
             :to="link.link"
             x-large
-            height="10vw"
-            width="10vw"
+            :height="$vuetify.breakpoint.smAndUp ? '10vw' : '10vh'"
+            :width="$vuetify.breakpoint.smAndUp ? '10vw' : '10vh'"
             :elevation="hover ? 4 : 1"
           )
             v-icon(
@@ -29,7 +31,12 @@
               :size="hover ? '8.5vw' : '8vw'"
             )
             v-scroll-y-reverse-transition
-              v-overlay(v-if="hover && $vuetify.breakpoint.mdAndUp" absolute color="primary")
+              v-overlay(
+                v-if="hover && $vuetify.breakpoint.mdAndUp" 
+                opacity="0.8"
+                absolute 
+                color="primary"
+                )
                 span(v-text="link.text")
 
 </template>

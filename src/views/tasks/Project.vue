@@ -9,7 +9,7 @@ v-container(fluid)
               v-col(
                 v-for="(value, key) in statuses"
                 :class="[value == 0 ? 'fadedIfStatusZero': '']"
-                :key="value"
+                :key="key"
               )
                 v-progress-circular(
                   size="100"
@@ -32,7 +32,7 @@ v-container(fluid)
             )
     v-row
         v-col(cols="12")
-            TasksItem(
+            tasks-item(
                 v-if="details._id"
                 v-bind:docid="details._id"
             )
@@ -75,7 +75,7 @@ v-container(fluid)
             md="12"
             lg="6"
             )
-              TasksItem(v-bind:docid="doc._id")
+              tasks-item(v-bind:docid="doc._id")
 </template>
 
 <script>

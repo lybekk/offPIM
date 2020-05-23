@@ -1,5 +1,4 @@
 <template lang="pug">
-  v-row
     v-dialog(
       v-model="dialog" 
       max-width="50vw"

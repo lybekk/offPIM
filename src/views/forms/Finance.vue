@@ -34,7 +34,7 @@
                                 v-row
                                     v-text-field(
                                         v-model="newEntry.name"
-                                        :label="`${newEntry.type} label`"
+                                        :label="`Budget entry label`"
                                         hint="Label distinguishing it from the rest"
                                     )
                                     v-text-field(
@@ -42,8 +42,8 @@
                                         label="Institution"
                                         hint="If entry relates to an institution"
                                     )
-
                                     v-text-field(
+                                        v-if="formType == 'transaction' || formType == 'budget'"
                                         v-model="newEntry.amount"
                                         label="Amount"
                                         type="number"
@@ -62,12 +62,6 @@
                                         v-model="newEntry.recipient"
                                         hint="What account received the dough"
                                         label="Recipient"
-                                    )
-                                    v-text-field(
-                                        v-model="newEntry.amount"
-                                        hint="Enter a positive value in your local currency"
-                                        type="number"
-                                        label="Amount"
                                     )
                             v-col(cols="12" md="6")
                                 p Transaction date
@@ -194,7 +188,7 @@ export default {
         // type:Transaction specific
         sender: null, //from //company: (plan for lookup here)
         recipient: null, //to //company: (plan for lookup here)
-        amount: 0,
+        amount: 0.0,
         date: new Date().toISOString().substring(0, 10)
     },
   

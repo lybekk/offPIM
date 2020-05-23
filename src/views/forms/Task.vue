@@ -13,6 +13,7 @@
                     v-col(cols="12")
                       v-text-field(
                         v-model="newTask.title"
+                        autofocus
                         label="Title"
                       )
                     v-col(cols="12")
@@ -113,10 +114,10 @@
 </template>
 
 <script>
-import SubmitButton from "@/components/form/submit"
+import SubmitButton from "@/components/form/submit";
 
 export default {
-    name: 'formsNewTask',
+  name: "formsNewTask",
   components: {
     SubmitButton
   },
@@ -135,27 +136,27 @@ export default {
       due: new Date().toISOString(),
       end: null,
       project: null,
-      context: null,
-    },
+      context: null
+    }
   }),
   computed: {
     doc() {
       var now = new Date().toISOString();
-      const doc = {...this.newTask}
+      const doc = { ...this.newTask };
       doc.created = now;
       doc.start = now;
       doc.priority = parseInt(this.newTask.priority); // TODO - use Vue's built-in number handling
 
       if (doc.type == "project") {
         delete doc.project;
-      } 
+      }
 
-      return doc
+      return doc;
     },
     tagsListItems: function() {
       let tl = this.$store.getters.getTagList;
 
-      let a = tl.map((obj) => {
+      let a = tl.map(obj => {
         return obj.key;
       });
 
@@ -170,7 +171,7 @@ export default {
         let old = this.newTask.due.substring(0, 10);
         var newDate = this.newTask.due.replace(old, pickerValue);
         this.newTask.due = newDate;
-      },
+      }
     },
     pickerTime: {
       get() {
@@ -181,30 +182,29 @@ export default {
         let old = this.newTask.due.substring(11, 16);
         var newTime = this.newTask.due.replace(old, pickerValue);
         this.newTask.due = newTime;
-      },
+      }
     },
     // TODO - use Vue's built-in number handling
-    newTaskPriority: { 
+    newTaskPriority: {
       get() {
         return this.newTask.priority.toString();
       },
       set(radioValue) {
         this.newTask.priority = parseInt(radioValue);
-      },
+      }
     },
     projectList: function() {
       let pl = this.$store.getters.getOpenProjects;
-      let arr = pl.map((obj) => {
-            return { text: obj.title, value: obj._id };
+      let arr = pl.map(obj => {
+        return { text: obj.title, value: obj._id };
       });
-      return arr.sort((a, b) => (a.text > b.text) - (a.text < b.text) );
-    },
-  },
-  mounted () {
-    if (!this.$store.getters.getOpenProjects.length) {
-      this.$store.dispatch('populateOpenProjects');
+      return arr.sort((a, b) => (a.text > b.text) - (a.text < b.text));
     }
   },
-
-}
+  mounted() {
+    if (!this.$store.getters.getOpenProjects.length) {
+      this.$store.dispatch("populateOpenProjects");
+    }
+  }
+};
 </script>

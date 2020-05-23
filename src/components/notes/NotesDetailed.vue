@@ -5,25 +5,6 @@
         scrollable
     )
         v-card
-            v-card-title
-                v-btn(
-                    class="mt-6"
-                    text
-                    color="warning"
-                    @click="hideNote"
-                ) close
-                v-btn(
-                    class="mt-6"
-                    text
-                    color="primary"
-                    @click="archiveNote"
-                ) Archive
-                v-btn(
-                    class="mt-6"
-                    text
-                    color="error"
-                    @click="deleteNote"
-                ) Delete
             v-card-text
                 v-container
                     v-row
@@ -32,10 +13,12 @@
                                 :value="selectedNote.title"
                                 label="Title"
                                 @change="setTitle"
+                                class="title"
                             )
                             v-textarea(
                                 :value="selectedNote.description"
-                                filled
+                                rows="2"
+                                auto-grow
                                 label="Description"
                                 @change="setDescription"
                             )
@@ -50,7 +33,20 @@
                     v-row
                         v-col
                             p(v-text="selectedNote._id")
-
+            v-card-actions
+              v-spacer
+              v-btn(
+                  class="mt-6"
+                  text
+                  color="primary"
+                  @click="archiveNote"
+              ) Archive
+              v-btn(
+                  class="mt-6"
+                  text
+                  color="error"
+                  @click="deleteNote"
+              ) Delete
 </template>
 
 <script>

@@ -23,6 +23,7 @@
                         v-text-field(
                             v-model="newEntry.subject"
                             label="Subject"
+                            autofocus
                             dense
                         )
                     v-col(cols="12")

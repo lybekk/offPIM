@@ -71,9 +71,8 @@ const finances = {
             context.commit('flushData');
             const mango = {
                 "selector": {
-                    "realm": "finance",
+                    "finance": true,
                     "type": type
-                    //"type": "transaction"
                 },
                 "limit": 100
             };

@@ -8,7 +8,12 @@
                 v-container
                     v-row(dense='')
                         v-col(cols='12')
-                            v-text-field(v-model='newEntry.title', label='Title', dense='')
+                            v-text-field(
+                                v-model='newEntry.title'
+                                label='Title'
+                                autofocus
+                                dense
+                                )
                         v-col(cols='12')
                             v-text-field(v-model='newEntry.category', label='Category', dense='')
                         v-col(cols='12')

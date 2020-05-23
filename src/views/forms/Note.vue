@@ -8,11 +8,24 @@
           v-container
             v-row
               v-col(cols='12')
-                v-text-field(v-model='newNote.title', label='Title')
+                v-text-field(
+                  v-model='newNote.title'
+                  label='Title'
+                  autofocus
+                  )
               v-col(cols='12')
-                v-textarea(v-model='newNote.description', label='Description', filled='')
+                v-textarea(
+                  v-model='newNote.description'
+                  label='Description'
+                  filled
+                  )
               v-col(cols='12')
-                v-combobox(v-model='newNote.tags', :items='tagsListItems', label='Tags', multiple='', chips='')
+                v-combobox(
+                  v-model='newNote.tags'
+                  :items='tagsListItems'
+                  label='Tags'
+                  multiple
+                  chips)
           small *indicates required field
 
 </template>
@@ -53,6 +66,11 @@ export default {
       doc.created = new Date().toISOString();
       doc.start = new Date().toISOString();
       return doc;
+    }
+  },
+  mounted() {
+    if (!this.$store.getters.getTagList.length) {
+      this.$store.dispatch("populateTagsList");
     }
   }
 };

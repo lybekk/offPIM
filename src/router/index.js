@@ -84,7 +84,7 @@ const routes = [
         component: () => import(/* webpackChunkName: "notes" */ '../views/notes/Tag.vue'),
         props: true
       },
-    ]    
+    ]
   },
   {
     path: '/logbook',
