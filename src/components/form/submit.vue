@@ -24,7 +24,10 @@ export default {
             console.log(this.doc);
             const response = await this.putDoc(this.doc);
             if (response.ok) {
-                this.insertedOK = true
+                this.insertedOK = true;
+                const routeInfo = window.localStorage.getItem('currentRoute');
+                const r = JSON.parse(routeInfo);
+                this.$router.push({ name: r.name, params: r.params })
             } else {
                 this.insertedOK = false
             }

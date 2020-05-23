@@ -73,7 +73,7 @@
             bottom
             right
             absolute
-            to="/new"
+            @click="openNewEntryForm"
           )
             v-icon mdi-plus
     v-scroll-x-transition(mode="out-in")
@@ -191,7 +191,17 @@ export default {
         this[`design_${docId}`] = true;
         console.log("Insert result: ", result);
       }
-    }
+    },
+
+    openNewEntryForm: function() {
+      const routeInfo = {
+        name: this.$route.name,
+        params: this.$route.params,
+      }
+      window.localStorage.setItem('currentRoute', JSON.stringify(routeInfo));
+      this.$router.push({ name: 'formsNew' })
+    },
+
   }
 };
 </script>
