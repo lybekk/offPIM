@@ -1,6 +1,6 @@
 <template lang="pug">
     v-bottom-sheet(
-        v-model="dialog"
+        v-model="dialogItemDetailed"
         :inset="$vuetify.breakpoint.mdAndUp"
         scrollable
     )
@@ -12,15 +12,15 @@
                             v-text-field(
                                 :value="selectedNote.title"
                                 label="Title"
-                                @change="setTitle"
                                 class="title"
+                                @change="setDocField('title',$event)"
                             )
                             v-textarea(
                                 :value="selectedNote.description"
                                 rows="2"
                                 auto-grow
                                 label="Description"
-                                @change="setDescription"
+                                @change="setDocField('description',$event)"
                             )
                             v-combobox(
                                 v-model="tags"
@@ -28,8 +28,9 @@
                                 label="Tags"
                                 multiple
                                 chips
-                                @change="setTags"
+                                @change="setDocField('tags',$event)"
                             )
+                              //- TODO: Implement another setDocField for arrays, like tags, with validation
                     v-row
                         v-col
                             p(v-text="selectedNote._id")
@@ -51,24 +52,14 @@
 
 <script>
 import pouchMixin from "@/mixins/pouchMixin";
+import itemDetailedMixin from "@/mixins/itemDetailedMixin";
 
 export default {
   name: "NotesDetailed",
-  mixins: [pouchMixin],
+  mixins: [pouchMixin, itemDetailedMixin],
   computed: {
     selectedNote() {
-      return this.$store.getters.selectedNote;
-    },
-    dialog: {
-      get: function() {
-        return this.$store.getters.dialogItemDetailed;
-      },
-      set: function(val) {
-        const mutation = val
-          ? "dialogItemDetailedShow"
-          : "dialogItemDetailedHide";
-        this.$store.commit(mutation, "dialogItemDetailed");
-      }
+      return this.$store.getters.selectedDoc;
     },
     tags: {
       get: function() {
@@ -107,25 +98,6 @@ export default {
         this.deleteDoc(this.selectedNote._id);
         this.hideNote();
       }
-    },
-
-    setTitle: function(text) {
-      this.setField("title", text);
-    },
-
-    setDescription: function(text) {
-      this.setField("description", text);
-    },
-
-    setTags: function(tags) {
-      this.setField("tags", tags);
-    },
-
-    setField: async function(key, value) {
-      let doc = await this.getDoc(this.selectedNote._id);
-      doc[key] = value;
-      await this.putDoc(doc);
-      this.$store.dispatch("refreshDoc", this.selectedNote._id);
     }
   }
 };

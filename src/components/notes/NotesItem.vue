@@ -4,16 +4,16 @@
       v-card(
         hover 
         ripple 
-        :disabled="isDeleted(item._id)" 
-        :flat="isDeleted(item._id)"
+        :disabled="isDeleted(doc._id)" 
+        :flat="isDeleted(doc._id)"
       )
         v-card-title(
           class="subheading" 
-          @click="showSheet"
-        ) {{ item.title }}
+          @click="showItemDetailed"
+        ) {{ doc.title }}
         v-card-subtitle(
-          @click="showSheet"
-        ) {{ item.description }}
+          @click="showItemDetailed"
+        ) {{ doc.description }}
         v-card-actions
           v-spacer
           v-fab-transition
@@ -35,13 +35,13 @@
                 fab
                 small
                 color="yellow lighten-2"
-                @click="deleteDoc(item._id)"
+                @click="deleteDoc(doc._id)"
               )
                 v-icon(color="black") mdi-radioactive
 
         v-fade-transition
           v-overlay(
-            v-if="isDeleted(item._id)"
+            v-if="isDeleted(doc._id)"
             absolute
             color="error"
             z-index="3"
@@ -49,7 +49,7 @@
             v-btn(text) Deleted
         v-fade-transition
           v-overlay(
-            v-if="item.archived"
+            v-if="doc.archived"
             absolute
             color="info"
             z-index="3"
@@ -60,12 +60,16 @@
 
 <script>
 import pouchMixin from "@/mixins/pouchMixin";
+import itemMixin from "@/mixins/itemMixin";
 
 export default {
   name: "NotesItems",
   components: {},
-  mixins: [pouchMixin],
-  props: ["item"],
+  mixins: [
+    pouchMixin,
+    itemMixin
+    ],
+  props: ["doc"],
   data: () => ({
     trashIconClicked: false,
     itemsPerPage: 8
@@ -85,10 +89,6 @@ export default {
     toggleTrashIcon: function() {
       this.trashIconClicked = !this.trashIconClicked;
     },
-    showSheet: function() {
-      this.$store.commit("setSelectedNote", this.item);
-      this.$store.commit("dialogItemDetailedShow");
-    }
   }
 };
 </script>

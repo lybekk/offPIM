@@ -13,15 +13,15 @@
                 template(v-slot:default="props")
                     v-row
                         v-col(
-                            v-for="item in props.items"
-                            :key="item._id"
+                            v-for="doc in props.items"
+                            :key="doc._id"
                             cols="12"
                             sm="6"
                             md="4"
                             lg="3"
                         )
                             notes-item(
-                                v-bind:item="item"
+                                v-bind:doc="doc"
                             )
 </template>
 
