@@ -11,12 +11,16 @@ export default {
             }
         },
 
-        getDoc: async function (id) {
+        getDoc: async function (id, silent = false) {
             try {
                 const result = await window.db.get(id);
                 return result
             } catch (error) {
-                this.$store.dispatch("infoBridge", { color: 'error', text: error, level: 'error' });
+                let obj = { color: 'error', text: error, level: 'error' };
+                if (silent) {
+                    obj.silent = true;
+                }
+                this.$store.dispatch("infoBridge", obj);
             }
         },
 
@@ -118,7 +122,6 @@ export default {
                     });
                 return data
             } catch (error) {
-                //this.errorHandler(error)
                 this.$store.dispatch("infoBridge", { color: 'error', text: error, level: 'error' });
             }
         },
@@ -127,12 +130,15 @@ export default {
             let context = this;
             context.$store.commit('loaderActive');
             let options = {
-                startkey: startKey,
-                endkey: endKey,
                 limit: 100, // consider controlling this value with vuex
                 reduce: false,
                 include_docs: false
             };
+            if (startKey) {
+                options.startkey = startKey;
+                options.endkey = endKey;
+            }
+
             if (includeDocs) { options.include_docs = true }
 
             let result = [];

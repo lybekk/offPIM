@@ -37,7 +37,6 @@ export default new Vuex.Store({
     localDBInfo: {},
     dbConnectionEstablished: false,
     dbConnectionDialog: false,
-    dialogItemDetailed: false,
     navItems: [],
     deleted: [],
     snackbar: {
@@ -55,6 +54,12 @@ export default new Vuex.Store({
     // Raw Document/JSON viewer
     rawDocumentViewerDialog: false,
     rawDocumentViewerDocument: { _id: null },
+
+    /**
+     * Detailed item dialog
+     */
+    dialogItemDetailed: false,
+    selectedDoc: {},
 
     /**
      * Session logs - used for debugging and general logging

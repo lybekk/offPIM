@@ -145,7 +145,7 @@ export default {
   infoBridge: function (context, obj) {
     obj.created = new Date().toISOString();
 
-    if (obj.color) {
+    if (obj.color && !obj.silent) {
       context.commit("showSnackbar", obj);
     }
 

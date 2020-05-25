@@ -143,4 +143,8 @@ export default {
     state.sessionLogs.push(doc)
   },
 
+  setSelectedDoc(state, doc) {
+    state.selectedDoc = doc;
+  },
+
 }

@@ -61,32 +61,46 @@ v-list
       template(v-slot:activator)
         v-list-item-content
           v-list-item-title Concepts
-      v-list-item(link to="/finances")
+      v-list-item(
+        v-for="link in concepts"
+        link :to="{ name: link.name }"
+        )
         v-list-item-action
-          v-icon mdi-cash
+          v-icon(v-text="link.icon")
         v-list-item-content
-          v-list-item-title Finances
-      v-list-item(link to="/inventory")
-        v-list-item-action
-          v-icon mdi-package-variant
-        v-list-item-content
-          v-list-item-title Inventory
-      v-list-item(link to="/maps")
-        v-list-item-action
-          v-icon mdi-map
-        v-list-item-content
-          v-list-item-title Maps
-      v-list-item(link to="/themes")
-        v-list-item-action
-          v-icon mdi-palette
-        v-list-item-content
-          v-list-item-title Themes
+          v-list-item-title(
+            v-text="link.name"
+            style="text-transform: capitalize;"
+            )
+
 </template>
 
 <script>
 export default {
   name: 'NavbarApps',
   data: () => ({
+    concepts: [
+      {
+        name: 'contacts',
+        icon: 'mdi-account'
+      },
+      {
+        name: 'finances',
+        icon: 'mdi-cash'
+      },
+      {
+        name: 'inventory',
+        icon: 'mdi-package-variant'
+      },
+      {
+        name: 'maps',
+        icon: 'mdi-map'
+      },
+      {
+        name: 'themes',
+        icon: 'mdi-palette'
+      },
+    ]
   }),
   computed: {
     badgeMessagesUnread: function () {

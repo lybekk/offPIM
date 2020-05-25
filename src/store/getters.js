@@ -87,4 +87,8 @@ export default {
     return state.sessionLogs
   },
 
+  selectedDoc: state => {
+    return state.selectedDoc
+  }
+
 }
