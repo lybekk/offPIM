@@ -15,6 +15,7 @@
                         v-model="newTask.title"
                         autofocus
                         label="Title"
+                        filled
                       )
                     v-col(cols="12")
                       v-textarea(
@@ -38,13 +39,14 @@
                             label="Project"
                             item-text="text"
                             item-value="value"
+                            filled
                         )
                     v-col(cols="12" sm="6")
                         v-combobox(
                             v-model="newTask.tags"
                             :items="tagsListItems"
                             label="Tags"
-                            outlined
+                            filled
                             multiple
                             chips
                         )
@@ -72,6 +74,7 @@
                                     prepend-icon="mdi-calendar"
                                     readonly
                                     v-on="on"
+                                    filled
                                 )
                             v-date-picker(v-model="pickerDate" @input="dateModal = false")
                     v-col(cols="11" sm="5")
@@ -93,6 +96,7 @@
                                     prepend-icon="mdi-clock"
                                     readonly
                                     v-on="on"
+                                    filled
                                 )
                             v-time-picker(
                                 v-if="timeModal"

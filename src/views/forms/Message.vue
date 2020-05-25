@@ -11,20 +11,20 @@
                         v-text-field(
                             v-model="newEntry.sender"
                             label="Sender"
-                            dense
+                            filled
                         )
                     v-col(cols="6")
                         v-text-field(
                             v-model="newEntry.recipient"
                             label="Recipient"
-                            dense
+                            filled
                         )
                     v-col(cols="12")
                         v-text-field(
                             v-model="newEntry.subject"
                             label="Subject"
                             autofocus
-                            dense
+                            filled
                         )
                     v-col(cols="12")
                         v-textarea(
@@ -32,7 +32,6 @@
                             label="Message body"
                             rows="3"
                             filled
-                            dense
                         )
                     v-col(cols="12")
                         v-combobox(
@@ -41,7 +40,7 @@
                             label="Tags"
                             multiple
                             chips
-                            dense
+                            filled
                         )
 
 </template>

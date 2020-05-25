@@ -36,11 +36,13 @@
                                         v-model="newEntry.name"
                                         :label="`Budget entry label`"
                                         hint="Label distinguishing it from the rest"
+                                        filled
                                     )
                                     v-text-field(
                                         v-model="newEntry.institution"
                                         label="Institution"
                                         hint="If entry relates to an institution"
+                                        filled
                                     )
                                     v-text-field(
                                         v-if="formType == 'transaction' || formType == 'budget'"
@@ -48,6 +50,7 @@
                                         label="Amount"
                                         type="number"
                                         hint="Enter a positive value in your local currency"
+                                        filled
                                     )
                         //- Transaction specific
                         v-row(v-if="formType == 'transaction'")
@@ -57,11 +60,13 @@
                                         v-model="newEntry.sender"
                                         hint="What account sent the dough"
                                         label="Sender"
+                                        filled
                                     )
                                     v-text-field(
                                         v-model="newEntry.recipient"
                                         hint="What account received the dough"
                                         label="Recipient"
+                                        filled
                                     )
                             v-col(cols="12" md="6")
                                 p Transaction date
@@ -76,6 +81,7 @@
                                 v-model="newEntry.name"
                                 hint="Name distinguishing this account from the rest"
                                 label="Name"
+                                filled
                             )
                             v-text-field(
                                 v-model="newEntry.number"

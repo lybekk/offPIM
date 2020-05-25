@@ -12,6 +12,7 @@
                   v-model='newNote.title'
                   label='Title'
                   autofocus
+                  filled
                   )
               v-col(cols='12')
                 v-textarea(
@@ -25,7 +26,9 @@
                   :items='tagsListItems'
                   label='Tags'
                   multiple
-                  chips)
+                  chips
+                  filled
+                  )
           small *indicates required field
 
 </template>
