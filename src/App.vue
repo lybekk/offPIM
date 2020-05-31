@@ -55,7 +55,7 @@
           v-tab(
             v-for="(tab, i) in $store.getters.appBarTabs" 
             :key="i"
-            :to="{ name: tab.to }"
+            :to="{ name: tab.to, params: tab.params }"
           ) {{ tab.name }}
             v-icon(v-text="tab.icon")
         v-progress-linear(

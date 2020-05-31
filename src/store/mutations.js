@@ -134,7 +134,6 @@ export default {
 
   refreshDoc(state, doc) {
     const index = state.data.findIndex(({ _id }) => _id === doc._id);
-    console.log(index)
     console.log(this)
     Vue.set(state.data, index, doc)
   },

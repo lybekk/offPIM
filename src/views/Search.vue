@@ -84,6 +84,24 @@ export default {
         "recipient",
         "subject",
         "body",
+        // Contacts
+        "givenName",
+        "familyName",
+        "additionalName",
+        "gender",
+        "nationality",
+        "spouse",
+        "@type",
+        "keywords",
+        "birthDate",
+        "knowsAbout",
+        "knowsLanguage",
+        "jobTitle",
+        "telephone",
+        "email",
+        "url",
+        "additionalType",
+        "legalName",
       ];
 
       this.lunrIndex = lunr(function() {
@@ -93,8 +111,29 @@ export default {
         fieldList.forEach((element) => {
           this.field(element);
         });
-        //this.field("title", { boost: 10 });
 
+
+        // Contacts
+        // TODO: register "contactPoint",
+        let addressFields = [
+          "streetAddress",
+          "addressLocality",
+          "postalCode",
+          "addressRegion",
+          "addressCountry"
+        ]
+        // Nested contact properties
+        for (let field of addressFields) {
+          this.field(field, {
+            extractor: function (doc = {}) {
+              if (doc.address) {
+                return doc.address[field]
+              }
+            }
+          })
+        }
+
+        // Heavy load
         documents.rows.forEach(function(doc) {
           this.add(doc.doc);
         }, this);
@@ -102,6 +141,7 @@ export default {
 
       this.indexReady = true;
     },
+
     beginSearch: async function() {
       this.searchInProgress = true;
 

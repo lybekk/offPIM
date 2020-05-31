@@ -129,8 +129,11 @@ export default {
         getQuery: async function (view, startKey, endKey, includeDocs = false) {
             let context = this;
             context.$store.commit('loaderActive');
+
+            let queryLimit = view === 'offpim/contacts-all' ? 1000 : 100;
+
             let options = {
-                limit: 100, // consider controlling this value with vuex
+                limit: queryLimit, // consider controlling this value with vuex
                 reduce: false,
                 include_docs: false
             };

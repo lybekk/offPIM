@@ -20,7 +20,7 @@ export default {
   data: () => ({
     title: "",
     description: "",
-    icon: "mdi-report",
+    icon: "mdi-report"
   }),
   computed: {},
   mounted() {
@@ -32,10 +32,7 @@ export default {
       // TODO - If supported item (task,note,logbook) open in relevant app, else show json
       this.$store.dispatch("setRawDocumentViewerDocument", id);
     },
-    rawJSON: function() {
-      // Not in use ATM
-      console.log("Action clicked");
-    },
+
     formatResult: function() {
       const d = this.doc;
       if (d.productivity || d.logbook) {
@@ -60,8 +57,19 @@ export default {
         this.icon = "mdi-email";
       }
 
+      if (d["@type"]) {
+        let t = d["@type"];
+
+        this.title =
+          t == "Person" ? d.givenName + " " + d.familyName : d.legalName;
+        this.description = d.description
+          ? d.description.slice(0, 150) + "..."
+          : "Contact";
+        this.icon = t == "Person" ? "mdi-account" : "mdi-domain";
+      }
+
       // TODO - if icon remains mdi-info, send to debug-log
-    },
-  },
+    }
+  }
 };
 </script>

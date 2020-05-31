@@ -1,6 +1,6 @@
 {
   "_id": "_design/offpim",
-  "version": 20200523,
+  "version": 20200530,
   "views": {
     "messages-tag-count": {
       "reduce": "_count",
@@ -63,7 +63,7 @@
       "map": "function (doc) {\n  if (doc.productivity \n      && doc.type === \"project\") {\n    emit(doc.status);\n  }\n}"
     },
     "contacts-all": {
-      "map": "function (doc) {\n  if (doc.contacts) {\n    emit(doc._id);\n  }\n}"
+      "map": "function (doc) {\n  if (doc['@type'] == 'Person' || doc['@type'] == 'Organization') {\n    emit(doc._id);\n  }\n}"
     }
   },
   "language": "javascript"

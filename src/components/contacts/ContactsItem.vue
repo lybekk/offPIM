@@ -3,11 +3,18 @@
         @click="showItemDetailed"
         )
         v-list-item-avatar(color="secondary")
-            v-icon(v-if="doc.type == 'person'") mdi-account
+            v-icon(v-if="doc['@type'] == 'Person'") mdi-account
             v-icon(v-else) mdi-domain
         v-list-item-content
-            v-list-item-title(v-text="displayedName")
-    
+            v-list-item-title(
+              class="title font-regular"
+              v-text="displayedName"
+            )
+            v-list-item-subtitle(
+              v-if="doc['@type'] == 'Person'"
+              v-text="doc.familyName"
+              class="subtitle-1 font-weight-light"
+            )
 </template>
 
 <script>
@@ -21,7 +28,7 @@ export default {
     displayedName() {
       const d = this.doc;
       if (d.givenName) {
-        return [d.givenName, d.additionalName, d.familyName].join(" ");
+        return [d.givenName, d.additionalName].join(" ");
       } else {
         return d.legalName;
       }
