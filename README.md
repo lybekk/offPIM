@@ -148,7 +148,7 @@ Contributions in any form will be appreciated.
 * Donations, of course
 
 ### Sponsoring
-Using, and downloading [Brave Browser](https://brave.com/lyb569) from [this link](https://brave.com/lyb569) gets me a cup of coffee as well.
+Using, and downloading [Brave Browser](https://brave.com/off167) from [this link](https://brave.com/off167) gets me a cup of coffee as well.
 
 ## Roadmap
 
