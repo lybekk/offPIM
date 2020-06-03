@@ -51,8 +51,9 @@
         v-tabs(
           align-with-title
           icons-and-text
+          show-arrows
         )
-          v-tab(
+          v-tab.body-2.font-weight-medium(
             v-for="(tab, i) in $store.getters.appBarTabs" 
             :key="i"
             :to="{ name: tab.to, params: tab.params }"
