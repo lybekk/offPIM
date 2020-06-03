@@ -7,22 +7,28 @@ v-content
       align="center"
       justify="center"
     )
-      v-col(cols="12")
+      v-col(cols="12" sm="6")
+        v-form(@submit="beginSearch")
+          v-text-field(
+            v-model="searchInput"
+            hide-details
+            placeholder="Search"
+            outlined
+            rounded
+          )
+          v-row(justify="center")
+            v-col(cols="6")
+              v-btn(
+                type="submit"
+                rounded
+                block
+                :loading="searchInProgress"
+                color="primary"
+                ) Search
+              //-@click="beginSearch"
         //- TODO - implement search help 
         //- either/or/both link to lunr.js https://lunrjs.com/guides/searching.html 
         //- Tooltip or container for short help text
-        v-text-field(
-          v-model="searchInput"
-          hide-details
-          placeholder="Search"
-          solo
-        )
-          template(v-slot:append-outer)
-            v-btn(
-              @click="beginSearch"
-              :loading="searchInProgress"
-              color="primary"
-              ) Go
       //-v-col
         //-v-btn(@click="buildIndex") Build index
         //-v-row
