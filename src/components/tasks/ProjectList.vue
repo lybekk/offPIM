@@ -1,7 +1,9 @@
 <template lang="pug">
+  v-sheet(class="pa-2")
     v-treeview(
         :active.sync="active"
         :items="items"
+        :search="search"
         :load-children="fetchProjects"
         :open.sync="open"
         expand-icon="mdi-chevron-down"
@@ -41,20 +43,21 @@ export default {
     },
     active: [],
     avatar: null,
-    open: []
+    open: ["doing"],
+    search: ""
   }),
   computed: {
     items() {
       let arr = [];
-      const keys = Object.keys( this.projects );
+      const keys = Object.keys(this.projects);
       for (let k of keys) {
         arr.push({
           id: k,
           name: k.charAt(0).toUpperCase() + k.slice(1),
           children: this.projects[k]
-        })
+        });
       }
-      return arr
+      return arr;
     },
     closedProjectsSorted: function() {
       const proj = this.closedProjects;
@@ -75,16 +78,22 @@ export default {
   methods: {
     projectTitle(item) {
       if (item.archived) {
-        return `(Archived) ${item.name}`
+        return `(Archived) ${item.name}`;
       } else {
-        return item.name
+        return item.name;
       }
     },
     showProject(id) {
       this.$router.push(`/tasks/project/${id}`);
     },
+
     async fetchProjects(item) {
-      const projects = await this.getQuery('offpim/tasks-projects', item.id, item.id, true);
+      const projects = await this.getQuery(
+        "offpim/tasks-projects",
+        item.id,
+        item.id,
+        true
+      );
       projects.forEach(doc => {
         let obj = {
           id: doc._id,

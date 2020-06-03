@@ -1,4 +1,8 @@
 <template lang="pug">
+  v-lazy(
+    :options="{ threshold: .5 }"
+    transition="slide-y-reverse-transition"
+  )
     v-list-item(link)
       v-fade-transition
         v-overlay(

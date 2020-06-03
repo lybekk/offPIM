@@ -29,7 +29,6 @@ v-container(
             v-model="search"
             clearable
             flat
-            solo-inverted
             hide-details
             prepend-inner-icon="mdi-magnify"
             label="Filter list"
@@ -38,20 +37,19 @@ v-container(
           v-select(
             v-model="sortBy"
             flat
-            solo-inverted
+            solo
             hide-details
             :items="keys"
             prepend-inner-icon="mdi-sort-variant"
-            label="Sort by"
+            label="Sort"
           )
-            //-darken-3
       template(v-slot:default="props")
         v-list(three-line)
           tasks-item(
             v-for="doc in props.items"
             :key="doc._id"
             v-bind:docid="doc._id"
-            )
+          )
 </template>
 
 <script>

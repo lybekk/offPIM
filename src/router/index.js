@@ -57,8 +57,13 @@ const routes = [
     path: '/tasks',
     name: 'tasks',
     component: () => import(/* webpackChunkName: "tasks" */ '../views/Tasks.vue'),
-    redirect: 'tasks/list/today',
+    redirect: 'tasks/overview',
     children: [
+      {
+        path: 'overview',
+        name: 'tasksOverview',
+        component: () => import(/* webpackChunkName: "tasks" */ '../views/tasks/Overview.vue')
+      },
       {
         path: 'list/:list',
         name: 'tasksList',
@@ -74,7 +79,7 @@ const routes = [
         path: 'completed_projectless',
         name: 'completedProjectless',
         component: () => import(/* webpackChunkName: "tasksList" */ '../views/tasks/ArchivalCompletedProjectless.vue')
-      }
+      },
     ]
   },
   {
@@ -102,7 +107,7 @@ const routes = [
     component: () => import(/* webpackChunkName: "maps" */ '../views/Maps.vue')
   },
   {
-    path: '/messages',
+    path: '/messages/:tag?',
     name: 'messages',
     component: () => import(/* webpackChunkName: "messages" */ '../views/Messages.vue')
   },
