@@ -1,117 +1,81 @@
 <template lang="pug">
-    div
-        //- TODO This component is planned for use in dashboard and Tasks
-        //- 
-        //- consider list item w/icon and count
-        v-progress-linear(
-            value="15"
-            rounded
-        )
-        p {{ countOpen.totalOpen }}
+v-card
+    v-card-title Tasks by status
+    v-card-text
+        v-list
+            v-list-item(
+                v-for="status in statusList"
+                :key="status"
+                :to="`/tasks/list/status${status}`"
+            )
+                v-list-item-icon
+                    v-icon(
+                        :color="$store.getters.getStatusColors[status]"
+                        v-text="$store.getters.getStatusIcons[status]"
+                    )
+                v-list-item-content
+                    v-badge(
+                        v-if="statusCount(status) != 0"
+                        :color="$store.getters.getStatusColors[status]"
+                        :content="statusCount(status)"
+                        inline
+                    )
+                        v-list-item-title(
+                            v-text="status"
+                            class="text-capitalize"
+                        )
+                    v-list-item-subtitle
+                        v-progress-linear(
+                            :color="$store.getters.getStatusColors[status]"
+                            :value="statusCount(status) * 100 / totalOpenTasks"
+                            rounded
+                        )
 </template>
 
 <script>
 export default {
     name: 'metricsstatuses',
     data: () => ({
-        //taskStatuses: ['wait','plan','todo','next','doing'],
-        //values: [],
-        //taskStatuses: ['wait','plan','todo','next','doing'],
-        //statuses: {
-        //    wait() {return 'cool'},
-        //}
     }),
     computed: {
-        countOpen: function() {
-            const v = this.$store.getters.getTaskStatuses;
-            const statusList = ['wait','plan','todo','next','doing'];
-            let totalOpen = 0;
-            //const statuses = [];
 
-            for (let x of statusList) {
-                totalOpen += v[x]
-            }
-
-            return totalOpen
-
-            //for (let x of statusList) {
-                //totalOpen += v[x];
-                //return el += v[x];
-                //return el += v[x];
-                //statuses.push( { x: v[x] } )
-                // [x] = v[x];
-                //console.log(x)
-                //return v[status]
-            //}
-
-            //return y
-
-            //return {
-            //    totalOpen: totalOpen,
-            //    statuses: statuses
-            //}
-            //return 
-
-            //return {
-                //totalOpen: function() {
-                    //return 'shit'
-                    //return statusList.forEach(status => { return v[status] })
-                    //return function() {for (let x in statusList) {
-                    //    //totalOpen++
-                    //    return v[status]
-                    //}}
-                //},
-                //totalOpen2: function() {
-                //    //statusList.forEach(status => { return v[status] })
-                //    for (let x in statusList) {
-                //        totalOpen++
-                //        console.log(x)
-                //    }
-                //},
-                //statuses:() => (
-                //    //statusList.forEach(status => {
-                //    ['wait','plan','todo','next','doing'].forEach(status => {
-                //        totalOpen += v[status];
-                //        totalOpen++;
-                //        return { jau: 'cool' }
-                //    }),
-                //)
-            //}
-
-            //return ['wait','plan','todo','next','doing'].forEach(status => {
-            //    //return this.$store.getters.getTaskStatuses[status];
-            //    return v.$store.getters.getTaskStatuses[status];
-            //});
+        statusList() {
+            const list = [
+                'doing',
+                'next',
+                'todo',
+                'plan',
+                'wait'
+            ];
+            const s = this.$store.getters.getTaskStatuses;
+            return list.filter(function (status) {
+                return s[status]
+            })
         },
-/*
-        statusPercent() {
-            //const ts = this.$store.getters.getTaskStatuses;
-            const statusesNew = ['wait','plan','todo','next','doing'].forEach(status => {
-                const ts = this.$store.getters.getTaskStatuses[status];
-            });
+
+        totalOpenTasks() {
+            const s = this.$store.getters.getTaskStatuses;
+            let sum = s.wait + s.plan + s.todo + s.next + s.doing;
+            return sum
         },
-        */
     },
     mounted () {
-        //const ts = this.$store.getters.getTaskStatuses;
-        //ts.forEach( element => {
-        //this.taskStatuses.forEach( status => {
-        //});
-        //this.initial()
+        const s = this.$store.getters.getTaskStatuses;
+        let total = Object.values(s).reduce(
+            ( accumulator, currentValue ) => accumulator + currentValue, 0
+        )
+
+        if (!total) {
+            this.$store.dispatch('getTaskStatuses');
+        }
+
     },
     methods: {
-        //fillDataTable: async function() {
-        //initial: function() {
-        //    //const ts = this.$store.getters.getTaskStatuses;
-        //    ['wait','plan','todo','next','doing'].forEach(status => {
-        //        const ts = this.$store.getters.getTaskStatuses;
-        //        ts[status];
-        //        this.values.push({
-        //            status: status,
-        //            isPercentOfOpenTasks: ,
-        //        })
-        //    });
-        //}
+        statusCount: function(status) {
+            let list = this.$store.getters.getTaskStatuses;
+            return list[status]
+        },
+
     }
 
 

@@ -34,7 +34,8 @@ v-content
     v-row
       v-col
         v-card
-          v-card-title Tasks
+          v-card-title Tasks 
+            span.headline.info--text {{ totalOpenTasks }}
           v-card-text
             v-container(fluid)
               v-row
@@ -69,29 +70,17 @@ v-content
                     transition="scale-transition"
                     type="image"
                   )
-                    chart-task-statuses
+                    metrics-statuses
+                v-col(                  
+                  md="6"
+                  lg="3"
+                )
+                  metrics-priorities
                 v-col(
                   md="6"
                   lg="3"
                 )
                   chart-tasks-today
-                // TODO - Work in progress - lighter variant of status chart
-                //v-col(
-                  md="6"
-                  lg="3"
-                  )
-                  metrics-statuses
-                v-col(
-                  md="6"
-                  lg="3"
-                )
-                  v-card(elevation="1")
-                    v-list
-                      v-list-item
-                        v-list-item-content
-                          v-list-item-title(class="subtitle") Open tasks
-                        v-list-item-action
-                          v-list-item-action-text(class="title") {{ totalOpenTasks }}
   v-footer 
     v-container
       v-row
@@ -149,20 +138,19 @@ v-content
 </template>
 
 <script>
-import ChartTaskStatuses from "@/components/charts/ChartTaskStatuses.vue"
 import ChartTasksToday from "@/components/charts/ChartTasksToday.vue"
 import formatMixin from '@/mixins/formatMixin'
 import { mapGetters } from 'vuex'
 
 import MetricsStatuses from "@/components/tasks/MetricsStatuses.vue"
-
+import MetricsPriorities from "@/components/tasks/MetricsPriorities.vue"
 
 export default {
   name: 'dashboard',
   components: {
-    ChartTaskStatuses,
     ChartTasksToday,
-    MetricsStatuses
+    MetricsStatuses,
+    MetricsPriorities
   },
   mixins: [formatMixin],
   data: () => ({
