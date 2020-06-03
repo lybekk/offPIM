@@ -3,6 +3,11 @@ export default {
   isLeftDrawerOpen: state => {
     return state.leftDrawer
   },
+
+  isRightDrawerOpen: state => {
+    return state.rightDrawer
+  },
+
   localDBInfo: state => {
     return state.localDBInfo
   },

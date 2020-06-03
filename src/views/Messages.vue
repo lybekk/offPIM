@@ -14,7 +14,7 @@
       v-divider
       v-list(dense nav)
         v-list-item(
-          @click="getMessagesByTag(false)"
+          :to="{ name: 'messages'}"
         )
           v-list-item-icon
             v-icon mdi-inbox
@@ -27,7 +27,7 @@
             ) 0
         v-list-item(
           title="Messages without tags end up here"
-          @click="getMessagesByTag('untagged')"
+          :to="{ name: 'messages', params: { tag: 'untagged'}}"
         )
           v-list-item-icon
             v-icon mdi-inbox
@@ -42,7 +42,7 @@
           v-list-item(
             v-for="(tag, i) in tagList"
             :key="i"
-            @click="getMessagesByTag(tag.key)"
+            :to="{ name: 'messages', params: { tag: tag.key }}"
           )
             v-list-item-icon
               v-icon mdi-tag
@@ -72,14 +72,9 @@
           @click.stop="drawerRight = !drawerRight"
         )
       messages-messagelist(
-        v-bind:message-list="messageList"
         v-bind:search="search"
-        @get-messages-tag-list="getMessagesTagList"
-        @read-message="readMessage"
       )
-      messages-reader(
-        v-bind:msg="activeMessage" 
-      )
+      messages-reader
 
 </template>
 
@@ -100,24 +95,24 @@ export default {
   },
   data: () => ({
     drawerRight: false,
-    messageList: [],
-    tags: [],
     activeTag: null,
-    activeMessageId: null,
     messageReaderDialog: false,
     search: ""
   }),
   computed: {
+
     totalMessages: function() {
       let x = this.$store.getters.getTotals;
       return x.messages;
     },
+
     tagList: function() {
-      let filtered = this.tags.filter(({ key }) => key !== "untagged");
+      let filtered = this.$store.getters.getTagList.filter(({ key }) => key !== "untagged");
       return filtered;
     },
+
     tagListUntaggedOnly: function() {
-      const x = this.tags;
+      const x = this.$store.getters.getTagList;
       const x2 = x.find(({ key }) => key === "untagged");
       if (typeof x2 == "undefined") {
         return 0;
@@ -125,21 +120,16 @@ export default {
         return x2.value;
       }
     },
-    activeMessage: function() {
-      const index = this.messageList.findIndex(
-        ({ _id }) => _id === this.activeMessageId
-      );
-      if (index == -1) {
-        return false;
-      }
-      return this.messageList[index];
-    }
+
   },
-  created: function() {},
+    watch:{
+      $route (){ 
+        this.getMessagesByTag()
+      }
+    },
   mounted() {
     this.$store.dispatch("setMessagesUnreadCount");
-    this.getMessagesByTag(false);
-    this.getMessagesTagList();
+    this.$store.dispatch("populateTagsList", 'offpim/messages-tag-count');
     setTimeout(() => {
       this.drawerRight = true;
     }, 600);
@@ -148,20 +138,22 @@ export default {
     this.drawerRight = false;
   },
   methods: {
-    getMessagesByTag: async function(payload) {
-      this.messageList = [];
-      let tag = payload;
+    getMessagesByTag: async function() {
+
+      const request = this.$route.params.tag;
+      const tag = request ? request : null;
+
       const vuex = this.$store;
+      vuex.commit("flushData");
       vuex.commit("loaderActive");
+
       try {
         const view = !tag
           ? "offpim/messages-unread"
           : "offpim/messages-tag-count";
         const data = await this.getQuery(view, tag, tag, true);
-        for await (let doc of data) {
-          this.messageList.push(doc);
-        }
-        this.getMessagesTagList();
+        this.$store.commit("addDataArray", data);
+        this.$store.dispatch("populateTagsList", 'offpim/messages-tag-count');
       } catch (error) {
         vuex.dispatch("infoBridge", {
           color: "error",
@@ -171,46 +163,28 @@ export default {
       }
       vuex.commit("loaderInactive");
     },
-    getMessagesTagList: async function() {
-      try {
-        var result = await window.db.query("offpim/messages-tag-count", {
-          group: true
-        });
-        this.tags = result.rows;
-      } catch (error) {
-        this.$store.dispatch("infoBridge", {
-          color: "error",
-          text: "Failed fetching message tags: " + error,
-          level: "error"
-        });
-      }
-    },
-    readMessage: function(item) {
-      this.$store.commit("setGenericStateBooleanTrue", "dialogItemDetailed");
-      this.activeMessageId = item._id;
-      if (!item.read) {
-        const index = this.messageList.findIndex(({ _id }) => _id === item._id);
-        let msg = this.messageList[index];
-        msg.read = true;
-        this.putDoc(msg, "silent");
-      }
-    },
 
-    getSessionLogs: function() {
-      this.messageList = [];
+    getSessionLogs: async function() {
       let logs = this.$store.getters.sessionLogs;
-      logs.forEach(log => {
+
+      const list = [];
+      for (const log of logs) {
         let body = '';
         for (var key of Object.keys(log)) {
             body += key + ": " + log[key] + '\n';
         }
 
-        this.messageList.push({
-          sender: "offPIM Info Bridge",
-          body: body
-        });
-      });
+        list.push({
+          sender: { name: "offPIM Info Bridge" },
+          recipient: { name: "offPIM Messages" },
+          messageAttachment: { text: body }
+        });        
+      }
+
+      this.$store.commit("addDataArray", list);
+
     }
+
   }
 };
 </script>

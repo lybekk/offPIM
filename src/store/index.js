@@ -18,7 +18,6 @@ Vue.use(Vuex)
 export default new Vuex.Store({
   state: {
     data: [],
-    leftDrawer: false,
     loaderActive: false,
     buttonFormNewHidden: true,
     remoteDBIsOnline: false,
@@ -51,6 +50,8 @@ export default new Vuex.Store({
 
     // Main App - Global
     appBarTabs: [],
+    leftDrawer: false,
+    rightDrawer: false,
     // Raw Document/JSON viewer
     rawDocumentViewerDialog: false,
     rawDocumentViewerDocument: { _id: null },

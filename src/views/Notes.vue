@@ -91,7 +91,7 @@ export default {
     setTimeout(() => {
       this.drawer = true;
     }, 300);
-    this.$store.dispatch("populateTagsList");
+    this.$store.dispatch("populateTagsList", 'offpim/note-tag-count');
   },
   methods: {
     /**

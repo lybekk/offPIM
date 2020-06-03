@@ -6,12 +6,13 @@
     transition="dialog-bottom-transition"
   )
     v-card(
-      :disabled="isDeleted(msg._id)"
+      v-if="Object.keys(doc).length"
+      :disabled="isDeleted(doc._id)"
     )
-      v-card-title(v-text="msg.subject")
+      v-card-title(v-text="doc.messageAttachment.headline")
       v-fade-transition
         v-overlay(
-          v-if="isDeleted(msg._id)"
+          v-if="isDeleted(doc._id)"
           absolute
           color="error"
           z-index="3"
@@ -27,9 +28,9 @@
             v-icon mdi-account
           v-list-item-content
             v-list-item-title.headline
-              span(v-text="msg.sender")
+              span(v-text="doc.sender.name")
             v-list-item-subtitle.subtitle-1 To:
-              span(class="subtitle" v-text="msg.recipient")
+              span(class="subtitle" v-text="doc.recipient.name")
           v-list-item-action(@click="$store.commit('setGenericStateBooleanFalse', 'dialogItemDetailed');")
             v-btn(text)
               v-icon mdi-close
@@ -37,22 +38,23 @@
         v-row
           v-col(cols="12")
             pre(
-              v-text="msg.body"
+              v-text="doc.messageAttachment.text"
               class="body-2"
               )
           v-col(cols="12")
             v-divider
           v-col.body-1 Created: 
-            time(v-text="new Date(this.msg.created)")
+            time(v-text="new Date(this.doc.dateSent)")
           v-col.body-1 ID: 
-            span(v-text="msg._id")
+            span(v-text="doc._id")
       v-card-actions
         MainDeleteButton(
-          v-bind:document-id="msg._id"
+          v-bind:document-id="doc._id"
         )
 </template>
 
 <script>
+import itemDetailedMixin from "@/mixins/itemDetailedMixin";
 import MainDeleteButton from "@/components/MainDeleteButton.vue";
 
 export default {
@@ -60,12 +62,9 @@ export default {
   components: {
     MainDeleteButton
   },
-  props: ["msg"],
+  mixins: [itemDetailedMixin],
   data: () => ({}),
   computed: {
-    msgCreated() {
-      return new Date(this.msg.created);
-    },
     dialog: {
       get() {
         return this.$store.getters.dialogItemDetailed;

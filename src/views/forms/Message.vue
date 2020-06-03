@@ -9,33 +9,33 @@
                 v-row
                     v-col(cols="6")
                         v-text-field(
-                            v-model="newEntry.sender"
+                            v-model="newEntry.sender.name"
                             label="Sender"
                             filled
                         )
                     v-col(cols="6")
                         v-text-field(
-                            v-model="newEntry.recipient"
+                            v-model="newEntry.recipient.name"
                             label="Recipient"
                             filled
                         )
                     v-col(cols="12")
                         v-text-field(
-                            v-model="newEntry.subject"
+                            v-model="newEntry.messageAttachment.headline"
                             label="Subject"
                             autofocus
                             filled
                         )
                     v-col(cols="12")
                         v-textarea(
-                            v-model="newEntry.body"
+                            v-model="newEntry.messageAttachment.text"
                             label="Message body"
                             rows="3"
                             filled
                         )
                     v-col(cols="12")
                         v-combobox(
-                            v-model="newEntry.tags"
+                            v-model="newEntry.keywords"
                             :items="tagsListItems"
                             label="Tags"
                             multiple
@@ -56,13 +56,19 @@ export default {
   data: () => ({
     dialog: false,
     newEntry: {
-      message: true,
-      sender: "",
-      recipient: "",
-      subject: "",
-      body: "",
-      tags: [],
-      read: false
+      "@type": "Message",
+      sender: {
+        name: ""
+      },
+      recipient: {
+        name: ""
+      },
+      messageAttachment: {
+        headline: "",
+        text: "",
+      },
+      keywords: [],
+      dateRead: null,
     }
   }),
   computed: {
@@ -71,7 +77,7 @@ export default {
     },
     doc() {
       const doc = { ...this.newEntry };
-      doc.created = new Date().toISOString();
+      doc.dateSent = new Date().toISOString();
       return doc;
     }
   }

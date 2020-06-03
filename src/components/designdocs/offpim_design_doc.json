@@ -1,10 +1,10 @@
 {
   "_id": "_design/offpim",
-  "version": 20200530,
+  "version": 20200602,
   "views": {
     "messages-tag-count": {
       "reduce": "_count",
-      "map": "function (doc) {\n  if (doc.message) {\n    function emitTag(tag) {\n        emit(tag);\n    }\n    doc.tags.forEach(emitTag);\n    if (doc.tags.length == 0) {\n      emit(\"untagged\");\n    }\n  }\n}"
+      "map": "function (doc) {\n  if (doc[\"@type\"] == \"Message\") {\n    function emitKeyword(tag) {\n        emit(tag);\n    }\n    doc.keywords.forEach(emitKeyword);\n    if (doc.keywords.length == 0) {\n      emit(\"untagged\");\n    }\n  }\n}"
     },
     "logs-tag-count": {
       "reduce": "_count",
@@ -56,7 +56,7 @@
     },
     "messages-unread": {
       "reduce": "_count",
-      "map": "function (doc) {\n  if (doc.message && !doc.read) {\n    emit(doc.read);\n  }\n}"
+      "map": "function (doc) {\n  if (doc[\"@type\"] == \"Message\" && !doc.dateRead) {\n    emit(doc.dateRead);\n  }\n}"
     },
     "tasks-projects": {
       "reduce": "_count",

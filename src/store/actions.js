@@ -172,4 +172,24 @@ export default {
     context.commit('addSessionLog', obj)
   },
 
+  /**
+   * I.E. 'offpim/note-tag-count'
+   * @param {*} context 
+   * @param {*} view 
+   */
+  async populateTagsList(context, view) {
+    try {
+      var result = await window.db.query(view, {
+        group: true
+      });
+      context.commit('setTagList', result)
+    } catch (error) {
+      this.$store.dispatch("infoBridge", {
+        text: error,
+        color: "error",
+      });
+    }
+
+  },
+
 }

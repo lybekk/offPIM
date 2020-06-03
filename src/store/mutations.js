@@ -6,6 +6,10 @@ export default {
     state.leftDrawer = payload
   },
 
+  setRightDrawer(state, payload) {
+    state.rightDrawer = payload
+  },
+
   setTagList(state, payload) {
     state.tagList = payload.rows
   },
