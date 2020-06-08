@@ -15,6 +15,8 @@ Every document has a certain boolean field, for organization and making queries 
 
 ### Tasks, projects and notes
 
+**(Tasks, projects and notes will be migrated to fit a model from Schema.org)**
+
 The Tasks and Note apps use `"productivity": true`
 
 type: either task, project or note
@@ -163,20 +165,29 @@ Key distinguishing property:
 
 ### Messages
 
-The Messages app uses `"message":true`. `read` is optional, but will be added during certain actions in the messages app.
+Key distinguishing property:
+    `"@type": "Message"`
+
+`dateRead` is optional, but will be added during certain actions in the messages app.
 
 **Example:**
 ```json
 {
-    "_id":"ba5b97dc-33eb-40fd-a689-e78e0ae194f3",
-    "message":true,
-    "sender":"Hal 9000",
-    "recipient":"Bender",
-    "subject":"Last message",
-    "body":"A Bicycle Built for Two",
-    "created":"2019-12-31T00:00:00",
-    "tags":["Infosphere","Central Bureaucracy"]
-    "read":false,
+    "_id": "22036bd4-d63d-40a4-be0f-f394360e8228",
+    "@type": "Message",
+    "sender": {
+        "name": "Hal 9000"
+    },
+    "recipient": {
+        "name": "Bender"
+    },
+    "messageAttachment": {
+        "headline": "Last message",
+        "text": "A bicycle built for two"
+    },
+    "keywords": ["Infosphere","Central Bureaucracy"],
+    "dateRead": "2020-06-03T01:21:59.694Z",
+    "dateSent": "2020-06-02T14:28:31.925Z"
 }
 ```
 

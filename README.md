@@ -7,31 +7,42 @@
 
 offPIM - A PIM - A Personal information management system
 
+![offPIM architecture diagram](assets/img/offPIM_diagram.svg)
+
+## Screenshots
+
+### Material design
 ![Dashboard screenshot](assets/img/dashboard.png)
-![Dashboard screenshot](assets/img/dashboard-dark.png)
+### Dark mode & mobile ready
+![Dark apps screenshot](assets/img/apps_dark.png)
 
 ## Description
 An easily deployable PIM made for the CouchDB ecosystem.
-In an age where everything is about collaboration and sharing... This is a counterweight to that. Not eveything needs to be shared. Something is just personal.
+In an age where everything is about collaboration and sharing... This is a counterweight to that. Not everything needs to be shared. Something is just personal.
 
-Features:
+### Features
+* Works offline, as in offline-first
 * Local storage in browser. No server needed
-* Sync back and forth to an external database (supporting the CouchDB replication protocol). Full master-master replication
+* Sync back and forth to an external database (any DB supporting the CouchDB replication protocol). Full master-master replication
 * Export/import to/from JSON
 * Apps
     * Task management
     * Notes
+    * Contacts
     * Journalling/logging
     * Messaging (Used for general purpose information between devices and such, or whatever you feel like)
-    * Search (Under development)
-    * Personal Finances (Under development)
-    * Inventory (Under development)
-    * Maps (Under development)
     * Search
         * Find items in offPIM by searching
 * Progressive web app (PWA)
-* Themes
 * Open source. No proprietary technologies. No external requests. No tracking.
+* BYOS(Bring Your Own Server). Self-hosted. No backend or complicated installation procedure. Just unzip on a web server.
+
+**Features under development:**
+
+* Personal Finances (Under development)
+* Inventory (Under development)
+* Maps (Under development)
+* Themes
 
 ## Use now
 [Use a live version of offPIM](https://offpim.app/) (or use it permanently, as it works just as it will anywhere else). You may close the browser and tabs. Your data will still be stored in your browser.
@@ -40,8 +51,7 @@ Features:
 | ----------- |:-------------:|
 | Netlify     | [![Netlify Status](https://api.netlify.com/api/v1/badges/ac368203-f0ac-4934-9fc2-dc4e68bb3d1d/deploy-status)](https://app.netlify.com/sites/offpim/deploys) |
 
-
-* **PS:** Your data never leaves your browser, as it uses [PouchDB](https://pouchdb.com/), an in-browser database. The data entered into offPIM will neaver touch the server it's hosted on.
+* **PS:** Your data never leaves your browser, as it uses [PouchDB](https://pouchdb.com/), an in-browser database. The data entered into offPIM will never touch the server it's hosted on, as all code is downloaded to the browser and executed locally, including form submission.
 * **PS2:** The downside to this however, is that the data will disappear if the browser cache/data gets deleted during an upgrade or the like. Remember to back up and/or synchronize regularly, as is crucial for all valuable data.
 * **PS3:** *(For network nerds)* To verify there's no monkey business going on here, investigate the data flow yourself. Open the developer tab (F12), and check the network tab to see where the traffic goes (or rather, where it doesn't go).
 
@@ -66,10 +76,12 @@ Features:
 
 *Three flavors are currently available*
 
-1. **Official app online**
+* **Official app online**
     1. Visit [https://offpim.app](offpim.app)
 
-2. **Desktop-app (Electron)**
+*OR*
+
+* **Desktop-app (Electron)**
     1. [Download the app for your operating system](#downloads)
     *Windows*
     2. Double-click offpim_desktop.exe to install
@@ -84,7 +96,7 @@ Features:
 
 *OR*
 
-3. **Self-hosted static bundle (SPA)**
+* **Self-hosted static bundle (SPA)**
     1. [Download](#downloads) and unzip contents in any directory (even root) on any HTTP-server.
 
     **Note:** Suitable for placing on a private VPS served by Apache, or any other http-server (I.E. python http.server or Node.js http.createServer)
@@ -100,7 +112,7 @@ Self-hosted
 * Any HTTP Server
 
 Synchronization
-* Database supporting the CouchDB replication protocol
+* A Database supporting the CouchDB replication protocol like:
     * CouchDB
     * PouchDB Server
     * Cloudant
@@ -114,7 +126,8 @@ If need for customization, or self-building:
 
 For local customization and development, run <code>npm install</code> first.
 
-Tested with 30 000+ documents and seems to work fine (5K in offPIM, while the rest is archived on Remote DB). Index optmizations are done continously (tips welcome).
+Tests on mid-end devices with 30 000+ documents (5K in offPIM, while the rest is archived on Remote DB) performs well. 
+Index optmizations are done now and then (tips welcome).
 
 ### Compiles and hot-reloads for development
 ```
@@ -146,6 +159,9 @@ Contributions in any form will be appreciated.
 * Styling tips (Code,Layout,CSS)
 * Tips regarding security considerations
 * Donations, of course
+
+Commits to github will be instantly reflected on [offpim.app](https://offpim.app).
+PWA Service workers may need 24 hours to update to the newest version automatically. A manual cache refresh will force download the newest version.
 
 ### Sponsoring
 Using, and downloading [Brave Browser](https://brave.com/off167) from [this link](https://brave.com/off167) gets me a cup of coffee as well.
