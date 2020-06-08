@@ -59,11 +59,12 @@
           v-list-item-content
             v-list-item-title System messages
     v-content
-      v-toolbar
+      v-toolbar(flat)
         v-text-field(
+          v-if="$store.getters.getData.length > 10"
           v-model="search"
           append-icon="mdi-email-search"
-          label="Search"
+          label="Filter"
           single-line
           hide-details
         )

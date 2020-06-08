@@ -33,7 +33,6 @@
           v-list-item-action
             v-list-item-action-text(v-text="tag.value")
     v-content
-
       v-container(
         class="fill-height"
         fluid
@@ -83,14 +82,7 @@ export default {
       return this.$store.getters.getTagList;
     }
   },
-  created() {},
-  beforeDestroy() {
-    this.drawer = false;
-  },
   mounted() {
-    setTimeout(() => {
-      this.drawer = true;
-    }, 300);
     this.$store.dispatch("populateTagsList", 'offpim/note-tag-count');
   },
   methods: {

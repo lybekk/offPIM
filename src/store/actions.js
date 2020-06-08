@@ -184,7 +184,7 @@ export default {
       });
       context.commit('setTagList', result)
     } catch (error) {
-      this.$store.dispatch("infoBridge", {
+      context.dispatch("infoBridge", {
         text: error,
         color: "error",
       });

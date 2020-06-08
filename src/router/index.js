@@ -37,6 +37,11 @@ const routes = [
         component: () => import(/* webpackChunkName: "forms" */ '../views/forms/Message.vue')
       },
       {
+        path: 'contact',
+        name: 'formsNewContact',
+        component: () => import(/* webpackChunkName: "forms" */ '../views/forms/Contact.vue')
+      },
+      {
         path: 'finance',
         name: 'formsNewFinance',
         component: () => import(/* webpackChunkName: "forms" */ '../views/forms/Finance.vue')

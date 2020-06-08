@@ -44,7 +44,8 @@ export default {
       }
       let mango = {
         selector: {
-          logbook: true,
+          //logbook: true,
+          "@type":"Event",
           start: { $regex: `^${q}` },
         },
         limit: 100,
@@ -53,7 +54,8 @@ export default {
 
       try {
         let data = await window.db.find(mango);
-        this.$emit("add-logs", data.docs);
+        //this.$emit("add-logs", data.docs);
+        this.$store.commit("addDataArray", data.docs);
         this.chronologyLoading = false;
       } catch (error) {
         this.$store.dispatch("infoBridge", {

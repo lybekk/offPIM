@@ -234,9 +234,6 @@ export default {
     },
   mounted () {
     setTimeout(() => {
-      this.$store.commit('setLeftDrawer', true);
-    }, 200);
-    setTimeout(() => {
       this.$store.dispatch('setMessagesUnreadCount');
       this.fillDataTable();
     }, 600);

@@ -39,13 +39,13 @@ export default {
   data: () => ({
     menu: false,
     statusList: [
-      'cancelled',
-      'wait',
-      'plan',
-      'todo',
-      'next',
+      'done',
       'doing',
-      'done'
+      'next',
+      'todo',
+      'plan',
+      'wait',
+      'cancelled',
     ],
   }),
   computed: {

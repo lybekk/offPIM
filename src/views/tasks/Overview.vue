@@ -8,6 +8,7 @@ v-container
                         v-if="totalOpenTasks"
                     ) {{ totalOpenTasks }} 
                         span.title open tasks
+                    span.headline(v-else) No open tasks
                     v-spacer
                     div.text-center
                         v-chip(
@@ -30,10 +31,9 @@ v-container
                         @click="$store.commit('setRightDrawer', true)"
                     ) Projects
         v-col(cols="12" sm="6")
-            metrics-statuses
+          metrics-statuses
         v-col(cols="12" sm="6")
-            metrics-priorities
-        v-col(cols="12")
+          metrics-priorities
         v-col(cols="12")
             v-list
                 v-list-item

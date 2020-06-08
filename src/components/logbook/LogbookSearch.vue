@@ -55,7 +55,8 @@ export default {
       const s = this.searchValue;
       let mango = {
         selector: {
-            logbook: true,
+          "@type":"Event",
+            //logbook: true,
             $or: [
               {
                   title: {

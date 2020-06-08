@@ -22,25 +22,19 @@ v-content
               v-icon mdi-clock
             v-list-item-content(@click="getLastLogEntriesByCount(30)")
               v-list-item-title 30 last entries
-      logbook-chronology(
-        @add-logs="addLogs"
-      )
+      logbook-chronology
       v-divider(inset)
-      logbook-taglist(
-        @add-logs="addLogs"
-      )
+      logbook-taglist
     v-row
       v-col
         v-row
           v-col
-            logbook-search(
-              @add-logs="addLogs"
-            )
+            logbook-search
           v-col
             span(v-text="logsDisplayed")
         v-row
           v-col
-            logbook-timeline(v-bind:logs="logList")
+            logbook-timeline
 
 </template>
 <script>
@@ -61,8 +55,6 @@ export default {
     source: String
   },
   data: () => ({
-    logList: [],
-    drawer: false,
     drawerRight: false
   }),
   computed: {
@@ -70,13 +62,14 @@ export default {
       let x = this.$store.getters.getTotals;
       return x.logs;
     },
+
     logsDisplayed: function() {
       let l = this.$store.getters.loaderState;
       if (l) {
         return "...";
       }
 
-      const n = this.logList.length;
+      const n = this.$store.getters.getData.length;
       if (n > 0) {
         return `Found ${n} entries`;
       }
@@ -87,16 +80,11 @@ export default {
   mounted() {
     // improve performance. Too sluggish. Consider async await. Chronology/getlogsyears last
     this.getLastLogEntriesByCount(30);
-    setTimeout(() => {
-      this.drawer = true;
-    }, 300);
+
+    // TODO: Remove after redesign
     setTimeout(() => {
       this.drawerRight = true;
     }, 600);
-  },
-  beforeDestroy() {
-    this.drawerRight = false;
-    this.drawer = true;
   },
   methods: {
     getLastLogEntriesByCount: async function(count = 30) {
@@ -105,7 +93,8 @@ export default {
       let now = new Date().toISOString().slice(0, 16);
       let mango = {
         selector: {
-          logbook: true,
+          //logbook: true,
+          "@type": "Event",
           created: { $lte: now }
         },
         limit: count,
@@ -114,15 +103,15 @@ export default {
 
       try {
         let data = await window.db.find(mango);
-        this.logList = data.docs;
+        this.$store.commit("addDataArray", data.docs);
         v.commit("loaderInactive");
       } catch (error) {
-        v.dispatch("infoBridge", { color:'error', text: error, level:'error' });
+        v.dispatch("infoBridge", {
+          color: "error",
+          text: error,
+          level: "error"
+        });
       }
-
-    },
-    addLogs: function(logs) {
-      this.logList = logs;
     }
   }
 };

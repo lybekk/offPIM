@@ -1,5 +1,5 @@
 <template lang="pug">
-v-card
+v-card(v-if="statusList.length")
     v-card-title Tasks by status
     v-card-text
         v-list

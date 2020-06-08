@@ -9,6 +9,7 @@
       :items-per-page="10"
       no-data-text="No messages"
       item-key="_id"
+      :hide-default-footer="$store.getters.getData.length < 10"
     )
       template(v-slot:default="props")
         v-list(two-line)

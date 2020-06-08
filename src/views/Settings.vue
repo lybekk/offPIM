@@ -10,8 +10,10 @@ v-content
             v-col
                 p(class="display-3") Settings
         v-tabs(
+            v-model="tab"
             :vertical="!$vuetify.breakpoint.mdAndDown"
             color="primary"
+            show-arrows
         )
             v-tab(href="#tab-interface") Interface
             v-tab(href="#tab-actions") Actions
@@ -62,6 +64,7 @@ export default {
     source: String,
   },
   data: () => ({
+      tab: null,
       refreshingCache: false,
       refreshProgress: 0,
   }),
@@ -81,7 +84,11 @@ export default {
     },
   },
   created: function() {},
-  mounted() {},
+  mounted() {
+      const requestedTab = this.$route.params.tab;
+      this.tab = requestedTab;
+      console.log(requestedTab)
+  },
   beforeDestroy() {},
   methods: {
       refreshCache: async function () {

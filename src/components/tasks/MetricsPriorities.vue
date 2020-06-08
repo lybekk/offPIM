@@ -1,5 +1,5 @@
 <template lang="pug">
-v-card
+v-card(v-if="priorityOpenTasks.length")
     v-card-title Tasks by priority
     v-card-text
         v-list
@@ -10,17 +10,23 @@ v-card
                 @click="prioritySheet = false"
             )
                 v-list-item-avatar
-                    v-icon(:color="priorityStarColor[btn.pri]") mdi-star
+                  v-tooltip(bottom)
+                    template(v-slot:activator="{ on }")
+                      v-icon(
+                        v-on="on"
+                        :color="priorityStarColor[btn.pri]"
+                        ) mdi-star
+                    span {{ btn.title }}
                 v-list-item-content
                     v-badge(
                         :color="priorityStarColor[btn.pri]"
                         :content="priorityCount(btn.pri)"
                         inline
                     )
-                        v-list-item-title(
-                            :title="btn.title"
-                        ) {{ btn.pri }} )
-                    v-list-item-subtitle() {{ btn.title }}
+                      v-list-item-title
+                        span.subtitle-2(
+                          :class="`${priorityStarColor[btn.pri]}--text`"                                
+                        ) {{ btn.pri }})
                     v-list-item-subtitle
                         v-progress-linear(
                             :color="priorityStarColor[btn.pri]"

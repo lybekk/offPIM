@@ -16,7 +16,7 @@
         v-fab-transition
           //- TODO: Evaluate replacing fab with icon. Cleaner
           v-btn(
-            v-show="doc.status != 'done'"
+            v-show="!isTaskClosed.visible"
             icon
             small
             :color="doc.status == 'done' ? 'success' : ''"
@@ -31,7 +31,7 @@
       )
         v-list-item-subtitle(
           v-text="doc.title" 
-          :class="[ doc.status == 'done' ? 'body-1 success--text' : 'text--primary body-1 font-weight-regular' ]"
+          :class="isTaskClosed.classes"
           )
         v-list-item-subtitle
           //- INFO: Info chips used for quick (actionable?) details
@@ -192,6 +192,16 @@ export default {
     statusList: ["cancelled", "plan", "wait", "todo", "next", "doing", "done"]
   }),
   computed: {
+    isTaskClosed: function() {
+      return {
+        visible: ["done", "cancelled"].includes(this.doc.status),
+        classes:
+          this.doc.status == "done"
+            ? "body-1 success--text isDone"
+            : "text--primary body-1 font-weight-regular"
+      };
+    },
+
     taskProgress: function() {
       const s = this.doc.status;
       const progress =
@@ -274,3 +284,9 @@ export default {
   }
 };
 </script>
+
+<style scoped>
+.isDone {
+  text-decoration: line-through;
+}
+</style>

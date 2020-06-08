@@ -67,15 +67,14 @@ v-container(fluid)
         //- INFO: don't use group-by="status". Reorders tasks on status change, making task lose fokus
         template(v-slot:default="props")
           v-row
-            v-col(
-            v-for="doc in props.items"
-            :key="doc._id"
-            cols="12"
-            sm="12"
-            md="12"
-            lg="6"
+            v-list(
+              three-line
             )
-              tasks-item(v-bind:docid="doc._id")
+              tasks-item(
+                v-for="doc in props.items"
+                :key="doc._id"
+                v-bind:docid="doc._id"
+              )
 </template>
 
 <script>

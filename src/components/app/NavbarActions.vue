@@ -177,6 +177,19 @@ export default {
         );
       }
 
+      const rDB = localStorage.getItem("remoteDBOptions");
+      if (!rDB) {
+        this.$store.dispatch("infoBridge", {
+          text: "Enter connection info",
+          color: "info",
+        });
+        this.$store.commit(
+          "setGenericStateBooleanTrue",
+          "dbConnectionDialog"
+        );
+        return
+      }
+
       const vuex = this.$store;
       const dis = this;
       this.syncInProgress = true;
@@ -243,7 +256,13 @@ export default {
           if (archivedDocsForSyncPhase2.length) {
             dis.syncPhase2(archivedDocsForSyncPhase2)
           }
-          console.log("Done syncing:", info);
+
+          vuex.dispatch("infoBridge", {
+            text: "Done syncing:" + info,
+            //color: "success",
+            //timeout: 6000,
+          });
+
           // push
           const pushedDocs = info.push.docs_written;
           const pushStart = new Date(info.push.start_time);

@@ -55,7 +55,7 @@ import SearchResultItem from "@/components/search/SearchResultItem.vue";
 export default {
   name: "search",
   components: {
-    SearchResultItem,
+    SearchResultItem
   },
   mixins: [pouchMixin],
   data: () => ({
@@ -64,7 +64,7 @@ export default {
     searchInput: null,
     searchResultsFound: 0,
     searchResults: [],
-    isActive: false,
+    isActive: false
   }),
   computed: {},
   created() {},
@@ -74,7 +74,7 @@ export default {
   methods: {
     buildIndex: async function() {
       const documents = await window.db.allDocs({
-        include_docs: true,
+        include_docs: true
       });
 
       const fieldList = [
@@ -107,17 +107,16 @@ export default {
         "email",
         "url",
         "additionalType",
-        "legalName",
+        "legalName"
       ];
 
       this.lunrIndex = lunr(function() {
         // may need await
         this.ref("_id");
 
-        fieldList.forEach((element) => {
+        fieldList.forEach(element => {
           this.field(element);
         });
-
 
         // Contacts
         // TODO: register "contactPoint",
@@ -127,16 +126,16 @@ export default {
           "postalCode",
           "addressRegion",
           "addressCountry"
-        ]
+        ];
         // Nested contact properties
         for (let field of addressFields) {
           this.field(field, {
-            extractor: function (doc = {}) {
+            extractor: function(doc = {}) {
               if (doc.address) {
-                return doc.address[field]
+                return doc.address[field];
               }
             }
-          })
+          });
         }
 
         // Heavy load
@@ -149,6 +148,15 @@ export default {
     },
 
     beginSearch: async function() {
+      if (!this.searchInput) {
+        this.$store.dispatch("infoBridge", {
+          text: "Search input empty",
+          color: "info",
+          timeout: 2000
+        });
+        return;
+      }
+
       this.searchInProgress = true;
 
       if (!this.indexReady) {
@@ -160,14 +168,14 @@ export default {
       this.searchResultsFound = result.length;
       // TODO pri2 - use 'score' property for sending results to segmentation/container
 
-      result.slice(0, 100).forEach((r) => {
+      result.slice(0, 100).forEach(r => {
         window.db
           .get(r.ref)
-          .then((doc) => this.searchResults.push({ score: r.score, doc: doc }));
+          .then(doc => this.searchResults.push({ score: r.score, doc: doc }));
       });
 
       this.searchInProgress = false;
-    },
-  },
+    }
+  }
 };
 </script>

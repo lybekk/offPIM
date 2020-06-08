@@ -219,7 +219,7 @@
                 )
                     v-icon mdi-code-braces-box
                 v-checkbox(
-                    :value="doc.favorite"
+                    :value="doc.favorite ? true : false"
                     label="Favorite"
                     on-icon="mdi-star"
                     off-icon="mdi-star-outline"
