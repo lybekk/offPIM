@@ -5,7 +5,7 @@
       group
     >
     <v-timeline-item
-      v-for="(log, i) in logs"
+      v-for="(log, i) in $store.getters.getData"
       :key="i"
       small
       :color="dot(log._id).color"
@@ -14,22 +14,22 @@
       <v-row>
         <v-col cols="1">
           <p>
-            <strong v-text="dateGet(log.start, 'year')"></strong>
+            <strong v-text="dateGet(log.startDate, 'year')"></strong>
             <br>
             <span 
               class="font-weight-light"
-              v-text="dateGet(log.start, 'month')" 
+              v-text="dateGet(log.startDate, 'month')" 
             ></span>
             <span 
               class="font-weight-light"
-              v-text="dateGet(log.start, 'day')" 
+              v-text="dateGet(log.startDate, 'day')" 
             ></span>
             <br>
-            <strong class="font-italic font-weight-light" v-text="dateGet(log.start, 'weekday')"></strong>
+            <strong class="font-italic font-weight-light" v-text="dateGet(log.startDate, 'weekday')"></strong>
             <br>
             <strong 
               class="overline"
-              v-text="dateGet(log.start, 'time')" 
+              v-text="dateGet(log.startDate, 'time')" 
             ></strong>
             <br>
             <strong v-if="dot(log._id).deleted" class="error--text">Deleted</strong>
@@ -39,14 +39,16 @@
           <v-card class="elevation-0">
             <v-card-title 
               class="headline" 
-              v-text="log.title"
+              v-text="log.name"
             >
             </v-card-title>
             <v-card-subtitle v-text="log.description"></v-card-subtitle>
             <v-card-text>
+              <!-- May be deprecated 
               <p> Category
                 <span v-text="log.category"></span>
               </p>
+              -->
               <p> ID
                 <span v-text="log._id"></span>
               </p>
@@ -88,7 +90,7 @@ export default {
     LogbookItemsDates,
     MainDeleteButton
   },
-  props: ['logs'],
+  //props: ['logs'],
   data: () => ({
   }),
   computed: {
