@@ -18,6 +18,7 @@ v-container(
         loading-text="Getting tasks"
         no-data-text="No tasks matching request"
         :sort-by="sortBy.toLowerCase()"
+        :hide-default-footer="tasks.length < 10"
     )
       template(v-slot:header)
         v-toolbar(
@@ -87,12 +88,11 @@ export default {
       }
     }
   },
-  created() {},
   mounted() {
     this.getTaskList();
   },
-  beforeDestroy() {},
   methods: {
+
     getTaskList: async function() {
       this.tasks = [];
       let list = this.list;
@@ -152,31 +152,48 @@ export default {
 
       let data = await this.getMango(mango);
       this.tasks = data.docs;
+      if (this.tasks.length == 0) {
+        this.returnToOverview();
+      }
     },
+
     processQuery: function(view, startKey, endKey) {
       let context = this;
       window.db
         .query(view, {
           startkey: startKey,
           endkey: endKey,
-          limit: 50,
+          limit: 200,
           reduce: false,
           include_docs: true
         })
         .then(function(data) {
-          data.rows.forEach(row => {
-            context.tasks.push(row.doc);
-          });
+          if (data.rows.length == 0) {
+            context.returnToOverview();
+          } else {
+            data.rows.forEach(row => {
+              context.tasks.push(row.doc);
+            });
+          }
           context.$store.commit("loaderInactive");
         })
         .catch(function(error) {
-          this.$store.dispatch("infoBridge", {
+          context.$store.dispatch("infoBridge", {
             color: "error",
             text: error,
             level: "error"
           });
         });
+    },
+
+    returnToOverview: function() {
+      this.$router.push({ name: "tasksOverview" });
+      this.$store.dispatch("infoBridge", {
+        color: "info",
+        text: "No tasks in list"
+      });
     }
+
   }
 };
 </script>
