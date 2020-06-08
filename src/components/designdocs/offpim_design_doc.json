@@ -1,6 +1,6 @@
 {
   "_id": "_design/offpim",
-  "version": 20200602,
+  "version": 20200604,
   "views": {
     "messages-tag-count": {
       "reduce": "_count",
@@ -8,7 +8,7 @@
     },
     "logs-tag-count": {
       "reduce": "_count",
-      "map": "function (doc) {\n  if (doc.logbook) {\n    function emitTag(tag) {\n        emit(tag);\n    }\n    doc.tags.forEach(emitTag);\n    if (doc.tags.length == 0) {\n      emit(\"untagged\");\n    }\n  }\n}"
+      "map": "function (doc) {\n  if (doc[\"$type\"] == \"Event\") {\n    function emitTag(tag) {\n        emit(tag);\n    }\n    doc.keywords.forEach(emitTag);\n    if (doc.keywords.length == 0) {\n      emit(\"untagged\");\n    }\n  }\n}"
     },
     "note-tag-count": {
       "reduce": "_count",
@@ -28,15 +28,15 @@
     },
     "logs-start-months": {
       "reduce": "_count",
-      "map": "function (doc) {\n  if (doc.logbook) {\n    var d = doc.start.slice(0,4);\n    var m = doc.start.slice(5,7);\n    var x = d + '-' + m;\n    emit(x);\n  }\n}"
+      "map": "function (doc) {\n  if (doc[\"$type\"] == \"Event\") {\n    var d = doc.startDate.slice(0,4);\n    var m = doc.startDate.slice(5,7);\n    var x = d + '-' + m;\n    emit(x);\n  }\n}"
     },
     "logs-start-years": {
       "reduce": "_count",
-      "map": "function (doc) {\n  if (doc.logbook) {\n    var d = doc.start.slice(0,4);\n    emit(d);\n  }\n}"
+      "map": "function (doc) {\n  if (doc[\"$type\"] == \"Event\") {\n    var d = doc.startDate.slice(0,4);\n    emit(d);\n  }\n}"
     },
     "logs-start-days": {
       "reduce": "_count",
-      "map": "function (doc) {\n  if (doc.logbook) {\n    var y = doc.start.slice(0,4);\n    var m = doc.start.slice(5,7);\n    var d = doc.start.slice(8,10);\n    var x = [y, m, d].join('-');\n    emit(x);\n  }\n}"
+      "map": "function (doc) {\n  if (doc[\"$type\"] == \"Event\") {\n    var y = doc.startDate.slice(0,4);\n    var m = doc.startDate.slice(5,7);\n    var d = doc.startDate.slice(8,10);\n    var x = [y, m, d].join('-');\n    emit(x);\n  }\n}"
     },
     "finance-totals-sum": {
       "reduce": "_sum",
