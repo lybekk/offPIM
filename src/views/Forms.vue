@@ -31,6 +31,11 @@ export default {
                 icon: 'mdi-email',
             },
             {
+                name: 'Contact',
+                to: 'formsNewContact',
+                icon: 'mdi-account',
+            },
+            {
                 name: 'Finance',
                 to: 'formsNewFinance',
                 icon: 'mdi-cash',

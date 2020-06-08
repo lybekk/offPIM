@@ -73,7 +73,7 @@ export default {
   },
   mounted() {
     if (!this.$store.getters.getTagList.length) {
-      this.$store.dispatch("populateTagsList");
+      this.$store.dispatch("populateTagsList", 'offpim/note-tag-count');
     }
   }
 };

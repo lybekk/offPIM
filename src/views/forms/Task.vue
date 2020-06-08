@@ -2,116 +2,123 @@
   v-container
     v-card(flat)
         v-card-title
-            v-radio-group(v-model="newTask.type" row dense)
-                v-radio(label="Task" value="task")
-                v-radio(label="Project" value="project")
-            v-spacer
-            submitButton(:doc="doc")
+          v-radio-group(v-model="newTask.type" row dense)
+            v-radio(label="Task" value="task")
+            v-radio(label="Project" value="project")
+          v-spacer
+          submitButton(:doc="doc")
         v-card-text
-            v-container
-                v-row
-                    v-col(cols="12")
-                      v-text-field(
-                        v-model="newTask.title"
-                        autofocus
-                        label="Title"
-                        filled
+          v-container
+            v-row
+              v-col(cols="12")
+                v-text-field(
+                  v-model="newTask.title"
+                  autofocus
+                  label="Title"
+                  filled
+                  hide-details
+                )
+              v-col(cols="12")
+                v-textarea(
+                  v-model="newTask.description"
+                  label="Description"
+                  rows="3"
+                  filled
+                  hide-details
+                )
+              v-col(cols="12")
+                v-radio-group(
+                  v-model="newTask.status" 
+                  label="Status" 
+                  hide-details
+                  )
+                    //-row
+                    v-radio(label="Wait" value="wait")
+                    v-radio(label="Plan" value="plan")
+                    v-radio(label="Todo" value="todo")
+                    v-radio(label="Next" value="next")
+                    v-radio(label="Doing" value="doing")
+              v-col(v-if="newTask.type == 'task'" cols="12" sm="6")
+                  v-select(
+                      v-model="newTask.project"
+                      :items="projectList"
+                      label="Project"
+                      item-text="text"
+                      item-value="value"
+                      filled
+                      hide-details
+                  )
+              v-col(cols="12" sm="6")
+                  v-combobox(
+                      v-model="newTask.tags"
+                      :items="tagsListItems"
+                      label="Tags"
+                      filled
+                      multiple
+                      chips
+                      hide-details
+                  )
+              v-col(cols="12")
+                  v-radio-group(v-model="newTaskPriority" label="Priority" dense)
+                      v-radio(label="1. Important - Urgent" value="1")
+                      v-radio(label="2. Important - Not urgent" value="2")
+                      v-radio(label="3. Not Important - Urgent" value="3")
+                      v-radio(label="4. Not Important - Not urgent" value="4")
+              v-col(cols="12" sm="6" md="4")
+                  //- TODO Consider using v-tabs for dates
+                  v-menu(
+                      v-model="dateModal"
+                      :close-on-content-click="false"
+                      :nudge-right="40"
+                      transition="scale-transition"
+                      offset-y
+                      min-width="290px"
+                  )
+                      template(v-slot:activator="{ on }")
+                          v-text-field(
+                              v-model="pickerDate"
+                              label="Due date"
+                              prepend-icon="mdi-calendar"
+                              readonly
+                              v-on="on"
+                              filled
+                          )
+                      v-date-picker(v-model="pickerDate" @input="dateModal = false")
+              v-col(cols="11" sm="5")
+                  v-menu(
+                      ref="timemodal"
+                      v-model="timeModal"
+                      :close-on-content-click="false"
+                      :nudge-right="40"
+                      :return-value.sync="pickerTime"
+                      transition="scale-transition"
+                      offset-y
+                      max-width="290px"
+                      min-width="290px"
+                  )
+                      template(v-slot:activator="{ on }")
+                          v-text-field(
+                              v-model="pickerTime"
+                              label="Due time"
+                              prepend-icon="mdi-clock"
+                              readonly
+                              v-on="on"
+                              filled
+                          )
+                      v-time-picker(
+                          v-if="timeModal"
+                          v-model="pickerTime"
+                          format="24hr"
+                          full-width
+                          @click:minute="$refs.timemodal.save(pickerTime)"
                       )
-                    v-col(cols="12")
-                      v-textarea(
-                        v-model="newTask.description"
-                        label="Description"
-                        rows="3"
-                        filled
-                        dense
-                      )
-                    v-col(cols="12")
-                        v-radio-group(v-model="newTask.status" label="Status" row)
-                            v-radio(label="Wait" value="wait")
-                            v-radio(label="Plan" value="plan")
-                            v-radio(label="Todo" value="todo")
-                            v-radio(label="Next" value="next")
-                            v-radio(label="Doing" value="doing")
-                    v-col(v-if="newTask.type == 'task'" cols="12" sm="6")
-                        v-select(
-                            v-model="newTask.project"
-                            :items="projectList"
-                            label="Project"
-                            item-text="text"
-                            item-value="value"
-                            filled
-                        )
-                    v-col(cols="12" sm="6")
-                        v-combobox(
-                            v-model="newTask.tags"
-                            :items="tagsListItems"
-                            label="Tags"
-                            filled
-                            multiple
-                            chips
-                        )
-                    v-col(cols="12")
-                        v-radio-group(v-model="newTaskPriority" label="Priority" dense)
-                            v-radio(label="1. Important - Urgent" value="1")
-                            v-radio(label="2. Important - Not urgent" value="2")
-                            v-radio(label="3. Not Important - Urgent" value="3")
-                            v-radio(label="4. Not Important - Not urgent" value="4")
-                //- TODO Consider using v-tabs for dates
-                v-row(dense)
-                    v-col(cols="12" sm="6" md="4")
-                        v-menu(
-                            v-model="dateModal"
-                            :close-on-content-click="false"
-                            :nudge-right="40"
-                            transition="scale-transition"
-                            offset-y
-                            min-width="290px"
-                        )
-                            template(v-slot:activator="{ on }")
-                                v-text-field(
-                                    v-model="pickerDate"
-                                    label="Due date"
-                                    prepend-icon="mdi-calendar"
-                                    readonly
-                                    v-on="on"
-                                    filled
-                                )
-                            v-date-picker(v-model="pickerDate" @input="dateModal = false")
-                    v-col(cols="11" sm="5")
-                        v-menu(
-                            ref="timemodal"
-                            v-model="timeModal"
-                            :close-on-content-click="false"
-                            :nudge-right="40"
-                            :return-value.sync="pickerTime"
-                            transition="scale-transition"
-                            offset-y
-                            max-width="290px"
-                            min-width="290px"
-                        )
-                            template(v-slot:activator="{ on }")
-                                v-text-field(
-                                    v-model="pickerTime"
-                                    label="Due time"
-                                    prepend-icon="mdi-clock"
-                                    readonly
-                                    v-on="on"
-                                    filled
-                                )
-                            v-time-picker(
-                                v-if="timeModal"
-                                v-model="pickerTime"
-                                format="24hr"
-                                full-width
-                                @click:minute="$refs.timemodal.save(pickerTime)"
-                            )
-                //- WAIT - Implement after project lookup by context has been implemented
-                //-v-row
-                  v-col(cols="6")
-                    v-text-field(
-                      v-model="newTask.context"
-                      label="Context"
-                    )
+                      //- WAIT - Implement after project lookup by context has been implemented
+                      //-v-row
+                        v-col(cols="6")
+                          v-text-field(
+                            v-model="newTask.context"
+                            label="Context"
+                          )
 
 </template>
 
@@ -135,7 +142,8 @@ export default {
       status: "plan",
       priority: 4,
       tags: [],
-      due: new Date().toISOString(),
+      due: null,
+      //due: new Date().toISOString(),
       end: null,
       project: null,
       context: null
@@ -166,23 +174,30 @@ export default {
     },
     pickerDate: {
       get() {
-        let d = this.newTask.due.substring(0, 10);
+        //let d = this.newTask.due.substring(0, 10);
+        let d = this.newTask.due ? this.newTask.due.substring(0, 10) : null;
         return d;
       },
       set(pickerValue) {
-        let old = this.newTask.due.substring(0, 10);
-        var newDate = this.newTask.due.replace(old, pickerValue);
+        var due = this.newTask.due;
+        if (due === null) { due = new Date().toISOString() ; console.log (this.newTask.due)}
+        let old = due.substring(0, 10);
+        var newDate = due.replace(old, pickerValue);
         this.newTask.due = newDate;
       }
     },
     pickerTime: {
       get() {
-        let hhmm = this.newTask.due.substring(11, 16);
+        //let hhmm = this.newTask.due.substring(11, 16);
+        let hhmm = this.newTask.due ? this.newTask.due.substring(11, 16) : null;
         return hhmm;
       },
       set(pickerValue) {
-        let old = this.newTask.due.substring(11, 16);
-        var newTime = this.newTask.due.replace(old, pickerValue);
+        var due = this.newTask.due;
+        if (due === null) { due = new Date().toISOString() }
+
+        let old = due.substring(11, 16);
+        var newTime = due.replace(old, pickerValue);
         this.newTask.due = newTime;
       }
     },

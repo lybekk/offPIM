@@ -107,7 +107,6 @@ export default {
     DatabaseConnectionDialog,
     RawDocumentViewer
   },
-  data: () => ({}),
   computed: {
     drawer: {
       get() {
@@ -124,7 +123,6 @@ export default {
       return this.$store.getters.loaderState;
     }
   },
-  created() {},
   mounted() {
     this.$store.dispatch("infoBridge", {
       text: "offPIM mounted",
@@ -136,8 +134,22 @@ export default {
     setTimeout(() => {
       this.$store.commit("setGenericStateBooleanFalse", "buttonFormNewHidden");
     }, 1000);
+
+    /**
+      * Keyboard shortcuts
+     */
+    var vm = this;
+    window.addEventListener('keydown', function (event) {
+      // NOTE: metaKey == Command on Mac
+      if ((event.metaKey || event.ctrlKey) && event.key === 'd') {
+        event.preventDefault()
+        vm.openNewEntryForm()
+      }
+    })
+
   },
   methods: {
+
     startupcheck: async function() {
       let v = this.$store;
       v.dispatch("checkThemeSettings"); //store/themes.js
@@ -206,17 +218,3 @@ export default {
   }
 };
 </script>
-
-<style scoped>
-.slide-fade-enter-active {
-  transition: all 0.3s ease;
-}
-.slide-fade-leave-active {
-  transition: all 0.8s cubic-bezier(1, 0.5, 0.8, 1);
-}
-.slide-fade-enter,
-.slide-fade-leave-to {
-  transform: translateX(10px);
-  opacity: 0;
-}
-</style>

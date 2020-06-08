@@ -9,7 +9,7 @@
                     v-row(dense='')
                         v-col(cols='12')
                             v-text-field(
-                                v-model='newEntry.title'
+                                v-model='newEntry.name'
                                 label='Title'
                                 autofocus
                                 filled
@@ -20,7 +20,7 @@
                                 label='Category'
                                 dense
                                 filled
-                                )
+                              )
                         v-col(cols='12')
                             v-textarea(
                                 v-model='newEntry.description'
@@ -31,7 +31,7 @@
                                 )
                         v-col(cols='12')
                             v-combobox(
-                                v-model='newEntry.tags'
+                                v-model='newEntry.keywords'
                                 :items='tagsListItems'
                                 label='Tags'
                                 multiple
@@ -112,13 +112,14 @@ export default {
     endDateModal: null,
     endTimeModal: null,
     newEntry: {
-      title: "",
+      "@type": "Event",
+      name: '',
       description: null,
-      logbook: true,
-      tags: [],
-      start: new Date().toISOString(),
-      end: new Date().toISOString(),
-      category: null
+      category: null,
+      keywords: [],
+      startDate: new Date().toISOString(),
+      endDate: new Date().toISOString(),
+      additionalType: 'logbook',
     }
   }),
   computed: {
@@ -132,42 +133,42 @@ export default {
     },
     pickerStartDate: {
       get() {
-        return this.newEntry.start.substring(0, 10);
+        return this.newEntry.startDate.substring(0, 10);
       },
       set(pickerValue) {
-        let old = this.newEntry.start.substring(0, 10);
-        var newDate = this.newEntry.start.replace(old, pickerValue);
-        this.newEntry.start = newDate;
+        let old = this.newEntry.startDate.substring(0, 10);
+        var newDate = this.newEntry.startDate.replace(old, pickerValue);
+        this.newEntry.startDate = newDate;
       }
     },
     pickerStartTime: {
       get() {
-        return this.newEntry.start.substring(11, 16); //hhmm
+        return this.newEntry.startDate.substring(11, 16); //hhmm
       },
       set(pickerValue) {
-        let old = this.newEntry.start.substring(11, 16);
-        var newTime = this.newEntry.start.replace(old, pickerValue);
-        this.newEntry.start = newTime;
+        let old = this.newEntry.startDate.substring(11, 16);
+        var newTime = this.newEntry.startDate.replace(old, pickerValue);
+        this.newEntry.startDate = newTime;
       }
     },
     pickerEndDate: {
       get() {
-        return this.newEntry.end.substring(0, 10);
+        return this.newEntry.endDate.substring(0, 10);
       },
       set(pickerValue) {
-        let old = this.newEntry.end.substring(0, 10);
-        var newDate = this.newEntry.end.replace(old, pickerValue);
-        this.newEntry.end = newDate;
+        let old = this.newEntry.endDate.substring(0, 10);
+        var newDate = this.newEntry.endDate.replace(old, pickerValue);
+        this.newEntry.endDate = newDate;
       }
     },
     pickerEndTime: {
       get() {
-        return this.newEntry.end.substring(11, 16);
+        return this.newEntry.endDate.substring(11, 16);
       },
       set(pickerValue) {
-        let old = this.newEntry.end.substring(11, 16);
-        var newTime = this.newEntry.end.replace(old, pickerValue);
-        this.newEntry.end = newTime;
+        let old = this.newEntry.endDate.substring(11, 16);
+        var newTime = this.newEntry.endDate.replace(old, pickerValue);
+        this.newEntry.endDate = newTime;
       }
     }
   }
