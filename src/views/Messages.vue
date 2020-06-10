@@ -129,6 +129,7 @@ export default {
       }
     },
   mounted() {
+    this.$store.commit("flushData");
     this.$store.dispatch("setMessagesUnreadCount");
     this.$store.dispatch("populateTagsList", 'offpim/messages-tag-count');
     setTimeout(() => {
@@ -136,6 +137,7 @@ export default {
     }, 600);
   },
   beforeDestroy() {
+    this.$store.commit("flushData");
     this.drawerRight = false;
   },
   methods: {

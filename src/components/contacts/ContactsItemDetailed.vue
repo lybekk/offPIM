@@ -1,5 +1,4 @@
 <template lang="pug">
-    //-v-dialog(
     v-bottom-sheet(
         v-model="dialogItemDetailed"
         scrollable
@@ -59,7 +58,6 @@
                                             @change="setDocField('additionalType', $event)"
                                             filled
                                         )
-
                                     v-col(cols="12" sm="4")
                                         v-textarea(
                                             :value="doc.description"
@@ -319,11 +317,6 @@ export default {
       let d = this.doc;
       d.location.geo[key] = value;
       this.setDocField("location", d.location);
-    },
-
-    setDate: function(key, value) {
-      const dateValue = new Date(value).toISOString();
-      this.setDocField(key, dateValue);
     },
 
     setSpouse: async function(key, value) {

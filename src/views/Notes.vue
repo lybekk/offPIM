@@ -83,7 +83,12 @@ export default {
     }
   },
   mounted() {
+    this.$store.commit("flushData");
     this.$store.dispatch("populateTagsList", 'offpim/note-tag-count');
+  },
+  beforeDestroy() {
+    this.$store.commit("appBarTabs", []);
+    this.$store.commit("flushData");
   },
   methods: {
     /**

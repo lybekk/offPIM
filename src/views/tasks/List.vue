@@ -46,11 +46,12 @@ v-container(
           )
       template(v-slot:default="props")
         v-list(three-line)
-          tasks-item(
-            v-for="doc in props.items"
-            :key="doc._id"
-            v-bind:docid="doc._id"
-          )
+          template(v-for="doc in props.items")
+            tasks-item(
+              :key="doc._id"
+              v-bind:docid="doc._id"
+            )
+            v-divider(inset)
 </template>
 
 <script>
@@ -92,7 +93,6 @@ export default {
     this.getTaskList();
   },
   methods: {
-
     getTaskList: async function() {
       this.tasks = [];
       let list = this.list;
@@ -193,7 +193,6 @@ export default {
         text: "No tasks in list"
       });
     }
-
   }
 };
 </script>

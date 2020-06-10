@@ -197,8 +197,8 @@ export default {
         visible: ["done", "cancelled"].includes(this.doc.status),
         classes:
           this.doc.status == "done"
-            ? "body-1 success--text isDone"
-            : "text--primary body-1 font-weight-regular"
+            ? "body-1 font-weight-regular success--text isDone"
+            : "text--primary subtitle-1 font-weight-medium"
       };
     },
 
