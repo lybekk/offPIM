@@ -6,22 +6,6 @@ v-content
       app
       right
     )
-      v-list
-        v-list-item
-          v-list-item-content
-            v-list-item-title(class="title") Logbook
-            v-list-item-subtitle Total: 
-              span(v-text="totalLogs")
-        v-divider
-        v-list(
-          dense
-          nav
-        )
-          v-list-item(link)
-            v-list-item-icon
-              v-icon mdi-clock
-            v-list-item-content(@click="getLastLogEntriesByCount(30)")
-              v-list-item-title 30 last entries
       logbook-chronology
       v-divider(inset)
       logbook-taglist
@@ -34,28 +18,52 @@ v-content
             span(v-text="logsDisplayed")
         v-row
           v-col
-            logbook-timeline
+            v-timeline(dense)
+              v-slide-x-transition(group)
+                logbook-item(
+                  v-for="(doc, i) in $store.getters.getData"
+                  :key="i"
+                  :doc="doc"
+                )
+        v-row
+          v-col
+            v-list
+              v-list-item
+                v-list-item-content
+                  v-list-item-title(class="title") Logbook
+                  v-list-item-subtitle Total logs in database: 
+                    span(v-text="totalLogs")
+    logbook-detailed
 
 </template>
 <script>
-import LogbookTimeline from "@/components/logbook/LogbookTimeline.vue";
+import LogbookItem from "@/components/logbook/LogbookItem.vue";
 import LogbookTaglist from "@/components/logbook/LogbookTaglist.vue";
 import LogbookSearch from "@/components/logbook/LogbookSearch.vue";
 import LogbookChronology from "@/components/logbook/LogbookChronology.vue";
+import LogbookDetailed from "@/components/logbook/LogbookDetailed.vue";
+import pouchMixin from "@/mixins/pouchMixin";
 
 export default {
   name: "logbook",
   components: {
-    LogbookTimeline,
+    LogbookItem,
     LogbookTaglist,
     LogbookSearch,
-    LogbookChronology
+    LogbookChronology,
+    LogbookDetailed
   },
-  props: {
-    source: String
-  },
+  mixins: [pouchMixin],
+  props: ["list"],
   data: () => ({
-    drawerRight: false
+    drawerRight: false,
+    navTabs: [
+      {
+        name: "Latest",
+        to: "logbook",
+        icon: "mdi-clock"
+      }
+    ]
   }),
   computed: {
     totalLogs: function() {
@@ -78,39 +86,36 @@ export default {
   },
   created: function() {},
   mounted() {
+    this.$store.commit("appBarTabs", this.navTabs);
+    this.$store.commit("flushData");
     // improve performance. Too sluggish. Consider async await. Chronology/getlogsyears last
-    this.getLastLogEntriesByCount(30);
+    if (!this.list) {
+      this.getLastLogEntriesByCount();
+    } else {
+      console.log("Debug: No list parameter");
+    }
 
     // TODO: Remove after redesign
     setTimeout(() => {
       this.drawerRight = true;
     }, 600);
   },
+  beforeDestroy() {
+    this.$store.commit("appBarTabs", []);
+    this.$store.commit("flushData");
+  },
   methods: {
-    getLastLogEntriesByCount: async function(count = 30) {
-      const v = this.$store;
-      v.commit("loaderActive");
-      let now = new Date().toISOString().slice(0, 16);
-      let mango = {
-        selector: {
-          //logbook: true,
-          "@type": "Event",
-          created: { $lte: now }
-        },
-        limit: count,
-        sort: [{ created: "desc" }]
-      };
-
+    getLastLogEntriesByCount: async function() {
       try {
-        let data = await window.db.find(mango);
-        this.$store.commit("addDataArray", data.docs);
-        v.commit("loaderInactive");
+        let data = await this.getQuery(
+          "offpim/logs-start-days",
+          null, //this.tag,
+          null, //this.tag,
+          true
+        );
+        this.$store.commit("addDataArray", data);
       } catch (error) {
-        v.dispatch("infoBridge", {
-          color: "error",
-          text: error,
-          level: "error"
-        });
+        this.errorHandler(error);
       }
     }
   }

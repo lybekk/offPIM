@@ -148,20 +148,31 @@ Key distinguishing property:
 
 ### Logbook (Logs)
 
+Key distinguishing property:
+    `"@type": "Event"`
+
+Logbook semi-adheres to [Schema.org/Event](https://schema.org/Event), simplifying export for rich search results (JSON-LD).
+
 **Example:**
 ```json
 {
+    "@type": "Event",
     "_id":"fc869aa0-84d1-458c-8c91-41d707f281ea",
-    "logbook": true,
-    "title":"Replaced items in vending machine",
+    "name":"Replaced items in vending machine",
     "description":"Lemon-lime soda cans replaced with orange flavored ones",
-    "start":"2020-12-31T09:00:00",
-    "end":null,
     "category": "Plot",
-    "tags": ["conspiracy", "gunther"],
+    "startDate":"2020-12-31T09:00:00",
+    "endDate":null,
+    "keywords": ["conspiracy", "gunther"],
     "created":"2019-12-31T00:00:00"
+    "additionalType": "logbook",
+
+      
+
 }
 ```
+
+PS: *Category is not a part of Schema.org/Event*
 
 ### Messages
 

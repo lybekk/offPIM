@@ -130,13 +130,21 @@ export default {
             let context = this;
             context.$store.commit('loaderActive');
 
-            let queryLimit = view === 'offpim/contacts-all' ? 1000 : 100;
-
+            
             let options = {
-                limit: queryLimit, // consider controlling this value with vuex
+                limit: 100, // consider controlling this value with vuex
                 reduce: false,
                 include_docs: false
             };
+            if (view == 'offpim/contacts-all') {
+                options.limit = 1000
+            }
+            if (view == 'offpim/logs-start-days') {
+                options.descending = true;
+                options.limit = 30;
+                options.group = true;
+            }
+            
             if (startKey) {
                 options.startkey = startKey;
                 options.endkey = endKey;

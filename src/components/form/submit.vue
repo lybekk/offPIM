@@ -20,17 +20,10 @@ export default {
     insertedOK: null
   }),
   mounted() {
-    /**
-     * Keyboard shortcuts
-     */
-    var vm = this;
-    window.addEventListener("keydown", function(event) {
-      // NOTE: metaKey == Command on Mac
-      if (event.key === "Escape") {
-        event.preventDefault();
-        vm.routeBack();
-      }
-    });
+    window.addEventListener("keyup", this.onEscapeKeyUp);
+  },
+  beforeDestroy() {
+    window.removeEventListener("keyup", this.onEscapeKeyUp);
   },
   methods: {
     insertDoc: async function() {
@@ -43,12 +36,20 @@ export default {
         this.insertedOK = false;
       }
     },
-
+    
+    onEscapeKeyUp(event) {
+      if (event.key === "Escape") {
+        event.preventDefault();
+        this.routeBack();
+      }
+    },
+    
     routeBack: async function() {
       const routeInfo = window.localStorage.getItem("currentRoute");
       const r = JSON.parse(routeInfo);
       this.$router.push({ name: r.name, params: r.params });
     }
+
   }
 };
 </script>

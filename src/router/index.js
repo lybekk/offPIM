@@ -102,9 +102,10 @@ const routes = [
     ]
   },
   {
-    path: '/logbook',
+    path: '/logbook/:list?',
     name: 'logbook',
-    component: () => import(/* webpackChunkName: "logbook" */ '../views/Logbook.vue')
+    component: () => import(/* webpackChunkName: "logbook" */ '../views/Logbook.vue'),
+    props: true
   },
   {
     path: '/maps',

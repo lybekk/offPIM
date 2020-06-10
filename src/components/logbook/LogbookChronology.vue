@@ -29,7 +29,7 @@ export default {
   data: () => ({
     dateTree: [],
     dateTreeOpen: [],
-    chronologyLoading: false,
+    chronologyLoading: false
   }),
   computed: {},
   watch: {},
@@ -44,23 +44,21 @@ export default {
       }
       let mango = {
         selector: {
-          //logbook: true,
-          "@type":"Event",
-          start: { $regex: `^${q}` },
+          "@type": "Event",
+          startDate: { $regex: `^${q}` }
         },
         limit: 100,
-        sort: [{ start: "asc" }],
+        sort: [{ start: "asc" }]
       };
 
       try {
         let data = await window.db.find(mango);
-        //this.$emit("add-logs", data.docs);
         this.$store.commit("addDataArray", data.docs);
         this.chronologyLoading = false;
       } catch (error) {
         this.$store.dispatch("infoBridge", {
           text: error,
-          color: 'error'
+          color: "error"
         });
       }
     },
@@ -69,9 +67,9 @@ export default {
       try {
         const response = await window.db.query("offpim/logs-start-years", {
           group: true,
-          descending: true,
+          descending: true
         });
-        response.rows.forEach((y) => {
+        response.rows.forEach(y => {
           const x = `${y.key} (${y.value})`;
           this.dateTree.push({ id: y.key, name: x, children: [] });
         });
@@ -79,7 +77,7 @@ export default {
       } catch (error) {
         this.$store.dispatch("infoBridge", {
           text: error,
-          color: "error",
+          color: "error"
         });
       }
     },
@@ -106,7 +104,7 @@ export default {
         "09": "September",
         "10": "October",
         "11": "November",
-        "12": "December",
+        "12": "December"
       };
 
       /* GENERATE DAYS */
@@ -123,7 +121,7 @@ export default {
           .query("offpim/logs-start-days", {
             group: true,
             startkey: startkey,
-            endkey: endkey,
+            endkey: endkey
           })
           .then(function(result) {
             const l = result.rows.length;
@@ -138,15 +136,15 @@ export default {
             });
             dt.push(z);
           })
-          .catch((err) => console.warn(err));
+          .catch(err => console.warn(err));
       }
 
       /* GENERATE MONTHS */
       return window.db
         .query("offpim/logs-start-months", {
-          group: true,
+          group: true
         })
-        .then((data) => {
+        .then(data => {
           const l = data.rows.length;
           data.rows.forEach((aggregate, i) => {
             const x = aggregate.key.split("-");
@@ -160,7 +158,7 @@ export default {
                 name: n,
                 children: [],
                 type: "month",
-                value: aggregate.key.slice(0, 10),
+                value: aggregate.key.slice(0, 10)
               });
             }
             if (i + 1 == l || l == 0) {
@@ -169,8 +167,8 @@ export default {
           });
           this.dateTreeOpen.push(item.name.slice(0, 4));
         })
-        .catch((err) => console.warn(err));
-    },
-  },
+        .catch(err => console.warn(err));
+    }
+  }
 };
 </script>
