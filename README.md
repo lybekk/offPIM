@@ -72,6 +72,8 @@ In an age where everything is about collaboration and sharing... This is a count
     </a>
 </div>
 
+**Note:** *The downloadable versions may be a bit behind the offpim.app version. A better way to build and distribute is on the drawing board*
+
 ## Installation
 
 *Three flavors are currently available*
