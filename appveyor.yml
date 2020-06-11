@@ -14,12 +14,18 @@ install:
   - ps: Install-Product node 10 x64
   - yarn
 
+build:
+  verbosity: minimal
+
 build_script:
   - yarn dist
 
 deploy:
   - provider: GitHub
+    auth_token:
+      secure: n1roQBg3Geu1LRo+NimY54DgtFIkGZnkE8LevninTd7b82LUrJqCWit9ekntQ+JP
     artifact: offpim_desktop.exe
     draft: true
+    force_update: true
 
 test: off
