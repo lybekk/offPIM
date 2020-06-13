@@ -7,7 +7,7 @@
   "scripts": {
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build",
-    "dist": "vue-cli-service electron:build",
+    "dist": "vue-cli-service electron:build --publish=never",
     "pack": "vue-cli-service electron:build --dir",
     "lint": "vue-cli-service lint",
     "docs:build": "bundle exec jekyll build",
