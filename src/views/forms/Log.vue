@@ -15,13 +15,6 @@
                                 filled
                                 )
                         v-col(cols='12')
-                            v-text-field(
-                                v-model='newEntry.category'
-                                label='Category'
-                                dense
-                                filled
-                              )
-                        v-col(cols='12')
                             v-textarea(
                                 v-model='newEntry.description'
                                 label='Details/Description'
@@ -29,6 +22,13 @@
                                 filled
                                 dense
                                 )
+                        v-col(cols='12')
+                            v-text-field(
+                                v-model='newEntry.category'
+                                label='Category'
+                                dense
+                                filled
+                              )
                         v-col(cols='12')
                             v-combobox(
                                 v-model='newEntry.keywords'

@@ -1,45 +1,31 @@
 <template lang="pug">
 v-list
-  v-list-item(link to="/dashboard")
-    v-list-item-action
-      v-icon mdi-home
+  v-list-item(
+    v-for="link in apps"
+    :key="link.name"
+    link :to="{ name: link.to, params: link.params }"
+  )
+    v-list-item-icon
+      v-icon(v-text="link.icon")
     v-list-item-content
-      v-list-item-title Dashboard
-  v-list-item(link to="/tasks/list/today")
+      v-list-item-title(
+        v-text="link.name"
+        style="text-transform: capitalize;"
+      )
     v-list-item-action
-      v-icon mdi-check
-    v-list-item-content
-      v-list-item-title Tasks
-        v-badge(
-          :content="this.$store.getters.getTasksAggregate.today"
-          :value="this.$store.getters.getTasksAggregate.today != 0"
-          bordered
-        )
-  v-list-item(link to="/notes")
-    v-list-item-action
-      v-icon mdi-note
-    v-list-item-content
-      v-list-item-title Notes
-  v-list-item(link to="/logbook")
-    v-list-item-action
-      v-icon mdi-book-open
-    v-list-item-content
-      v-list-item-title Logbook
-  v-list-item(link to="/messages")
-    v-list-item-action
-      v-icon mdi-email
-    v-list-item-content
-      v-list-item-title Messages
-        v-badge(
-          :content="badgeMessagesUnread"
-          :value="badgeMessagesUnread != 0"
-          bordered
-        )
-  v-list-item(link to="/search")
-    v-list-item-action
-      v-icon mdi-magnify
-    v-list-item-content
-      v-list-item-title Search
+      v-badge(
+        v-if="link.name == 'Tasks'"
+        :content="$store.getters.getTasksAggregate.today"
+        :value="$store.getters.getTasksAggregate.today != 0"
+        bordered
+        overlap
+      )
+      v-badge(
+        v-if="link.name == 'Messages'"
+        :content="badgeMessagesUnread"
+        :value="badgeMessagesUnread != 0"
+        bordered
+      )
   v-divider
   v-list
     v-list-item(link to="/tools")
@@ -63,6 +49,7 @@ v-list
           v-list-item-title Concepts
       v-list-item(
         v-for="link in concepts"
+        :key="link.name"
         link :to="{ name: link.name }"
         )
         v-list-item-action
@@ -77,36 +64,71 @@ v-list
 
 <script>
 export default {
-  name: 'NavbarApps',
+  name: "NavbarApps",
   data: () => ({
+    apps: [
+      {
+        name: "Dashboard",
+        icon: "mdi-home",
+        to: "dashboard"
+      },
+      {
+        name: "Tasks",
+        icon: "mdi-check",
+        to: "tasksOverview",
+      },
+      {
+        name: "Notes",
+        icon: "mdi-note",
+        to: "notes",
+      },
+      {
+        name: "Logbook",
+        icon: "mdi-book-open",
+        to: "logbook",
+      },
+      {
+        name: "Messages",
+        icon: "mdi-email",
+        to: "messages",
+      },
+      {
+        name: "Search",
+        icon: "mdi-magnify",
+        to: "search",
+      },
+    ],
     concepts: [
       {
-        name: 'contacts',
-        icon: 'mdi-account'
+        name: "contacts",
+        icon: "mdi-account"
       },
       {
-        name: 'finances',
-        icon: 'mdi-cash'
+        name: "finances",
+        icon: "mdi-cash"
       },
       {
-        name: 'inventory',
-        icon: 'mdi-package-variant'
+        name: "inventory",
+        icon: "mdi-package-variant"
       },
       {
-        name: 'maps',
-        icon: 'mdi-map'
+        name: "maps",
+        icon: "mdi-map"
       },
       {
-        name: 'themes',
-        icon: 'mdi-palette'
-      },
+        name: "themes",
+        icon: "mdi-palette"
+      }
     ]
   }),
   computed: {
-    badgeMessagesUnread: function () {
+    badgeMessagesUnread: function() {
+      console.log('Fix this')
       let x = this.$store.getters.getMessagesUnreadCount;
-      if (x > 10) {return '10+'}
-      return x
+      if (x > 10) {
+        return "10+";
+      }
+      return x;
     }
   }
 };

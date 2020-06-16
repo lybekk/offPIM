@@ -58,13 +58,13 @@ export default {
   data: () => ({
     dialog: false,
     projectName: null,
-    search: "",
+    search: ""
   }),
   computed: {
     openProjects: function() {
       // TODO - Getting project list. Runs multiple times... Optimize. Hand off project list & getter to Vuex
       return this.$store.getters.getOpenProjects;
-    },
+    }
   },
   mounted() {
     this.getProjectName();
@@ -87,19 +87,25 @@ export default {
         }
       }
     },
+
     setTaskField: async function(project) {
       await this.setFieldGeneric({
         _id: this.task._id,
         field: "project",
-        value: project,
+        value: project
       });
-
       this.dialog = false;
       this.$emit("set-doc");
+
+      /* TODO: After Tasks have been redesigned to use Vuex,
+       * remove task from task list if project does not match current project in projectView
+       * if (this.$route.name == 'tasksProject') {}
+       */
     },
+
     showProject(id) {
       this.$router.push(`/tasks/project/${id}`);
-    },
-  },
+    }
+  }
 };
 </script>

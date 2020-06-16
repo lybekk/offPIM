@@ -8,7 +8,7 @@ v-content
       justify="center"
     )
       v-col(cols="12" sm="6")
-        v-form(@submit="beginSearch")
+        v-form(@submit.prevent="beginSearch")
           v-text-field(
             v-model="searchInput"
             hide-details

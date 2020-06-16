@@ -2,7 +2,11 @@
   v-container
     v-card(flat)
         v-card-title
-          v-radio-group(v-model="newTask.type" row dense)
+          v-radio-group(
+            v-model="newTask.type"
+            row
+            hide-details
+          )
             v-radio(label="Task" value="task")
             v-radio(label="Project" value="project")
           v-spacer
@@ -26,18 +30,32 @@
                   filled
                   hide-details
                 )
-              v-col(cols="12")
+              v-col(cols="6")
                 v-radio-group(
                   v-model="newTask.status" 
                   label="Status" 
                   hide-details
                   )
-                    //-row
-                    v-radio(label="Wait" value="wait")
-                    v-radio(label="Plan" value="plan")
-                    v-radio(label="Todo" value="todo")
-                    v-radio(label="Next" value="next")
-                    v-radio(label="Doing" value="doing")
+                    v-radio(
+                      v-for="status in statuses"
+                      :key="status"
+                      :label="status"
+                      :value="status"
+                      style="text-transform: capitalize"
+                    )
+              v-col(cols="6")
+                v-radio-group(v-model="newTaskPriority" label="Priority" dense)
+                  v-tooltip(
+                    v-for="pri in priorities"
+                    :key="pri[1]"
+                    top
+                  ) {{ pri[0] }}
+                    template(v-slot:activator="{ on }")
+                      v-radio(
+                        :label="pri[1]"
+                        :value="pri[1]"
+                        v-on="on"
+                      )
               v-col(v-if="newTask.type == 'task'" cols="12" sm="6")
                   v-select(
                       v-model="newTask.project"
@@ -58,12 +76,6 @@
                       chips
                       hide-details
                   )
-              v-col(cols="12")
-                  v-radio-group(v-model="newTaskPriority" label="Priority" dense)
-                      v-radio(label="1. Important - Urgent" value="1")
-                      v-radio(label="2. Important - Not urgent" value="2")
-                      v-radio(label="3. Not Important - Urgent" value="3")
-                      v-radio(label="4. Not Important - Not urgent" value="4")
               v-col(cols="12" sm="6" md="4")
                   //- TODO Consider using v-tabs for dates
                   v-menu(
@@ -147,7 +159,20 @@ export default {
       end: null,
       project: null,
       context: null
-    }
+    },
+    priorities: [
+      ["1. Important - Urgent", "1"],
+      ["2. Important - Not urgent", "2"],
+      ["3. Not Important - Urgent", "3"],
+      ["4. Not Important - Not urgent", "4"],
+    ],
+    statuses: [
+      "wait",
+      "plan",
+      "todo",
+      "next",
+      "doing",
+    ]
   }),
   computed: {
     doc() {

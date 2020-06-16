@@ -51,7 +51,10 @@
                             v-tabs(fixed-tabs)
                                 v-tab Start
                                 v-tab End
-                                v-tab-item(v-for="key in ['startDate','endDate']")
+                                v-tab-item(
+                                    v-for="key in ['startDate','endDate']"
+                                    :key="key"
+                                    )
                                     v-card
                                         v-card-text
                                             v-row
@@ -84,10 +87,10 @@ import itemDetailedMixin from "@/mixins/itemDetailedMixin";
 
 export default {
   name: "LogbookDetailed",
-  mixins: [pouchMixin, itemDetailedMixin],
   components: {
     MainDeleteButton
   },
+  mixins: [pouchMixin, itemDetailedMixin],
   computed: {},
   methods: {
     hideNote: function() {

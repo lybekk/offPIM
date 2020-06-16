@@ -193,11 +193,14 @@ export default {
   }),
   computed: {
     isTaskClosed: function() {
+      let s = this.doc.status;
       return {
-        visible: ["done", "cancelled"].includes(this.doc.status),
+        visible: ["done", "cancelled"].includes(s),
         classes:
-          this.doc.status == "done"
+          s == "done"
             ? "body-1 font-weight-regular success--text isDone"
+            : s == "cancelled"
+            ? "body-1 font-weight-regular error--text isDone"
             : "text--primary subtitle-1 font-weight-medium"
       };
     },
