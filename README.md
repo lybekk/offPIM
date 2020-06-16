@@ -58,21 +58,25 @@ In an age where everything is about collaboration and sharing... This is a count
 ## <a id="downloads"></a>Download
 
 <div class="card">
-    <a href="https://lybekk.tech/downloads/offpim_desktop.AppImage" class="btn">
+    <a href="https://github.com/lybekk/offpim/releases/latest/download/offpim_desktop.AppImage" class="btn">
         <img src="assets/img/logo_linux.png" alt="Linux" width="32">
         Linux
     </a>
-    <a href="https://lybekk.tech/downloads/offpim_desktop.exe" class="btn">
+    <a href="https://github.com/lybekk/offpim/releases/latest/download/offpim_desktop.exe" class="btn">
         <img src="assets/img/logo_windows.png" alt="Windows" width="32">
         Windows
     </a>
-    <a href="https://lybekk.tech/downloads/offpim_self_hosted.zip" class="btn">
+    <a href="https://github.com/lybekk/offpim/releases/latest/download/offpim_desktop.dmg" class="btn">
+        <img src="assets/img/logo_mac.png" alt="Mac OS" width="32">
+        Mac OS
+    </a>
+    <a href="https://github.com/lybekk/offpim/releases/latest/download/offpim_self_hosted.zip" class="btn">
         <img src="assets/img/logo_self_hosted.png" alt="Self-hosted" width="32">
         Self-hosted
     </a>
 </div>
 
-**Note:** *The downloadable versions may be a bit behind the offpim.app version. A better way to build and distribute is on the drawing board*
+**Note:** *The downloadable versions may be a bit behind the [https://offpim.app](offpim.app) version. A better way to build and distribute is on the drawing board*
 
 ## Installation
 

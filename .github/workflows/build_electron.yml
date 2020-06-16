@@ -2,7 +2,10 @@ name: Build offPIM Electron
 
 on:
   push:
-    branches: [ master ]
+    branches:
+      - master
+    paths:
+      - 'src/**'
   pull_request:
     branches: [ master ]
 
@@ -43,8 +46,26 @@ jobs:
       - name: Build
         run: yarn dist
 
-      - name: Archive production artifacts
-        uses: actions/upload-artifact@v1
+      - name: Archive production artifact - Linux
+        uses: actions/upload-artifact@v2
+        if: matrix.os == 'ubuntu-latest'
         with:
-          name: dist_electron
-          path: dist_electron
+          name: electron-linux-artifact
+          path: dist_electron/offpim_desktop.AppImage
+
+      - name: Archive production artifact - Windows
+        uses: actions/upload-artifact@v2
+        if: matrix.os == 'windows-latest'
+        with:
+          name: electron-linux-artifact
+          path: dist_electron/offpim_desktop.exe
+
+      - name: Archive production artifact - Mac
+        uses: actions/upload-artifact@v2
+        if: matrix.os == 'macos-latest'
+        with:
+          name: electron-linux-artifact
+          path: dist_electron/offpim_desktop.dmg
+
+
+    
