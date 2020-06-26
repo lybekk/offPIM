@@ -51,14 +51,14 @@ v-list
         v-for="link in concepts"
         :key="link.name"
         link :to="{ name: link.name }"
-        )
+      )
         v-list-item-action
           v-icon(v-text="link.icon")
         v-list-item-content
           v-list-item-title(
             v-text="link.name"
             style="text-transform: capitalize;"
-            )
+          )
 
 </template>
 
@@ -97,12 +97,13 @@ export default {
         icon: "mdi-magnify",
         to: "search",
       },
+      {
+        name: "Contacts",
+        icon: "mdi-account",
+        to: "contacts",
+      },
     ],
     concepts: [
-      {
-        name: "contacts",
-        icon: "mdi-account"
-      },
       {
         name: "finances",
         icon: "mdi-cash"
