@@ -1,6 +1,6 @@
 <template lang="pug">
 v-card(v-if="priorityOpenTasks.length")
-    v-card-title Tasks by priority
+    v-card-title By priority
     v-card-text
         v-list
             v-list-item(

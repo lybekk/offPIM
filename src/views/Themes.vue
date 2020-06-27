@@ -30,6 +30,7 @@ v-content
               v-card-text
                 v-chip(
                   v-for="btn in theme"
+                  :key="btn"
                   label
                   :color="btn" 
                   v-text="btn"
@@ -53,12 +54,14 @@ v-content
             h4 Buttons
             v-btn(
               v-for="btn in colors"
+              :key="btn"
               :color="btn" 
               v-text="btn"
             )
             h4 Text buttons
             v-btn(
               v-for="btn in colors"
+              :key="btn"
               text
               :color="btn" 
               v-text="btn"
@@ -71,6 +74,7 @@ v-content
             h4 Alerts
             v-alert(
               v-for="alert in ['success','info','warning','error']"
+              :key="alert"
               :type="alert" 
             ) {{ alert }}
 </template>

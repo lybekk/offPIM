@@ -20,6 +20,8 @@
           v-icon mdi-open-in-new
     v-app-bar(
       app
+      color="primary"
+      dark
       hide-on-scroll
       elevate-on-scroll
     )
@@ -39,13 +41,14 @@
             to="/"
           )
             v-icon mdi-apps
-      v-tabs(
+      //-v-tabs(
         fixed-tabs
         background-color="transparent"
         grow
         color="transparent"
-      )
+        )
         v-tab(@click.stop="drawer = !drawer")
+      v-spacer
       navbar-actions
       template(v-slot:extension)
         v-tabs(
@@ -53,7 +56,7 @@
           icons-and-text
           show-arrows
         )
-          v-tab.body-2.font-weight-medium(
+          v-tab(
             v-for="(tab, i) in $store.getters.appBarTabs" 
             :key="i"
             :to="{ name: tab.to, params: tab.params }"
@@ -64,12 +67,12 @@
           :indeterminate="loading"
           absolute
           bottom
-          color="primary"
+          color="secondary"
           )
         v-fab-transition
           v-btn(
             v-show="!$store.getters.buttonFormNewHidden"
-            color="primary"
+            color="secondary"
             fab
             bottom
             right

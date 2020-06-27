@@ -23,7 +23,7 @@ v-content
                 rounded
                 block
                 :loading="searchInProgress"
-                color="primary"
+                color="secondary"
                 ) Search
               //-@click="beginSearch"
         //- TODO - implement search help 
