@@ -1,12 +1,13 @@
 <template lang="pug">
     //- TODO Conider FAB mdi-send
     v-btn(
-        :color="insertedOK ? 'success' : 'primary'"
-        @click="insertDoc"
-        text
-        )
-        v-icon(v-if="insertedOK") mdi-check
-        span(v-else) Submit
+      :color="insertedOK ? 'success' : 'secondary'"
+      @click="insertDoc"
+    )
+      v-icon(v-if="insertedOK") mdi-check
+      div(v-else)
+        v-icon(left) mdi-send
+        span() Submit
 </template>
 
 <script>

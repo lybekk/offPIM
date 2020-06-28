@@ -13,7 +13,7 @@
           @click="updateLastSync"
           aria-label="Sync dialog"
         )
-          v-icon(color="primary") mdi-dots-vertical
+          v-icon mdi-dots-vertical
         v-btn(
           v-if="$store.getters.localSettings.liveSync"
           icon
@@ -21,7 +21,8 @@
           @click="buttonLiveSync"
         )
           v-icon(v-if="!remoteDBIsOnline") mdi-cloud-off-outline
-          v-icon(v-else color="success") mdi-cloud-sync
+          v-icon(v-else) mdi-cloud-sync
+          //-v-icon(v-else color="success") mdi-cloud-sync
         v-btn(
           v-else
           icon

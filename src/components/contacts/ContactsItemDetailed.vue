@@ -91,14 +91,14 @@
                                     v-btn(
                                         slot="prepend"
                                         icon
-                                        color="primary"
+                                        color="secondary"
                                         :href="'tel:' + doc.telephone"
                                     )
                                         v-icon mdi-phone
                                     v-btn(
                                         slot="append"
                                         icon
-                                        color="primary"
+                                        color="secondary"
                                         :href="'sms:' + doc.telephone"
                                     )
                                         v-icon mdi-message
@@ -111,7 +111,7 @@
                                     v-btn(
                                         slot="prepend"
                                         icon
-                                        color="primary"
+                                        color="secondary"
                                         :href="'mailto:' + doc.email"
                                     )
                                         v-icon mdi-email
@@ -124,7 +124,7 @@
                                     v-btn(
                                         slot="prepend"
                                         icon
-                                        color="primary"
+                                        color="secondary"
                                         :href="doc.url"
                                         target="_blank"
                                     )

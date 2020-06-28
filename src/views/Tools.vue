@@ -31,7 +31,7 @@ v-content
             span(class="title font-weight-light") UUID Generator
           v-card-text
             v-btn(
-              color="primary" 
+              color="secondary"
               fab 
               x-small 
               dark

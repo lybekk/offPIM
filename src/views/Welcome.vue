@@ -18,18 +18,19 @@ v-content
         v-hover(v-slot:default="{ hover }")
           v-btn(
             icon
-            color="transparent"
+            color="secondary"
             :to="link.link"
             x-large
             :height="$vuetify.breakpoint.smAndUp ? '10vw' : '10vh'"
             :width="$vuetify.breakpoint.smAndUp ? '10vw' : '10vh'"
             :elevation="hover ? 4 : 1"
           )
+            //-color="transparent"
             v-icon(
               v-text="link.icon" 
-              color="primary"
               :size="hover ? '8.5vw' : '8vw'"
             )
+              //-color="secondary"
             v-scroll-y-reverse-transition
               v-overlay(
                 v-if="hover && $vuetify.breakpoint.mdAndUp" 

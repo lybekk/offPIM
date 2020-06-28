@@ -41,7 +41,7 @@
           flat
         )
           v-btn(            
-            color="primary"
+            color="secondary"
             @click="getNotesByTag()"
           )
             v-icon mdi-note-text
@@ -49,7 +49,7 @@
           v-spacer
           v-btn(
             class="ma-2" 
-            color="primary"
+            color="secondary"
             rounded 
             @click="drawer = !drawer"
             )

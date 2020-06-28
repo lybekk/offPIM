@@ -11,23 +11,23 @@ v-container
                     span.headline(v-else) No open tasks
                     v-spacer
                     div.text-center
-                        v-chip(
-                            v-for="chip in chipsFiltered"
-                            :key="chip.aggregate"
-                            class="ma-2"
-                            :color="chip.color"
-                            :text-color="chip.textColor"
-                            :to="chip.to"
-                            label
-                        )
-                            v-avatar(
-                                left
-                                :class="`${chip.color} darken-2`"
-                            ) {{ getTasksAggregate[chip.aggregate] }}
-                            span {{ chip.text }}
+                      v-chip(
+                        v-for="chip in chipsFiltered"
+                        :key="chip.aggregate"
+                        class="ma-2"
+                        :to="chip.to"
+                        :color="chip.color"
+                        :text-color="chip.textColor"
+                        label
+                      )
+                        v-avatar(
+                          left
+                          :class="`${chip.color} darken-2`"
+                        ) {{ getTasksAggregate[chip.aggregate] }}
+                        span {{ chip.text }}
                     v-spacer
                     v-btn(
-                        color="primary"
+                        color="secondary"
                         @click="$store.commit('setRightDrawer', true)"
                     ) Projects
         v-col(cols="12" sm="6")

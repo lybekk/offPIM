@@ -1,6 +1,6 @@
 <template lang="pug">
 v-card(v-if="statusList.length")
-    v-card-title Tasks by status
+    v-card-title By status
     v-card-text
         v-list
             v-list-item(
