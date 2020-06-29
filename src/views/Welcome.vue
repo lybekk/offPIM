@@ -17,7 +17,8 @@ v-content
       )
         v-hover(v-slot:default="{ hover }")
           v-btn(
-            icon
+            :fab="$vuetify.theme.dark"
+            :icon="!$vuetify.theme.dark"
             color="secondary"
             :to="link.link"
             x-large
@@ -39,6 +40,21 @@ v-content
                 color="primary"
                 )
                 span(v-text="link.text")
+    //-v-row(
+      align="center"
+      justify="center"
+      :no-gutters="$vuetify.breakpoint.smAndUp"
+      )
+      v-col(
+        v-for="link,i in links"
+        :key="i"
+        cols="6"
+        sm="3"
+        class="text-center"
+      )
+        v-card(height="25vh")
+          v-btn(block height="100%")
+            v-icon(x-large) mdi-check
 
 </template>
 

@@ -32,9 +32,36 @@ v-content
                   v-list-item-content
                     v-list-item-title(v-text="reportMessages")
     v-row
+      v-col(cols="12")
+        span.headline Tasks 
+          span.subtitle-1.info--text {{ totalOpenTasks }}
+        //-v-row(
+          align="center"
+          justify="center"
+          )
+      v-col(                  
+        md="6"
+        lg="3"
+      )
+        v-skeleton-loader(
+          :loading="!this.$store.getters.getTasksAggregate.initiated"
+          transition="scale-transition"
+          type="image"
+        )
+          metrics-statuses
+      v-col(                  
+        lg="2"
+      )
+        //-md="6"
+        metrics-priorities
+      v-col(
+        md="6"
+        lg="3"
+      )
+        chart-tasks-today
       v-col
         v-card
-          v-card-title Tasks 
+          //-v-card-title Tasks 
             span.headline.info--text {{ totalOpenTasks }}
           v-card-text
             v-container(fluid)
@@ -57,10 +84,10 @@ v-content
                       :color="taskProgress.color"
                       :value="taskProgress.value" 
                     )
-              v-row(
+              //-v-row(
                 align="center"
                 justify="center"
-              )
+                )
                 v-col(                  
                   md="6"
                   lg="3"
@@ -72,9 +99,9 @@ v-content
                   )
                     metrics-statuses
                 v-col(                  
-                  md="6"
-                  lg="3"
+                  lg="2"
                 )
+                  //-md="6"
                   metrics-priorities
                 v-col(
                   md="6"

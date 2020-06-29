@@ -15,8 +15,8 @@ export default new Vuetify({
             light: {
                 primary: colors.blueGrey,
                 secondary: colors.teal,
-                //accent: colors.indigo.base, // #3F51B5
-                info: colors.cyan,
+                accent: colors.red,
+                info: colors.cyan.darken1,
                 //warning: colors.amber.lighten2,
                 warning: colors.amber.accent3,
                 error: colors.red.darken4,
@@ -30,14 +30,13 @@ export default new Vuetify({
                 //success: '#72754f', //Secret meadow
             },
             dark: {
-                primary: colors.blueGrey.darken2,
-                secondary: colors.teal,
-                //primary: '#00838f', // undecided
-                //secondary: '#2F4F4F', //DarkSlateGray
-                error: '#cf6679',
-                warning: '#ffa000', //Amber
-                info: '#0277bd', // 
-                success: '#6b8e23', // Olive drab
+                primary: colors.blueGrey.darken4,
+                secondary: colors.teal.darken1,
+                accent: colors.red.darken4,
+                info: colors.cyan.darken1,
+                warning: colors.amber.lighten1,
+                error: colors.red.lighten2,
+                success: colors.lightGreen.darken3,
             },
         }
     }

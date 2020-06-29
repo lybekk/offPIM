@@ -32,7 +32,8 @@
           aria-label="Sync button"
         )
           v-icon(v-if="!remoteDBIsOnline") mdi-cloud-off-outline
-          v-icon(v-else color="primary") mdi-cloud-sync
+          //-v-icon(v-else color="primary") mdi-cloud-sync
+          v-icon(v-else) mdi-cloud-check
       v-card
         v-list
           v-list-item

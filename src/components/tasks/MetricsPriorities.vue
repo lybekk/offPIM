@@ -18,21 +18,77 @@ v-card(v-if="priorityOpenTasks.length")
                         ) mdi-star
                     span {{ btn.title }}
                 v-list-item-content
-                    v-badge(
+                    //-v-badge(
                         :color="priorityStarColor[btn.pri]"
                         :content="priorityCount(btn.pri)"
                         inline
-                    )
-                      v-list-item-title
-                        span.subtitle-2(
-                          :class="`${priorityStarColor[btn.pri]}--text`"                                
-                        ) {{ btn.pri }})
+                      )
+                    v-list-item-title
+                      span.subtitle-1 {{ btn.pri }})
+                        //-:class="`${priorityStarColor[btn.pri]}--text`"
                     v-list-item-subtitle
-                        v-progress-linear(
+                v-list-item-icon
+                  v-chip(
+                    v-text="priorityCount(btn.pri)"
+                    color="info"
+                    small
+                  )
+                    //-:color="priorityStarColor[btn.pri]"
+                        //-v-progress-linear(
                             :color="priorityStarColor[btn.pri]"
                             :value="priorityCount(btn.pri) * 100 / totalOpenTasks"
                             rounded
-                        )
+                          )
+        //-div
+          v-sparkline(
+            :value="priorityValues"
+            fill
+            :gradient="[$vuetify.theme.themes.light.info.base]"
+            height="100%"
+            stroke-linecap="round"
+            smooth="2"
+            padding="2"
+            type="bar"
+            auto-line-width
+            )
+            //-color="info"
+            template(v-slot:label="item") {{ item.value }}
+            //-:line-width="lineWidth"
+            //-:stroke-linecap="lineCap"
+            //-:gradient-direction="gradientDirection"
+            //-:fill="fill"
+            //-:auto-line-width="autoLineWidth"
+            //-auto-draw
+            //-:show-labels="showLabels"
+            //-:label-size="labelSize"
+          //-div(class="text-center" )
+            v-row
+              v-col(
+                v-for="btn in priorityOpenTasks"
+                :key="btn.pri"
+                cols="3"
+              )
+                v-btn(
+                  block
+                  outlined
+                  color="secondary"
+                  :to="`/tasks/list/priority${btn.pri}`"
+                )
+                  //-:color="priorityStarColor[btn.pri]"
+                  v-icon(left :color="priorityStarColor[btn.pri]") mdi-star
+                  span(v-text="btn.pri")
+                  //-v-chip(
+                      v-text="priorityCount(btn.pri)"
+                      :color="priorityStarColor[btn.pri]"
+                      small
+                    )
+                //-v-btn(
+                  block
+                  outlined
+                  :color="priorityStarColor[btn.pri]"
+                  )
+                  v-icon(left :color="priorityStarColor[btn.pri]") mdi-star
+                  span(v-text="btn.pri")
 
 </template>
 
@@ -66,7 +122,11 @@ export default {
       const s = this.$store.getters.getTaskStatuses;
       let sum = s.wait + s.plan + s.todo + s.next + s.doing;
       return sum;
-    }
+    },
+
+    priorityValues() {
+      return this.priorityOpenTasks.map(item => this.priorityCount(item.pri) )
+    },
   },
   mounted() {
     const s = this.$store.getters.getTaskPriorities;
@@ -78,6 +138,12 @@ export default {
     if (!total) {
       this.$store.dispatch("getTaskPriorities");
     }
+
+    setTimeout(() => {
+      console.log(this.priorityOpenTasks)
+      this.priorityOpenTasks.map(item => console.log( this.priorityCount(item.pri) ) )
+      console.log(this.$vuetify.theme.themes.light.info.base)
+    }, 1000);
   },
   methods: {
     priorityCount: function(priority) {
