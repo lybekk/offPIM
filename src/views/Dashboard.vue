@@ -35,10 +35,6 @@ v-content
       v-col(cols="12")
         span.headline Tasks 
           span.subtitle-1.info--text {{ totalOpenTasks }}
-        //-v-row(
-          align="center"
-          justify="center"
-          )
       v-col(                  
         md="6"
         lg="3"
@@ -60,9 +56,7 @@ v-content
       )
         chart-tasks-today
       v-col
-        v-card
-          //-v-card-title Tasks 
-            span.headline.info--text {{ totalOpenTasks }}
+        v-card(v-if="this.$store.getters.getTasksAggregate.initiated && taskProgress.visible")
           v-card-text
             v-container(fluid)
               v-row
@@ -70,44 +64,21 @@ v-content
                   div
                     p(v-if="!this.$store.getters.getTasksAggregate.initiated") Retrieving aggregates
                     p(
-                      v-if="this.$store.getters.getTasksAggregate.doneToday != 0"
+                      v-if="!taskProgress.value == 100"
                     ) Tasks done today: 
+                      //-v-if="this.$store.getters.getTasksAggregate.doneToday != 0"
                       span(
                         v-text="this.$store.getters.getTasksAggregate.doneToday"
                         class="success--text"
                       )
-                    p(
-                      v-if="this.$store.getters.getTasksAggregate.initiated && !taskProgress.visible"
-                    ) No tasks done today so far
+                    p(v-else)
+                      v-icon(color="success") mdi-check
+                      span All done
                     v-progress-linear(
                       v-if="this.$store.getters.getTasksAggregate.initiated && taskProgress.visible"
                       :color="taskProgress.color"
                       :value="taskProgress.value" 
                     )
-              //-v-row(
-                align="center"
-                justify="center"
-                )
-                v-col(                  
-                  md="6"
-                  lg="3"
-                )
-                  v-skeleton-loader(
-                    :loading="!this.$store.getters.getTasksAggregate.initiated"
-                    transition="scale-transition"
-                    type="image"
-                  )
-                    metrics-statuses
-                v-col(                  
-                  lg="2"
-                )
-                  //-md="6"
-                  metrics-priorities
-                v-col(
-                  md="6"
-                  lg="3"
-                )
-                  chart-tasks-today
   v-footer 
     v-container
       v-row
@@ -197,11 +168,12 @@ export default {
       let a = this.$store.getters.getTasksAggregate
       let d = a.doneToday;
       let t = a.today;
+      let o = a.overdue;
       if (d == 0 && t == 0) {
         j.visible = false
         return j
       }
-      if (d > 0 && t == 0) {
+      if ( d > 0 && t + o == 0) {
         j.value = 100
         j.color = 'success'
         return j

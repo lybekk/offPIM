@@ -1,6 +1,6 @@
 export default {
     methods: {
-        setFieldGeneric: async function (payload) {
+        setFieldGeneric: async function(payload) {
             try {
                 let doc;
                 doc = await window.db.get(payload._id);
@@ -11,20 +11,29 @@ export default {
             }
         },
 
-        getDoc: async function (id, silent = false) {
+        getDoc: async function(id, silent = false) {
             try {
                 const result = await window.db.get(id);
                 return result
             } catch (error) {
                 let obj = { color: 'error', text: error, level: 'error' };
+                if (error.status === 404) {
+                    silent = true;
+                    obj = {
+                        ...obj,
+                        deleted: true,
+                        _id: 'document deleted'
+                    }
+                }
                 if (silent) {
                     obj.silent = true;
                 }
                 this.$store.dispatch("infoBridge", obj);
+                return obj
             }
         },
 
-        putDoc: async function (doc, snackbarText = false) {
+        putDoc: async function(doc, snackbarText = false) {
             try {
                 const silent = snackbarText == 'silent' ? true : false;
                 const response = doc._id ? await window.db.put(doc) : await window.db.post(doc);
@@ -52,11 +61,11 @@ export default {
             }
         },
 
-        deleteDoc: async function (id) {
+        deleteDoc: async function(id) {
             this.$store.dispatch('deleteDocument', id)
         },
 
-        setFieldDate: async function (payload) {
+        setFieldDate: async function(payload) {
             try {
                 let doc = await window.db.get(payload._id);
                 if (doc.type == 'task' && payload.field == 'due') {
@@ -79,7 +88,7 @@ export default {
 
         },
 
-        setFieldNull: async function (payload) {
+        setFieldNull: async function(payload) {
             try {
                 let doc = await window.db.get(payload._id);
                 doc[payload.field] = null;
@@ -89,7 +98,7 @@ export default {
             }
         },
 
-        setFieldTime: async function (payload) {
+        setFieldTime: async function(payload) {
             let doc = await window.db.get(payload._id);
             let dateString = doc[payload.field];
             if (typeof dateString == 'undefined') {
@@ -107,7 +116,7 @@ export default {
             this.putDoc(doc)
         },
 
-        getMango: async function (mango) {
+        getMango: async function(mango) {
             // Future feature: if using remote instead of local db (vuex state?), switch to window.remoteDB
             this.$store.commit('loaderActive');
             try {
@@ -116,9 +125,9 @@ export default {
 
                 // debugging
                 window.db.explain(mango)
-                    .then(function (explained) {
+                    .then(function(explained) {
                         console.log('Mango query explained: ', explained)
-                        // detailed explained info can be viewed
+                            // detailed explained info can be viewed
                     });
                 return data
             } catch (error) {
@@ -126,11 +135,11 @@ export default {
             }
         },
 
-        getQuery: async function (view, startKey, endKey, includeDocs = false) {
+        getQuery: async function(view, startKey, endKey, includeDocs = false) {
             let context = this;
             context.$store.commit('loaderActive');
 
-            
+
             let options = {
                 limit: 100, // consider controlling this value with vuex
                 reduce: false,
@@ -144,7 +153,7 @@ export default {
                 options.limit = 30;
                 options.group = true;
             }
-            
+
             if (startKey) {
                 options.startkey = startKey;
                 options.endkey = endKey;

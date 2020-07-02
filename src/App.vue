@@ -41,27 +41,23 @@
             to="/"
           )
             v-icon mdi-apps
-      //-v-tabs(
-        fixed-tabs
-        background-color="transparent"
-        grow
-        color="transparent"
-        )
-        v-tab(@click.stop="drawer = !drawer")
       v-spacer
       navbar-actions
       template(v-slot:extension)
         v-tabs(
           align-with-title
-          icons-and-text
           show-arrows
+          icons-and-text
+          active-class="primary darken-1"
         )
           v-tab(
             v-for="(tab, i) in $store.getters.appBarTabs" 
             :key="i"
             :to="{ name: tab.to, params: tab.params }"
-          ) {{ tab.name }}
-            v-icon(v-text="tab.icon")
+          )
+            span
+              v-icon(v-text="tab.icon")
+              span  {{ tab.name }}
         v-progress-linear(
           :active="loading"
           :indeterminate="loading"
@@ -87,7 +83,8 @@
       :timeout="snackbar.timeout"
       :multi-line="snackbar.multiline === true"
       :color="snackbar.color"
-      bottom
+      app
+      :top="$vuetify.breakpoint.mdAndDown"
     ) {{ snackbar.text }}
     database-connection-dialog
     raw-document-viewer

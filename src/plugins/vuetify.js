@@ -17,17 +17,9 @@ export default new Vuetify({
                 secondary: colors.teal,
                 accent: colors.red,
                 info: colors.cyan.darken1,
-                //warning: colors.amber.lighten2,
-                warning: colors.amber.accent3,
-                error: colors.red.darken4,
+                warning: colors.amber.darken1,
+                error: colors.pink.darken3,
                 success: colors.lightGreen.darken3,
-
-                //primary: '#005a6a', //Oceanside
-                //secondary: '#dee1df', //Rock candy
-                //error: '#874057', //Juneberry
-                //warning: '#c7882d', //Auric
-                //info: '#2ba9ae', //Aquarium
-                //success: '#72754f', //Secret meadow
             },
             dark: {
                 primary: colors.blueGrey.darken4,

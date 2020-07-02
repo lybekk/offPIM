@@ -8,7 +8,7 @@
             v-data-iterator(
                 :items="this.$store.getters.getData"
                 item-key="_id"
-                :items-per-page="10"
+                :items-per-page="20"
             )
                 template(v-slot:default="props")
                     v-row

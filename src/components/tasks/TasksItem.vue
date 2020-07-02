@@ -6,7 +6,7 @@
     v-list-item(link)
       v-fade-transition
         v-overlay(
-          v-if='isDeleted(doc._id)'
+          v-if='isDeleted(doc._id) || doc.deleted'
           absolute
           color='error'
           z-index='3'

@@ -63,6 +63,7 @@ v-container(fluid)
           :loading="this.$store.getters.loaderState"
           loading-text="Getting tasks"
           no-data-text="No tasks matching request"
+          :items-per-page="25"
       )
         //- INFO: don't use group-by="status". Reorders tasks on status change, making task lose fokus
         template(v-slot:default="props")

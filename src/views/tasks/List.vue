@@ -18,7 +18,8 @@ v-container(
         loading-text="Getting tasks"
         no-data-text="No tasks matching request"
         :sort-by="sortBy.toLowerCase()"
-        :hide-default-footer="tasks.length < 10"
+        :items-per-page="25"
+        :hide-default-footer="tasks.length < 25"
     )
       template(v-slot:header)
         v-toolbar(
