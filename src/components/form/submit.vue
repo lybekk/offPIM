@@ -48,7 +48,12 @@ export default {
     routeBack: async function() {
       const routeInfo = window.localStorage.getItem("currentRoute");
       const r = JSON.parse(routeInfo);
-      this.$router.push({ name: r.name, params: r.params });
+      try {
+        this.$router.push({ name: r.name, params: r.params });
+      } catch (error) {
+        console.log('This is not an error: ', error);
+        this.$router.push({ name: 'welcome' });
+      }
     }
 
   }
