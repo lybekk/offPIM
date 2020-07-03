@@ -1,5 +1,5 @@
 <template lang="pug">
-v-content
+v-main
     v-overlay(
         :value="refreshingCache"
         color="info"

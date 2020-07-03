@@ -2,7 +2,7 @@
     v-list-item(
         @click="showItemDetailed"
         )
-        v-list-item-avatar(color="accent")
+        v-list-item-avatar(color="info")
             v-icon(v-if="doc['@type'] == 'Person'") mdi-account
             v-icon(v-else) mdi-domain
         v-list-item-content

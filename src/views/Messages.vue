@@ -58,7 +58,7 @@
             v-icon mdi-console
           v-list-item-content
             v-list-item-title System messages
-    v-content
+    v-main
       v-toolbar(flat)
         v-text-field(
           v-if="$store.getters.getData.length > 10"

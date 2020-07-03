@@ -1,5 +1,5 @@
 <template lang="pug">
-v-content
+v-main
   v-navigation-drawer(
     v-model="drawer"
     app

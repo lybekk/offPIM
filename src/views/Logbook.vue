@@ -1,5 +1,5 @@
 <template lang="pug">
-v-content
+v-main
   v-container(fluid)
     v-navigation-drawer(
       v-model="drawerRight"

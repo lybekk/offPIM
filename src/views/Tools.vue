@@ -1,5 +1,5 @@
 <template lang="pug">
-v-content
+v-main
   v-container(
     class="fill-height"
     fluid

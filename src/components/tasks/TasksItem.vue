@@ -1,158 +1,169 @@
-<template lang="pug">
-  v-lazy(
-    :options="{ threshold: .5 }"
-    transition="slide-y-reverse-transition"
-  )
-    v-list-item(link)
-      v-fade-transition
-        v-overlay(
-          v-if='isDeleted(doc._id) || doc.deleted'
-          absolute
-          color='error'
-          z-index='3'
-        )
-          v-btn(text) Deleted
-      v-list-item-action
-        v-fab-transition
-          //- TODO: Evaluate replacing fab with icon. Cleaner
-          v-btn(
+<template>
+  <v-lazy :options="{ threshold: .5 }" transition="slide-y-reverse-transition">
+    <v-list-item link="link">
+      <v-fade-transition>
+        <v-overlay
+          v-if="isDeleted(doc._id) || doc.deleted"
+          absolute="absolute"
+          color="error"
+          z-index="3"
+        >
+          <v-btn text="text">Deleted</v-btn>
+        </v-overlay>
+      </v-fade-transition>
+      <v-list-item-action>
+        <v-fab-transition>
+          <!-- TODO: Evaluate replacing fab with icon. Cleaner -->
+          <v-btn
             v-show="!isTaskClosed.visible"
-            icon
-            small
+            icon="icon"
+            small="small"
             :color="doc.status == 'done' ? 'success' : ''"
             @click="setTaskStatus('done')"
-          )
-            v-progress-circular(
+          >
+            <v-progress-circular
               :value="taskProgress"
               :color="$store.getters.getStatusColors[doc.status]"
-            )
-      v-list-item-content(
-        @click="sheet = !sheet"
-      )
-        v-list-item-subtitle(
-          v-text="doc.title" 
-          :class="isTaskClosed.classes"
-          )
-        v-list-item-subtitle
-          //- INFO: Info chips used for quick (actionable?) details
-          v-chip(
-            v-if="doc.archived"
-            color="info lighten-2"
-            label
-          ) Archived
-          //- TODO - map to status-colors
-          //-v-card-text v-if postponed x times and additional info
-          v-tooltip(v-if='isOverdue' top)
-            template(v-slot:activator='{ on }')
-              v-icon(color='error' v-on='on') mdi-clock-alert
-            span {{ overdueAmount(doc.due) }} Overdue 
-          v-chip(
-            v-if='isPostponed(doc._id)'
-            small
-            label
-            color='info'
-          ) Postponed
-          v-tooltip(top)
-            template(v-slot:activator='{ on }')
-              v-icon(
-                v-text="doc.description ? 'mdi-text' : '' "
-                color="secondary"
-                v-on='on'
-              )
-            span(v-text="doc.description")
-      v-list-item-action
-        tasks-items-priority(
-          v-bind:task='doc'
-          @set-doc="setDoc()"
-        )
-        //- TODO - Evaluate the need for this.
-        v-tooltip(top)
-          template(v-slot:activator='{ on }')
-            v-btn(
-              icon
-              color='info'
+            ></v-progress-circular>
+          </v-btn>
+        </v-fab-transition>
+      </v-list-item-action>
+      <v-list-item-content @click="sheet = !sheet">
+        <v-list-item-subtitle :class="isTaskClosed.classes" v-text="doc.title" />
+        <!-- INFO: Info chips used for quick (actionable?) details -->
+        <v-list-item-subtitle>
+          <v-chip v-if="doc.archived" color="info lighten-2" label="label">Archived</v-chip>
+          <!--
+                      TODO - map to status-colors
+          v-card-text v-if postponed x times and additional info
+          -->
+          <v-tooltip v-if="isOverdue" top="top">
+            <template v-slot:activator="{ on }">
+              <v-icon color="error" v-on="on">mdi-clock-alert</v-icon>
+            </template>
+            <span>{{ overdueAmount(doc.due) }} Overdue</span>
+          </v-tooltip>
+          <v-chip v-if="isPostponed(doc._id)" small="small" label="label" color="info">Postponed</v-chip>
+          <v-tooltip top="top">
+            <template v-slot:activator="{ on }">
+              <v-icon color="secondary" v-on="on" v-text="doc.description ? 'mdi-text' : ''" />
+            </template>
+            <span v-text="doc.description"></span>
+          </v-tooltip>
+        </v-list-item-subtitle>
+      </v-list-item-content>
+      <v-list-item-action>
+        <tasks-items-priority v-bind:task="doc" @set-doc="setDoc()"></tasks-items-priority>
+        <v-tooltip top="top">
+          <template v-slot:activator="{ on }">
+            <v-btn
+              icon="icon"
+              color="info"
               :disabled="isPostponed(doc._id)"
-              v-on='on'
-              @click='postponeTask(doc._id)'
-            )
-              v-icon mdi-update
-          span Postpone until tomorrow
-        v-bottom-sheet( 
-          v-model="sheet" 
+              v-on="on"
+              @click="postponeTask(doc._id)"
+            >
+              <v-icon>mdi-update</v-icon>
+            </v-btn>
+          </template>
+          <span>Postpone until tomorrow</span>
+        </v-tooltip>
+        <v-bottom-sheet
+          v-model="sheet"
           :inset="$vuetify.breakpoint.mdAndUp"
-          scrollable
-        )
-          v-card
-            v-card-title
-              tasks-items-title(
-                v-bind:id='doc._id'
-                v-bind:title='doc.title'
-                v-bind:status='doc.status'
+          scrollable="scrollable"
+        >
+          <v-card>
+            <v-card-title>
+              <tasks-items-title
+                v-bind:id="doc._id"
+                v-bind:title="doc.title"
+                v-bind:status="doc.status"
                 @set-doc="setDoc()"
-              )
-            v-card-text
-              v-list
-                tasks-items-description(
-                  v-bind:task='doc'
-                  @set-doc="setDoc()"
-                )
-                tasks-items-project(
+              ></tasks-items-title>
+            </v-card-title>
+            <v-card-text>
+              <v-list>
+                <tasks-items-description v-bind:task="doc" @set-doc="setDoc()"></tasks-items-description>
+                <tasks-items-project
                   v-if="doc.type != 'project'"
-                  v-bind:task='doc'
+                  v-bind:task="doc"
                   @set-doc="setDoc()"
-                )
-                v-list-item
-                  v-list-item-content
-                    tasks-items-status(
-                      v-bind:task='doc'
-                      @set-status="setTaskStatus"
-                    )
-              v-divider(inset width="80%")
-              div(
-                v-for="field in ['due','start','end']"
-                :key="field"
-              )
-                form-datetime(
-                  v-bind:doc='doc'
-                  :field-name="field"
-                  @set-doc="setDoc()"
-                )
-              v-divider(inset width="80%")
-              tasks-items-tags(
-                v-bind:task='doc'
-                @set-doc="setDoc()"
-              )
-              v-divider
-              v-col
-                div
-                  span
-                    v-chip(
-                      v-if='isOverdue'
-                      small
-                      label
-                      color='error'
-                    ) {{ overdueAmount(doc.due) }} Overdue 
-                    v-chip(
-                      v-if="doc.status == 'done'"
-                      small
-                      label
-                      color='success'
-                    ) Done
-                    v-chip(
-                      v-if='isPostponed(doc._id)'
-                      small
-                      label
-                      color='info'
-                    ) Postponed
-                  //- (TODO) x-Small btn with brackets for viewing raw document (tied to app - general tool for editing json)
-              v-row
-                v-col
-                  tr(class="font-weight-thin")
-                    td ID: 
-                    td(v-text="doc._id")
-                v-col
-                  main-delete-button(v-bind:document-id='doc._id')
+                ></tasks-items-project>
+                <v-list-item>
+                  <v-list-item-content>
+                    <tasks-items-status v-bind:task="doc" @set-status="setTaskStatus"></tasks-items-status>
+                  </v-list-item-content>
+                </v-list-item>
+              </v-list>
+              <v-divider inset="inset" width="80%"></v-divider>
 
+              <v-tabs background-color="primary">
+                <v-tab v-for="field in ['due','start','end']" :key="field">
+                  <v-icon left>mdi-calendar</v-icon>
+                  <span style="text-transform: capitalize;">{{ field }}</span>
+                </v-tab>
+                <v-tab-item v-for="field in ['due','start','end']" :key="field">
+                  <v-card flat>
+                    <v-card-text>
+                      <form-datetime v-bind:doc="doc" :field-name="field" @set-doc="setDoc()"></form-datetime>
+                    </v-card-text>
+                  </v-card>
+                </v-tab-item>
+              </v-tabs>
+
+              <!-- 
+              <v-subheader inset>Subheader</v-subheader>
+              <v-divider color="primary" inset="inset" width="80%"></v-divider>
+              -->
+              <tasks-items-tags v-bind:task="doc" @set-doc="setDoc()"></tasks-items-tags>
+              <!-- 
+              <v-divider></v-divider>
+              -->
+              <v-row>
+                <v-col>
+                  <div>
+                    <span>
+                      <v-chip
+                        v-if="isOverdue"
+                        small="small"
+                        label="label"
+                        color="error"
+                      >{{ overdueAmount(doc.due) }} Overdue</v-chip>
+                      <v-chip
+                        v-if="doc.status == 'done'"
+                        small="small"
+                        label="label"
+                        color="success"
+                      >Done</v-chip>
+                      <v-chip
+                        v-if="isPostponed(doc._id)"
+                        small="small"
+                        label="label"
+                        color="info"
+                      >Postponed</v-chip>
+                    </span>
+                  </div>
+                </v-col>
+                <!-- 
+                (TODO) x-Small btn with brackets for viewing raw document (tied to app - general tool for editing json)
+                -->
+                <v-col>
+                  <tr class="font-weight-thin">
+                    <td>ID:</td>
+                    <td v-text="doc._id"></td>
+                  </tr>
+                </v-col>
+                <v-col>
+                  <main-delete-button v-bind:document-id="doc._id"></main-delete-button>
+                </v-col>
+              </v-row>
+            </v-card-text>
+          </v-card>
+        </v-bottom-sheet>
+      </v-list-item-action>
+    </v-list-item>
+  </v-lazy>
 </template>
 
 <script>
@@ -162,7 +173,7 @@ import TasksItemsDescription from "@/components/tasks/TasksItemsDescription.vue"
 import TasksItemsProject from "@/components/tasks/TasksItemsProject.vue";
 import TasksItemsTags from "@/components/tasks/TasksItemsTags.vue";
 import TasksItemsPriority from "@/components/tasks/TasksItemsPriority.vue";
-import TasksItemsDates from "@/components/tasks/TasksItemsDates.vue";
+//import TasksItemsDates from "@/components/tasks/TasksItemsDates.vue";
 import FormDatetime from "@/components/form/formDatetime.vue";
 import MainDeleteButton from "@/components/MainDeleteButton.vue";
 import pouchMixin from "@/mixins/pouchMixin";
@@ -173,7 +184,7 @@ export default {
     TasksItemsStatus,
     TasksItemsTitle,
     TasksItemsDescription,
-    TasksItemsDates,
+    //TasksItemsDates,
     MainDeleteButton,
     TasksItemsProject,
     TasksItemsTags,

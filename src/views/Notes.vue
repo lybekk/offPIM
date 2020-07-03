@@ -32,7 +32,7 @@
             )
           v-list-item-action
             v-list-item-action-text(v-text="tag.value")
-    v-content
+    v-main
       v-container(
         class="fill-height"
         fluid

@@ -12,13 +12,14 @@
           template(v-slot:activator="{ on }")
             v-text-field(
               v-model="date"
-              :label="fieldName.toUpperCase()"
+              label="Date"
               prepend-icon="mdi-calendar"
               readonly
               dense 
               hide-details="auto"
               v-on="on"
             )
+              //-:label="fieldName.toUpperCase()"
           v-date-picker(v-model="date" @input="dateMenu = false")
       v-col(cols="3")
         v-menu(
@@ -34,6 +35,7 @@
           template(v-slot:activator="{ on }")
             v-text-field(
               v-model="time"
+              label="Time"
               dense 
               hide-details="auto"
               readonly
