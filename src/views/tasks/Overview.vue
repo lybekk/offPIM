@@ -35,26 +35,29 @@ v-container
         v-col(cols="12" sm="6")
           metrics-priorities
         v-col(cols="12")
-            v-list
-                v-list-item
-                    v-list-item-content
-                        v-list-item-title.title.font-regular Other task lists
-                v-divider(inset)
-                v-list-item(link to="/tasks/completed_projectless")
-                    v-list-item-icon
-                        v-icon mdi-check
-                    v-list-item-content
-                        v-list-item-title Completed & projectless
-                v-list-item(link to="/tasks/list/noproject")
-                    v-list-item-icon
-                        v-icon mdi-folder-alert
-                    v-list-item-content
-                        v-list-item-title No project
+          v-list
+              v-list-item
+                  v-list-item-content
+                      v-list-item-title.title.font-regular Other task lists
+              v-divider(inset)
+              v-list-item(link to="/tasks/completed_projectless")
+                  v-list-item-icon
+                      v-icon mdi-check
+                  v-list-item-content
+                      v-list-item-title Completed & projectless
+              v-list-item(link to="/tasks/list/noproject")
+                  v-list-item-icon
+                      v-icon mdi-folder-alert
+                  v-list-item-content
+                      v-list-item-title No project
+        v-col(cols="12")
+          DoneToday
 </template>
 
 <script>
 import MetricsStatuses from "@/components/tasks/MetricsStatuses.vue";
 import MetricsPriorities from "@/components/tasks/MetricsPriorities.vue";
+import DoneToday from "@/components/tasks/DoneToday.vue";
 
 import { mapGetters } from "vuex";
 
@@ -62,7 +65,8 @@ export default {
   name: "tasksoverview",
   components: {
     MetricsStatuses,
-    MetricsPriorities
+    MetricsPriorities,
+    DoneToday
   },
   data: () => ({
     chips: [

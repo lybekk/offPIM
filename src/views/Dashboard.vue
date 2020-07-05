@@ -64,21 +64,24 @@ v-main
                   div
                     p(v-if="!this.$store.getters.getTasksAggregate.initiated") Retrieving aggregates
                     p(
-                      v-if="!taskProgress.value == 100"
+                      v-if="taskProgress.value != 100"
                     ) Tasks done today: 
                       //-v-if="this.$store.getters.getTasksAggregate.doneToday != 0"
                       span(
                         v-text="this.$store.getters.getTasksAggregate.doneToday"
                         class="success--text"
                       )
-                    p(v-else)
-                      v-icon(color="success") mdi-check
-                      span All done
-                    v-progress-linear(
-                      v-if="this.$store.getters.getTasksAggregate.initiated && taskProgress.visible"
-                      :color="taskProgress.color"
-                      :value="taskProgress.value" 
-                    )
+                      v-progress-linear(
+                        v-if="this.$store.getters.getTasksAggregate.initiated && taskProgress.visible"
+                        :color="taskProgress.color"
+                        :value="taskProgress.value" 
+                      )
+                    div(v-else)
+                      v-list-item
+                        v-list-item-icon
+                          v-icon(color="success") mdi-check
+                        v-list-item-content
+                          v-list-item-title All done for today
   v-footer 
     v-container
       v-row
