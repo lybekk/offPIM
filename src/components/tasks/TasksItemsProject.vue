@@ -1,5 +1,5 @@
 <template lang="pug">
-    v-dialog(v-model="dialog" scrollable max-width="300px")
+    v-dialog(v-model="dialog" scrollable max-width="600px" :fullscreen="$vuetify.breakpoint.smAndDown")
       template(v-slot:activator="{ on }")
         v-list-item(@click="")
           v-list-item-content(v-on="on")
