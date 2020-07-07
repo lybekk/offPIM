@@ -42,6 +42,7 @@
           )
             v-icon mdi-apps
       v-spacer
+      LocalWhiteboard
       navbar-actions
       template(v-slot:extension)
         v-tabs(
@@ -95,6 +96,7 @@ import NavbarApps from "@/components/app/NavbarApps.vue";
 import NavbarActions from "@/components/app/NavbarActions.vue";
 import DatabaseConnectionDialog from "@/components/app/DatabaseConnectionDialog.vue";
 import RawDocumentViewer from "@/components/app/RawDocumentViewer.vue";
+import LocalWhiteboard from "@/components/app/LocalWhiteboard.vue";
 
 import offPIMDesignDoc from "@/components/designdocs/offpim_design_doc.json";
 import MangoDesignDoc from "@/components/designdocs/mango_indexes.json";
@@ -105,7 +107,8 @@ export default {
     NavbarApps,
     NavbarActions,
     DatabaseConnectionDialog,
-    RawDocumentViewer
+    RawDocumentViewer,
+    LocalWhiteboard
   },
   computed: {
     drawer: {
