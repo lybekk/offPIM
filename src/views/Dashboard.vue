@@ -95,16 +95,12 @@ v-main
               v-card-text
                 v-simple-table
                   template(v-slot:default)
-                    thead
-                      tr
-                        th(class="text-left") Key
-                        th(class="text-left") Value
                     tbody
                       tr(
                         v-for="data in dt.table" 
                         :key="data.key"
                       )
-                        td {{ data.key }}
+                        th {{ data.key }}
                         td {{ data.value }}
         v-col
           v-container
@@ -115,27 +111,9 @@ v-main
                 v-simple-table
                   template(v-slot:default)
                     tbody
-                      tr
-                        td DB Name
-                        td {{ rDBInfo.db_name }}
-                      tr
-                        td DB Name
-                        td {{ rDBInfo.host }}
-                      tr
-                        td Deleted documents
-                        td {{ rDBInfo.doc_del_count }}
-                      tr
-                        td Total documents
-                        td {{ rDBInfo.doc_count }}
-                      tr
-                        td DB disk Size
-                        td {{ formatBytes(rDBInfo.disk_size) }}
-                      tr
-                        td DB disk Size
-                        td {{ formatBytes(rDBInfo.data_size) }}
-                      tr
-                        td DB Adapter
-                        td {{ rDBInfo.adapter }}
+                      tr(v-for="(value, name, index) in remoteDBInfo" :key="index")
+                        th {{ name }}
+                        td {{ value }}
 </template>
 
 <script>
@@ -166,6 +144,26 @@ export default {
     ...mapGetters({
       rDBInfo: 'remoteDBInfo'
     }),
+    remoteDBInfo() {
+      let r = this.rDBInfo;
+      let obj = {
+        "DB Name": r.db_name,
+        "Host": r.host,
+        "Deleted documents": r.doc_del_count,
+        "Total documents": r.doc_count,
+        "DB Adapter": r.adapter,
+      }
+      if (r.disk_size) {
+        obj["DB disk size"] = this.formatBytes(r.disk_size);
+        obj["DB data size"] = this.formatBytes(r.data_size);
+      }
+      if (r.sizes) {
+        obj["Live data size"] = this.formatBytes(r.sizes.active);
+        obj["Uncompressed data size"] = this.formatBytes(r.sizes.external);
+        obj["Disk data size"] = this.formatBytes(r.sizes.file);
+      }
+      return obj
+    },
     taskProgress: function () {
       let j = { color: 'info', buffer: 0, value: 0, visible: true}
       let a = this.$store.getters.getTasksAggregate
@@ -238,7 +236,12 @@ export default {
     setTimeout(() => {
       this.$store.dispatch('setMessagesUnreadCount');
       this.fillDataTable();
+      if (this.$store.getters.remoteDBIsOnline) {
+        this.$store.dispatch('remoteDBInfo');
+      }
     }, 600);
+
+
   },
   methods: {
     fillDataTable: async function() {
