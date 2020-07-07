@@ -180,7 +180,7 @@ export default {
       }
 
       const rDB = localStorage.getItem("remoteDBOptions");
-      if (!rDB) {
+      if (!rDB && !this.remoteDBIsOnline) {
         this.$store.dispatch("infoBridge", {
           text: "Enter connection info",
           color: "info",
