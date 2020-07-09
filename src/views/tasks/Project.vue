@@ -48,45 +48,25 @@ v-container(fluid)
         v-card-title(
           class="headline"
         ) {{ tasks.length }} Tasks in 
-          span(class="font-weight-thin") {{ details.project }}
+          span(class="primary--text font-weight-thin ml-1") {{ details.title }}
         v-card-subtitle(
           class="subtitle font-weight-thin"
         ) Showing {{ filteredTasks.length }} 
-    v-skeleton-loader(
-      :loading="this.$store.getters.loaderState"
-      class="mx-auto"
-      transition="scale-transition"
-      type="list-item-avatar-three-line"
-    )
-      v-data-iterator(
-          :items="filteredTasks"
-          :loading="this.$store.getters.loaderState"
-          loading-text="Getting tasks"
-          no-data-text="No tasks matching request"
-          :items-per-page="25"
-      )
-        //- INFO: don't use group-by="status". Reorders tasks on status change, making task lose fokus
-        template(v-slot:default="props")
-          v-list(
-            three-line
-          )
-            tasks-item(
-              v-for="doc in props.items"
-              :key="doc._id"
-              v-bind:docid="doc._id"
-            )
+    TasksDataIteratorList(:tasks="filteredTasks")
 </template>
 
 <script>
 import TasksItem from "@/components/tasks/TasksItem.vue";
 import TasksProjectArchival from "@/components/tasks/TasksProjectArchival.vue";
+import TasksDataIteratorList from "@/components/tasks/TasksDataIteratorList.vue";
 import pouchMixin from "@/mixins/pouchMixin";
 
 export default {
   name: "tasksProject",
   components: {
     TasksItem,
-    TasksProjectArchival
+    TasksProjectArchival,
+    TasksDataIteratorList
   },
   mixins: [pouchMixin],
   props: ["projectid"],

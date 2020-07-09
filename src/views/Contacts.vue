@@ -1,56 +1,53 @@
-<template lang="pug">
-v-main
-    v-container(
-    :fluid="$vuetify.breakpoint.mdAndDown"
-    )
-        v-skeleton-loader(
-            :loading="this.$store.getters.loaderState"
-            class="mx-auto"
-            transition="scroll-y-reverse-transition"
-            type="list-item-avatar-two-line"        
-        )
-            v-data-iterator(
-                :items="contactList"
-                item-key="_id"
-                :items-per-page="20"
-                :search="search"
-                :sort-by="sortByFormatted"
-                :loading="this.$store.getters.loaderState"
-                loading-text="Getting Contacts"
-                no-data-text="No contacts matching request"
-            )
-                template(v-slot:header)
-                    v-toolbar(
-                        color="transparent"
-                        class="mb-1"
-                        flat
-                    )
-                        v-text-field(
-                            v-model="search"
-                            clearable
-                            hide-details
-                            prepend-inner-icon="mdi-magnify"
-                            label="Filter list"
-                        )
-                        v-spacer
-                        v-select(
-                            v-model="sortBy"
-                            flat
-                            solo-inverted
-                            hide-details
-                            :items="keys"
-                            prepend-inner-icon="mdi-sort-variant"
-                            label="Sort by"
-                        )
-                template(v-slot:default="props")
-                    v-list(two-line)
-                        contacts-item(
-                            v-for="doc in props.items"
-                            :key="doc._id"
-                            v-bind:doc="doc"
-                        )
-        contacts-item-detailed
-
+<template>
+  <v-main>
+    <v-container :fluid="$vuetify.breakpoint.mdAndDown">
+      <v-skeleton-loader
+        class="mx-auto"
+        :loading="this.$store.getters.loaderState"
+        transition="scroll-y-reverse-transition"
+        type="list-item-avatar-two-line"
+      >
+        <v-data-iterator
+          :items="contactList"
+          item-key="_id"
+          :items-per-page="50"
+          :search="search"
+          :sort-by="sortByFormatted"
+          :loading="this.$store.getters.loaderState"
+          loading-text="Getting Contacts"
+          no-data-text="No contacts matching request"
+        >
+          <template v-slot:header>
+            <v-toolbar class="mb-1" color="transparent" flat="flat">
+              <v-text-field
+                v-model="search"
+                clearable="clearable"
+                hide-details="hide-details"
+                prepend-inner-icon="mdi-magnify"
+                label="Filter list"
+              ></v-text-field>
+              <v-spacer></v-spacer>
+              <v-select
+                v-model="sortBy"
+                flat="flat"
+                solo-inverted="solo-inverted"
+                hide-details="hide-details"
+                :items="keys"
+                prepend-inner-icon="mdi-sort-variant"
+                label="Sort by"
+              ></v-select>
+            </v-toolbar>
+          </template>
+          <template v-slot:default="props">
+            <v-list two-line="two-line">
+              <contacts-item v-for="doc in props.items" :key="doc._id" v-bind:doc="doc"></contacts-item>
+            </v-list>
+          </template>
+        </v-data-iterator>
+      </v-skeleton-loader>
+      <contacts-item-detailed></contacts-item-detailed>
+    </v-container>
+  </v-main>
 </template>
 
 <script>

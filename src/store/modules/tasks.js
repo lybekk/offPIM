@@ -71,7 +71,7 @@ const tasks = {
 
     },
     actions: {
-        tasksDueAggregation: async function (context) {
+        tasksDueAggregation: async function(context) {
             let aggregate = {
                 today: 0,
                 tomorrow: 0,
@@ -153,7 +153,9 @@ const tasks = {
                 });
                 const projects = []
                 for await (let row of data.rows) {
-                    projects.push({ _id: row.id, title: row.doc.title })
+                    projects.push({
+                        ...row.doc,
+                    })
                 }
                 context.commit('addOpenProjects', projects)
             } catch (error) {
@@ -180,11 +182,11 @@ const tasks = {
         getTaskPriorities(context) {
             window.db.query('offpim/task-priority-count', {
                 group: true
-            }).then(function (data) {
+            }).then(function(data) {
                 data.rows.forEach((aggregate) => {
                     context.commit('setTaskPriorities', aggregate)
                 });
-            }).catch(function (error) {
+            }).catch(function(error) {
                 context.dispatch("infoBridge", {
                     text: 'Getting task priorities failed' + error,
                     color: "error",
@@ -196,8 +198,7 @@ const tasks = {
             let list = payload;
             context.commit('toggleLoader');
             let mango = {
-                selector:
-                {
+                selector: {
                     productivity: true,
                     type: "task",
                 },
@@ -249,11 +250,11 @@ const tasks = {
             }
 
             window.db.find(mango)
-                .then(function (data) {
+                .then(function(data) {
 
                     context.commit('addDataArray', data.docs)
 
-                }).catch(function (error) {
+                }).catch(function(error) {
                     context.commit('toggleLoader');
                     context.dispatch("infoBridge", {
                         text: 'Getting tasks failed: ' + error,
@@ -262,7 +263,7 @@ const tasks = {
                 });
 
         },
-        getTasksTagList: async function (context) {
+        getTasksTagList: async function(context) {
             try {
                 const result = await window.db.query('offpim/tasks-tag-count', {
                     group: true

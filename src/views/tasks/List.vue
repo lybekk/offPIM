@@ -1,77 +1,21 @@
-<template lang="pug">
-v-container(
-  :fluid="$vuetify.breakpoint.mdAndDown"
-  )
-  v-skeleton-loader(
-      :loading="this.$store.getters.loaderState"
-      class="mx-auto"
-      transition="scroll-y-reverse-transition"
-      type="list-item-avatar-two-line"
-      
-  )
-    //- INFO - don't use group-by="status". Reorders tasks on status change, making task lose fokus
-    v-data-iterator(
-        :items="tasks"
-        item-key="_id"
-        :search="search"
-        :loading="this.$store.getters.loaderState"
-        loading-text="Getting tasks"
-        no-data-text="No tasks matching request"
-        :sort-by="sortBy.toLowerCase()"
-        :items-per-page="25"
-        :hide-default-footer="tasks.length < 25"
-    )
-      template(v-slot:header)
-        v-toolbar(
-          color="transparent"
-          class="mb-1"
-          flat
-          )
-          v-text-field(
-            v-model="search"
-            clearable
-            flat
-            hide-details
-            prepend-inner-icon="mdi-magnify"
-            label="Filter list"
-          )
-          v-spacer
-          v-select(
-            v-model="sortBy"
-            flat
-            solo
-            hide-details
-            :items="keys"
-            prepend-inner-icon="mdi-sort-variant"
-            label="Sort"
-          )
-      template(v-slot:default="props")
-        v-list(three-line)
-          template(v-for="doc in props.items")
-            tasks-item(
-              :key="doc._id"
-              v-bind:docid="doc._id"
-            )
-            v-divider(inset)
+<template>
+  <TasksDataIteratorList :tasks="tasks" />
 </template>
 
 <script>
-import TasksItem from "@/components/tasks/TasksItem.vue";
+import TasksDataIteratorList from "@/components/tasks/TasksDataIteratorList.vue";
 import pouchMixin from "@/mixins/pouchMixin";
 
 export default {
   name: "tasksList",
   components: {
-    TasksItem
+    TasksDataIteratorList
   },
   mixins: [pouchMixin],
   props: {
     source: String
   },
   data: () => ({
-    search: "",
-    sortBy: "due",
-    keys: ["Due", "Status", "Priority", "Project"],
     tasks: []
   }),
   computed: {

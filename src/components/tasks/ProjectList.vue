@@ -1,26 +1,46 @@
-<template lang="pug">
-  v-sheet(class="pa-2")
-    v-treeview(
-        :active.sync="active"
-        :items="items"
-        :search="search"
-        :load-children="fetchProjects"
-        :open.sync="open"
-        expand-icon="mdi-chevron-down"
-        activatable
-        color="warning"
-        open-on-click
-        transition
-        dense
-    )
-        template(v-slot:label="{ item, active }")
-            span(
-                v-if="!item.children"
-                @click="showProject(item.id)"
-                :class="item.archived ? 'projectArchived' : ''"
-                :title="projectTitle(item)"
-            ) {{ item.name }}
-            span(v-else) {{ item.name }}
+<template>
+  <v-sheet>
+    <v-sheet class="pa-4 primary lighten-2">
+      <v-text-field
+        v-model="filter"
+        label="Filter projects"
+        dark
+        flat
+        solo-inverted
+        hide-details
+        clearable
+      ></v-text-field>
+    </v-sheet>
+    <v-sheet class="pa-1">
+
+    <v-list>
+      <v-list-group
+        v-for="item in items"
+        :key="item.title"
+        v-model="item.active"
+        :prepend-icon="$store.getters.getStatusIcons[item.title]"
+        no-action
+      >
+        <template v-slot:activator>
+          <v-list-item-content>
+            <v-list-item-title v-text="item.title" style="text-transform: capitalize;" />
+          </v-list-item-content>
+        </template>
+
+        <v-list-item
+          v-for="subItem in item.children"
+          :key="subItem.title"
+          @click="showProject(subItem._id)"
+        >
+          <v-list-item-content>
+            <v-list-item-title v-text="subItem.title" />
+          </v-list-item-content>
+        </v-list-item>
+      </v-list-group>
+    </v-list>
+
+    </v-sheet>
+  </v-sheet>
 </template>
 
 <script>
@@ -31,34 +51,52 @@ export default {
   mixins: [pouchMixin],
   data: () => ({
     closedProjects: [],
-    openProjects: [],
-    projects: {
-      doing: [],
-      next: [],
-      todo: [],
-      plan: [],
-      wait: [],
-      done: [],
-      cancelled: []
-    },
     active: [],
     avatar: null,
     open: ["doing"],
-    search: ""
+    filter: ""
   }),
   computed: {
     items() {
-      let arr = [];
-      const keys = Object.keys(this.projects);
-      for (let k of keys) {
-        arr.push({
-          id: k,
-          name: k.charAt(0).toUpperCase() + k.slice(1),
-          children: this.projects[k]
-        });
+      const statuses = [
+        "doing",
+        "next",
+        "todo",
+        "plan",
+        "wait",
+        "done",
+        "cancelled"
+      ]
+
+      const obj = {}
+
+      for (let key of statuses) {
+        obj[key] = {
+          _id: key,
+          title: key,
+          children: [],
+          active: key == 'doing' ? true: undefined,
+        }
       }
-      return arr;
+
+      for (let p of this.$store.getters.getOpenProjects) {
+        // TODO: Implement filter
+        if (this.filter.length > 0) {
+          if (p.title.includes(this.filter)) {
+            obj[p.status].children.push(p);
+          }
+        } else {
+          obj[p.status].children.push(p);
+        }
+      }
+
+      for (let key in obj) {
+        if (!obj[key].children.length) { delete obj[key] }
+      }
+
+      return Object.values(obj);
     },
+
     closedProjectsSorted: function() {
       const proj = this.closedProjects;
       proj.sort(function(a, b) {
