@@ -1,19 +1,9 @@
 <template>
   <v-container fluid>
     <v-fab-transition>
-      <v-speed-dial
-        absolute 
-        bottom 
-        right
-      >
+      <v-speed-dial absolute bottom right>
         <template v-slot:activator>
-          <v-btn
-            icon 
-            small 
-            fab
-            :disabled="isDeleted"
-            @click="toggleTrashIcon"
-          >
+          <v-btn icon small fab :disabled="isDeleted" @click="toggleTrashIcon">
             <v-icon v-if="trashIconClicked">mdi-close</v-icon>
             <v-icon v-else>mdi-delete</v-icon>
           </v-btn>
@@ -29,34 +19,36 @@
         </v-btn>
       </v-speed-dial>
     </v-fab-transition>
-
   </v-container>
 </template>
 
 <script>
+import pouchMixin from "@/mixins/pouchMixin";
 
 export default {
-  name: 'MainDeleteButton',
-  components: {
-  },
-  props: ['documentId'],
+  name: "MainDeleteButton",
+  components: {},
+  mixins: [pouchMixin],
+  props: ["documentId"],
   data: () => ({
     trashIconClicked: false,
     isDeleted: false
   }),
-  computed: {
-  },
+  computed: {},
   methods: {
-    toggleTrashIcon: function () {
-      this.trashIconClicked = !this.trashIconClicked
+    toggleTrashIcon: function() {
+      this.trashIconClicked = !this.trashIconClicked;
     },
-    deleteDocument: function (id) {
+    deleteDocument: async function(id) {
       this.toggleTrashIcon();
-      this.$store.dispatch('deleteDocument', id);
-      this.$store.commit('setGenericStateBooleanFalse', 'dialogItemDetailed');
+      let doc = await this.getDoc(id, true);
+      this.$store.dispatch("deleteDocument", id);
+      this.$store.commit("setGenericStateBooleanFalse", "dialogItemDetailed");
       this.isDeleted = true;
-    },
+
+      doc.deleted = true;
+      this.$store.commit("refreshDoc", doc);
+    }
   }
 };
-
 </script>
