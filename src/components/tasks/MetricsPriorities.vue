@@ -70,11 +70,6 @@ export default {
       this.$store.dispatch("getTaskPriorities");
     }
 
-    setTimeout(() => {
-      console.log(this.priorityOpenTasks)
-      this.priorityOpenTasks.map(item => console.log( this.priorityCount(item.pri) ) )
-      console.log(this.$vuetify.theme.themes.light.info.base)
-    }, 1000);
   },
   methods: {
     priorityCount: function(priority) {

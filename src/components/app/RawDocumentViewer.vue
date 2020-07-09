@@ -40,11 +40,12 @@ v-dialog(
           class="grey darken-4 info--text pa-2"
         )
           v-card-text
-            code(
+            pre
+              code(
                 v-text="JSON.stringify(doc, null, 2)"
                 class="grey darken-4 info--text pa-2"
                 style="width:100%"
-            )
+              )
         v-card(
           v-if="tab == 'Iterated'"
           flat
