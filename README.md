@@ -2,10 +2,16 @@
 **Formerly known as pimpim**
 *(rebranded as not to be confused with a "male performance product" solving a different problem)*
 
-*Quick access with a fancy URL*
-[offpim.app](https://offpim.app/)
+>offPIM - A PIM - A Personal information management system
+>
+>Use as a Progressive Web App (PWA).
+>
+>Or on the desktop. Supports Windows <img src="assets/img/logo_windows.png" alt="Windows" width="16">, 
+>Mac <img src="assets/img/logo_mac.png" alt="Mac OS" width="16">, 
+>and Linux <img src="assets/img/logo_linux.png" alt="Linux" width="16">
 
-offPIM - A PIM - A Personal information management system
+*Quick access*
+[offpim.app](https://offpim.app/)
 
 ![offPIM architecture diagram](assets/img/offPIM_diagram.svg)
 
