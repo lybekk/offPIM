@@ -51,8 +51,6 @@ $ npm install
 $ npm run electron:build
 ```
 
-### Customization
-
 ## Self-hosted - tested setups / Deployment options
 
 offPIM is run successfully on the following deployment setups
@@ -73,10 +71,41 @@ use offpim/ or another sub-directory if you wish. Using offpim for simplicity he
 
 Added bonus: Turning on CORS is not necessary if put directly in CouchDB's www folder.
 
-## Misc
-For synchronization, CouchDB can be used.
-Installation instructions [Install CouchDB](https://docs.couchdb.org/en/latest/install/index.html)
+### Python HTTPServer
+```python
+import http.server
+import socketserver
+import webbrowser
 
+PORT = 8000
+# Binds to localhost only. Use "" for exposing this to network interfaces
+HOST = "localhost" 
+
+# Launches the server in current working directory in the default web browser
+url = 'http://' + HOST + ":" + str(PORT)
+webbrowser.open_new_tab(url)
+
+# Magic
+Handler = http.server.SimpleHTTPRequestHandler
+
+with socketserver.TCPServer((HOST, PORT), Handler) as httpd:
+    print("serving at port", PORT)
+    httpd.serve_forever()
+```
+
+
+## Synchronization
+*The following setups have been tested successfully*
+
+* CouchDB 2.x
+* CouchDB 3.x
+* Cloudant
+* PouchDB Server
+    * Tested OK on both Desktop and via [Termux on Android](https://lybekk.tech/guide/pouchdb-server-termux).
+
+>Installation instructions for [CouchDB](https://docs.couchdb.org/en/latest/install/index.html)
+
+## Security
 ::: warning
-offPIM implements no security measures. Be sure no one else has access to the database.
+offPIM implements no security measures. Be sure no one else has access to your browser or database.
 :::
