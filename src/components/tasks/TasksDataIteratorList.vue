@@ -15,7 +15,7 @@
         no-data-text="No tasks matching request"
         :sort-by="sortBy.toLowerCase()"
         :items-per-page="25"
-        :hide-default-footer="tasks.length &lt; 25"
+        :hide-default-footer="tasks.length < 25"
       >
         <template v-slot:header>
           <v-toolbar class="mb-1" color="transparent" flat="flat">
