@@ -56,7 +56,7 @@
                         :value="pri[1]"
                         v-on="on"
                       )
-              v-col(v-if="newTask.type == 'task'" cols="12" sm="6")
+              v-col(v-if="newTask.type == 'task'" cols="12" sm="12")
                   v-select(
                       v-model="newTask.project"
                       :items="projectList"
@@ -64,16 +64,6 @@
                       item-text="text"
                       item-value="value"
                       filled
-                      hide-details
-                  )
-              v-col(cols="12" sm="6")
-                  v-combobox(
-                      v-model="newTask.tags"
-                      :items="tagsListItems"
-                      label="Tags"
-                      filled
-                      multiple
-                      chips
                       hide-details
                   )
               v-col(cols="12" sm="6" md="4")
@@ -93,7 +83,7 @@
                               prepend-icon="mdi-calendar"
                               readonly
                               v-on="on"
-                              filled
+                              outlined
                           )
                       v-date-picker(v-model="pickerDate" @input="dateModal = false")
               v-col(cols="11" sm="5")
@@ -115,7 +105,7 @@
                               prepend-icon="mdi-clock"
                               readonly
                               v-on="on"
-                              filled
+                              outlined
                           )
                       v-time-picker(
                           v-if="timeModal"
@@ -131,7 +121,16 @@
                             v-model="newTask.context"
                             label="Context"
                           )
-
+              v-col(cols="12" sm="6")
+                  v-combobox(
+                      v-model="newTask.tags"
+                      :items="tagsListItems"
+                      label="Tags"
+                      filled
+                      multiple
+                      chips
+                      hide-details
+                  )
 </template>
 
 <script>

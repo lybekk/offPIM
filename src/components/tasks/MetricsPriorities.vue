@@ -1,26 +1,27 @@
 <template>
-<v-card v-if="priorityOpenTasks.length">
-    <v-card-title> By priority</v-card-title>
+  <v-card v-if="priorityOpenTasks.length">
+    <v-card-title>Priority</v-card-title>
     <v-card-text>
-        <v-chip-group column active-class="primary--text">
-          <v-chip
-                v-for="btn in priorityOpenTasks"
-                :key="btn.pri"
-                :to="`/tasks/list/priority${btn.pri}`"
-              class="text-capitalize"
-                        :color="priorityStarColor[btn.pri]"
-          >
-            <v-avatar left>
-              <v-icon>mdi-star</v-icon>
-            </v-avatar>
-            {{ btn.pri }}
-            <v-avatar right :class="`${priorityStarColor[btn.pri]} darken-1`">
-                <small> {{ priorityCount(btn.pri) }} </small>
-            </v-avatar>            
-          </v-chip>
-        </v-chip-group>
+      <v-chip-group column active-class="primary--text">
+        <v-chip
+          v-for="btn in priorityOpenTasks"
+          :key="btn.pri"
+          :to="`/tasks/list/priority${btn.pri}`"
+          class="text-capitalize"
+          :color="priorityStarColor[btn.pri]"
+          label
+        >
+          <v-avatar left>
+            <v-icon>mdi-star</v-icon>
+          </v-avatar>
+          {{ btn.pri }}
+          <v-avatar right :class="`${priorityStarColor[btn.pri]} darken-1`">
+            <small>{{ priorityCount(btn.pri) }}</small>
+          </v-avatar>
+        </v-chip>
+      </v-chip-group>
     </v-card-text>
-</v-card>
+  </v-card>
 </template>
 
 <script>
@@ -56,8 +57,8 @@ export default {
     },
 
     priorityValues() {
-      return this.priorityOpenTasks.map(item => this.priorityCount(item.pri) )
-    },
+      return this.priorityOpenTasks.map(item => this.priorityCount(item.pri));
+    }
   },
   mounted() {
     const s = this.$store.getters.getTaskPriorities;
@@ -69,7 +70,6 @@ export default {
     if (!total) {
       this.$store.dispatch("getTaskPriorities");
     }
-
   },
   methods: {
     priorityCount: function(priority) {

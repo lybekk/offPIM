@@ -97,7 +97,12 @@ export default {
             }
         } catch (error) {
             // TODO Advise troubleshooting steps (network/curl, CORS )
-            context.dispatch("infoBridge", { color: 'warning', text: 'Remote database connection unsuccessful', level: 'warn', error: error });
+            context.dispatch("infoBridge", {
+                color: 'warning',
+                text: 'Remote database connection unsuccessful',
+                level: 'warn',
+                error: JSON.stringify(error)
+            });
             context.commit('setGenericStateBooleanFalse', 'remoteDBIsOnline');
             return false
         }

@@ -1,6 +1,6 @@
 <template lang="pug">
 v-main
-  v-container(fluid)
+  v-container
     v-row
       v-col
         v-container
@@ -39,49 +39,34 @@ v-main
         md="6"
         lg="3"
       )
-        v-skeleton-loader(
-          :loading="!this.$store.getters.getTasksAggregate.initiated"
-          transition="scale-transition"
-          type="image"
-        )
-          metrics-statuses
+        metrics-statuses
       v-col(                  
         lg="2"
       )
-        //-md="6"
         metrics-priorities
-      v-col(
+      //- TODO: Replace with Vue's own progress
+      //-v-col(
         md="6"
         lg="3"
-      )
+        )
         chart-tasks-today
-      v-col
+      v-col(lg="2")
         v-card(v-if="this.$store.getters.getTasksAggregate.initiated && taskProgress.visible")
-          v-card-text
-            v-container(fluid)
-              v-row
-                v-col(cols="12")
-                  div
-                    p(v-if="!this.$store.getters.getTasksAggregate.initiated") Retrieving aggregates
-                    p(
-                      v-if="taskProgress.value != 100"
-                    ) Tasks done today: 
-                      //-v-if="this.$store.getters.getTasksAggregate.doneToday != 0"
-                      span(
-                        v-text="this.$store.getters.getTasksAggregate.doneToday"
-                        class="success--text"
-                      )
-                      v-progress-linear(
-                        v-if="this.$store.getters.getTasksAggregate.initiated && taskProgress.visible"
-                        :color="taskProgress.color"
-                        :value="taskProgress.value" 
-                      )
-                    div(v-else)
-                      v-list-item
-                        v-list-item-icon
-                          v-icon(color="success") mdi-check
-                        v-list-item-content
-                          v-list-item-title All done for today
+          v-card-title
+            v-icon(v-if="allTasksDone" large left color="success") mdi-check
+            span(v-text="!allTasksDone ? 'Done today: ' : 'All due done'") 
+            span(
+              v-if="!allTasksDone"
+              v-text="this.$store.getters.getTasksAggregate.doneToday"
+              class="success--text ml-1"
+            )
+          v-card-subtitle(v-if="!allTasksDone")
+            v-progress-linear(
+              v-if="this.$store.getters.getTasksAggregate.initiated && taskProgress.visible"
+              :color="taskProgress.color"
+              :value="taskProgress.value" 
+              rounded
+            )
   v-footer 
     v-container
       v-row
@@ -164,22 +149,32 @@ export default {
       }
       return obj
     },
+    allTasksDone() {
+      return this.taskProgress.value == 100 ? true : false
+    },
     taskProgress: function () {
       let j = { color: 'info', buffer: 0, value: 0, visible: true}
       let a = this.$store.getters.getTasksAggregate
       let d = a.doneToday;
       let t = a.today;
       let o = a.overdue;
-      if (d == 0 && t == 0) {
+      let tasksLeft = t + o;
+      /**
+       * If no tasks are due
+       */
+      if (d == 0 && !tasksLeft) {
         j.visible = false
         return j
       }
-      if ( d > 0 && t + o == 0) {
+      /**
+       * If all due tasks are done
+       */
+      if ( d > 0 && !tasksLeft) {
         j.value = 100
         j.color = 'success'
         return j
       }
-      let s = d + t
+      let s = d + tasksLeft
       let pct = Math.floor( d / s * 100 )
       j.value = pct
       if (pct <= 50) {
@@ -217,12 +212,6 @@ export default {
         ov = `${tov}`
       }
       return { main: r, overdue: ov }
-    },
-    sparklineLoading: function () {
-      if (this.tasksStatuSparklineValues.length == 5) {
-        return false
-      }
-      return true
     },
     totalOpenTasks() {
       const s = this.$store.getters.getTaskStatuses;

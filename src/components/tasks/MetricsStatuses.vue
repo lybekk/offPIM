@@ -1,14 +1,15 @@
 <template>
 <v-card v-if="statusList.length">
-    <v-card-title> By status</v-card-title>
+    <v-card-title>Status</v-card-title>
     <v-card-text>
-        <v-chip-group column active-class="primary--text">
+        <v-chip-group column>
           <v-chip
             v-for="status in statusList"
             :key="status"
             :to="`/tasks/list/status${status}`"
             :color="$store.getters.getStatusColors[status]"
             class="text-capitalize"
+            label
           >
             <v-avatar left>
               <v-icon>{{ $store.getters.getStatusIcons[status] }}</v-icon>

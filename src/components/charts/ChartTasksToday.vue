@@ -19,9 +19,9 @@ export default {
           {
             data: [],
             backgroundColor: [
-              this.$vuetify.theme.themes.light.error,
-              this.$vuetify.theme.themes.light.warning,
-              this.$vuetify.theme.themes.light.success,
+              this.$vuetify.theme.themes.light.error.base,
+              this.$vuetify.theme.themes.light.warning.base,
+              this.$vuetify.theme.themes.light.success.base,
             ],
             borderWidth: 2,
           }

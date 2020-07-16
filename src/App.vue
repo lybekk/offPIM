@@ -167,7 +167,6 @@ export default {
           doc: "offpim_mango_indexes",
           version: MangoDesignDoc.version
         });
-        console.log(pDoc);
         if (!pDoc || !mDoc) {
           await this.insertDesignDocument(offPIMDesignDoc, "offpim");
           await this.insertDesignDocument(
@@ -178,10 +177,11 @@ export default {
         v.dispatch("setTotals");
         v.dispatch("setMessagesUnreadCount");
       } catch (err) {
-        console.log(
-          "Something went wrong during design doc verification: ",
-          err
-        );
+          this.$store.dispatch("infoBridge", {
+            text: "Something went wrong during design doc verification: ",
+            color: "error",
+            error: err
+          });
       }
     },
     insertDesignDocument: async function(serverDoc, docId) {

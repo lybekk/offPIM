@@ -1,5 +1,5 @@
 <template lang="pug">
-    v-content
+    v-main
         v-scroll-y-reverse-transition(mode="out-in")
             router-view
 </template>
