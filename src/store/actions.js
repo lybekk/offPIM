@@ -1,30 +1,12 @@
 export default {
-    setTotals: async function(context) {
+    setTotals: async function (context) {
         const response = await window.db.query('offpim/totals', {
             group: true
         })
         context.commit('setTotals', response)
     },
 
-    deleteDocument: async function(context, docId) {
-        let result;
-        try {
-            var doc = await window.db.get(docId);
-            var response = await window.db.remove(doc);
-            this.commit('addDeleted', docId)
-            this.dispatch("infoBridge", {
-                text: 'Document deleted',
-                color: 'info',
-                error: docId + ' Doc delete result: ' + response,
-            });
-        } catch (error) {
-            this.dispatch("infoBridge", { color: 'error', text: 'Deleting document failed: ', level: 'error', error: error });
-            result = error
-        }
-        return await result;
-    },
-
-    insertDocument: async function(state, payload) {
+    insertDocument: async function (state, payload) {
         let txt;
         let pDoc = payload.doc;
 
@@ -57,7 +39,7 @@ export default {
         }
     },
 
-    postData: async function(state, payload) {
+    postData: async function (state, payload) {
         this.commit('loaderActive')
         const response = await fetch(payload.url, {
             method: 'POST',
@@ -71,7 +53,7 @@ export default {
         return data;
     },
 
-    startupIndexCheck: async function(context, payload) {
+    startupIndexCheck: async function (context, payload) {
         try {
             const localVersion = payload.version;
             const dbDoc = await window.db.get(`_design/${payload.doc}`); // databaseDesignDoc
@@ -86,7 +68,7 @@ export default {
         }
     },
 
-    remoteDBConnectivityCheck: async function(context) {
+    remoteDBConnectivityCheck: async function (context) {
         try {
             const response = await window.remoteDB.info();
             if (response.db_name) {
@@ -108,17 +90,17 @@ export default {
         }
     },
 
-    remoteDBInfo: async function(context) {
+    remoteDBInfo: async function (context) {
         const result = await window.remoteDB.info();
         context.commit('remoteDBInfo', result)
     },
 
-    localDBInfo: async function(context) {
+    localDBInfo: async function (context) {
         const result = await window.db.info();
         context.commit('localDBInfo', result)
     },
 
-    setRawDocumentViewerDocument: async function(context, docId) {
+    setRawDocumentViewerDocument: async function (context, docId) {
         try {
             context.commit(
                 'setRawDocumentViewerDocument',
@@ -129,12 +111,12 @@ export default {
         }
     },
 
-    getDoc: async function(context, docId) {
+    getDoc: async function (context, docId) {
         // TODO WAIT - When using remote as primary. use window.remoteDB
         return await window.db.get(docId);
     },
 
-    refreshDoc: async function(context, docId) {
+    refreshDoc: async function (context, docId) {
         const doc = await context.dispatch('getDoc', docId);
         context.commit('refreshDoc', doc)
     },
@@ -146,7 +128,7 @@ export default {
      * @param {*} context 
      * @param {*} obj 
      */
-    infoBridge: function(context, obj) {
+    infoBridge: function (context, obj) {
         obj.created = new Date().toISOString();
 
         if (obj.color && !obj.silent) {

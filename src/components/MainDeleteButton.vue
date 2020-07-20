@@ -1,11 +1,25 @@
 <template>
   <v-container fluid>
     <v-fab-transition>
-      <v-speed-dial absolute bottom right>
+      <v-speed-dial
+        absolute
+        bottom
+        right
+      >
         <template v-slot:activator>
-          <v-btn icon small fab :disabled="isDeleted" @click="toggleTrashIcon">
-            <v-icon v-if="trashIconClicked">mdi-close</v-icon>
-            <v-icon v-else>mdi-delete</v-icon>
+          <v-btn
+            icon
+            small
+            fab
+            :disabled="isDeleted"
+            @click="toggleTrashIcon"
+          >
+            <v-icon v-if="trashIconClicked">
+              mdi-close
+            </v-icon>
+            <v-icon v-else>
+              mdi-delete
+            </v-icon>
           </v-btn>
         </template>
         <v-btn
@@ -15,7 +29,9 @@
           :disabled="isDeleted"
           @click="deleteDocument(documentId)"
         >
-          <v-icon color="black">mdi-radioactive</v-icon>
+          <v-icon color="black">
+            mdi-radioactive
+          </v-icon>
         </v-btn>
       </v-speed-dial>
     </v-fab-transition>
@@ -29,7 +45,12 @@ export default {
   name: "MainDeleteButton",
   components: {},
   mixins: [pouchMixin],
-  props: ["documentId"],
+  props: {
+    documentId: {
+      type: String,
+      default: null,
+    }
+  },
   data: () => ({
     trashIconClicked: false,
     isDeleted: false
@@ -41,12 +62,12 @@ export default {
     },
     deleteDocument: async function(id) {
       this.toggleTrashIcon();
-      let doc = await this.getDoc(id, true);
-      this.$store.dispatch("deleteDocument", id);
+      this.deleteDoc(id);
       this.$store.commit("setGenericStateBooleanFalse", "dialogItemDetailed");
       this.isDeleted = true;
 
-      doc.deleted = true;
+      let doc = await this.getDoc(id, true);
+      doc._deleted = true;
       this.$store.commit("refreshDoc", doc);
     }
   }
