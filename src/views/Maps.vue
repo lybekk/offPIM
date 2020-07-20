@@ -1,29 +1,25 @@
-<template lang="pug">
-v-content
-    v-container(fluid)
-        v-row(
-            no-gutters
-        )
-            v-col
-                div#mapid
-                div#navbtns
-                    v-btn(
-                        @click="whereAmI"
-                    )
-                        v-icon(v-text="myLocationIcon")
-
+<template>
+  <v-content>
+    <v-container fluid>
+      <v-row no-gutters>
+        <v-col>
+          <div id="mapid" />
+          <div id="navbtns">
+            <v-btn @click="whereAmI">
+              <v-icon v-text="myLocationIcon" />
+            </v-btn>
+          </div>
+        </v-col>
+      </v-row>
+    </v-container>
+  </v-content>
 </template>
 
 <script>
 import L from 'leaflet';
 
 export default {
-    name: 'maps',
-    components: {
-    },
-    props: {
-        source: String,
-    },
+    name: 'Maps',
     data: () => ({
         myLocationIcon: 'mdi-crosshairs',
         mapSource: {
@@ -34,10 +30,6 @@ export default {
             }
         }
     }),
-    computed: {
-    },
-    created: function () {
-    },
     mounted () {
         const mapVendor = 'openStreetMap';
         const m = this.mapSource[ mapVendor ];
@@ -49,8 +41,6 @@ export default {
             subdomains: m.subdomains
         }).addTo( this.mymap );
 
-    },
-    beforeDestroy() {
     },
     methods: {
         whereAmI: function () {

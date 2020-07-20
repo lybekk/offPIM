@@ -2,20 +2,29 @@
   <v-card v-if="priorityOpenTasks.length">
     <v-card-title>Priority</v-card-title>
     <v-card-text>
-      <v-chip-group column active-class="primary--text">
+      <v-chip-group
+        column
+        active-class="primary--text"
+      >
         <v-chip
           v-for="btn in priorityOpenTasks"
           :key="btn.pri"
           :to="`/tasks/list/priority${btn.pri}`"
+          color="secondary"
           class="text-capitalize"
-          :color="priorityStarColor[btn.pri]"
           label
         >
-          <v-avatar left>
-            <v-icon>mdi-star</v-icon>
-          </v-avatar>
+          <v-icon 
+            left
+            :color="`${priorityStarColor[btn.pri]} lighten-2`"
+          >
+            mdi-star
+          </v-icon>
           {{ btn.pri }}
-          <v-avatar right :class="`${priorityStarColor[btn.pri]} darken-1`">
+          <v-avatar
+            right
+            color="secondary darken-3"
+          >
             <small>{{ priorityCount(btn.pri) }}</small>
           </v-avatar>
         </v-chip>
@@ -26,7 +35,7 @@
 
 <script>
 export default {
-  name: "metricspriorities",
+  name: "Metricspriorities",
   data: () => ({
     priorityButtons: [
       { pri: 1, title: "Important & urgent" },

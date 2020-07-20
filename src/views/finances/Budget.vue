@@ -1,4 +1,88 @@
-<template lang="pug">
+<template>
+  <v-container>
+    <v-tabs
+      :vertical="$vuetify.breakpoint.mdAndUp"
+      color="primary"
+      center-active
+    >
+      <v-tab href="#tab-income">
+        Income
+      </v-tab>
+      <v-tab href="#tab-expenses">
+        Expenses
+      </v-tab>
+      <v-tab href="#tab-contracts">
+        Contracts
+      </v-tab>
+      <v-tab-item
+        v-for="tab in tabsIncomeExpenses"
+        :id="tab.id"
+        :key="tab.name"
+      >
+        <v-container>
+          <v-card flat="flat">
+            <v-card-title>
+              <v-spacer />
+              <v-text-field
+                v-model="tab.searchModel"
+                append-icon="mdi-magnify"
+                label="Search"
+                single-line
+                hide-details
+              />
+            </v-card-title>
+            <v-card-text>
+              <v-data-iterator
+                class="elevation-0"
+                :items="$store.getters.getBudget( tab.name )"
+                :loading="$store.getters.loaderState"
+                :items-per-page="10"
+                :search="tab.searchModel"
+                loading-text="Looking..."
+                no-data-text="None found"
+              >
+                <template v-slot:default="props">
+                  <v-list three-line="three-line">
+                    <v-list-item
+                      v-for="doc in props.items"
+                      :key="doc._id"
+                      @click="console.log('Work in progress')"
+                    >
+                      <v-list-item-content>
+                        <v-list-item-title
+                          class="title font-weight-regular primary--text"
+                          v-text="doc.name"
+                        /><v-list-item-subtitle
+                          class="subtitle-1"
+                          v-text="doc.institution"
+                        /><v-list-item-subtitle v-text="doc.description" />
+                      </v-list-item-content><v-list-item-action>
+                        <v-list-item-action-text
+                          :class="`body-1 ${getColor(doc.amount)}--text text--accent-2`"
+                          v-text="doc.amount"
+                        /><v-list-item-action-text
+                          class="text-capitalize"
+                          v-text="doc.category"
+                        />
+                      </v-list-item-action>
+                    </v-list-item>
+                  </v-list>
+                </template>
+              </v-data-iterator>
+            </v-card-text><br>
+          </v-card>
+        </v-container>
+      </v-tab-item>
+      <v-tab-item id="tab-contracts">
+        <v-card flat="flat">
+          <v-card-title>Contracts/Subscriptions/Memberships</v-card-title>
+          <v-card-text>Work in progress</v-card-text>
+        </v-card>
+      </v-tab-item>
+    </v-tabs>
+
+    <!-- 
+
   v-container
     v-tabs(
         :vertical="$vuetify.breakpoint.mdAndUp"
@@ -162,17 +246,13 @@
       Liabilities??
       budget
       type for accounts (subscriptions/memberships? services?)
-
+-->
+  </v-container>
 </template>
 <script>
 
 export default {
-  name: 'financesBudget',
-  components: {
-  },
-  props: {
-    source: String,
-  },
+  name: 'FinancesBudget',
   data: () => ({
     searchIncome: null,
     searchExpense: null,

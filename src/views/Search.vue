@@ -1,50 +1,70 @@
-<template lang="pug">
-v-main
-  v-container(
-    class="fill-height"
-  )
-    v-row(
-      align="center"
-      justify="center"
-    )
-      v-col(cols="12" sm="6")
-        v-form(@submit.prevent="beginSearch")
-          v-text-field(
-            v-model="searchInput"
-            hide-details
-            placeholder="Search"
-            outlined
-            rounded
-          )
-          v-row(justify="center")
-            v-col(cols="6")
-              v-btn(
-                type="submit"
-                rounded
-                block
-                :loading="searchInProgress"
-                color="secondary"
-                ) Search
-              //-@click="beginSearch"
+<template>
+  <v-main>
+    <v-container class="fill-height">
+      <v-row
+        align="center"
+        justify="center"
+      >
+        <v-col
+          cols="12"
+          sm="6"
+        >
+          <v-form @submit.prevent="beginSearch">
+            <v-text-field
+              v-model="searchInput"
+              hide-details
+              placeholder="Search"
+              outlined
+              rounded
+            />
+            <v-row justify="center">
+              <v-col cols="6">
+                <v-btn
+                  type="submit"
+                  rounded
+                  block
+                  :loading="searchInProgress"
+                  color="secondary"
+                >
+                  Search
+                </v-btn>
+              </v-col>
+            </v-row>
+          </v-form>
+        </v-col>
+        <v-col
+          v-if="indexReady"
+          cols="12"
+        >
+          {{ searchResultsFound }} Results
+        </v-col>
+        <v-col
+          v-if="searchResultsFound &gt;= 100"
+          cols="12"
+        >
+          Showing {{ searchResults.length }}
+        </v-col>
+        <v-col cols="12">
+          <v-list three-line>
+            <SearchResultItem
+              v-for="result in searchResults"
+              :key="result._id"
+              :doc="result.doc"
+              :score="result.score"
+            />
+          </v-list>
+        </v-col>
+      </v-row>
+    </v-container>
+    <!-- 
         //- TODO - implement search help 
         //- either/or/both link to lunr.js https://lunrjs.com/guides/searching.html 
         //- Tooltip or container for short help text
-      //-v-col
+        //-v-col
         //-v-btn(@click="buildIndex") Build index
         //-v-row
-      v-col(cols="12" v-if="indexReady") {{ searchResultsFound }} Results
-      v-col(cols="12" v-if="searchResultsFound >= 100") Showing {{ searchResults.length }} 
-      v-col(
-        cols="12"
-        )
-        v-list(three-line)
-          search-result-item(
-            v-for="result in searchResults"
-            :key="result._id"
-            :doc="result.doc" 
-            :score="result.score"
-            )
-
+      -->
+  </v-main>
 </template>
 
 <script>
@@ -53,7 +73,7 @@ import pouchMixin from "@/mixins/pouchMixin";
 import SearchResultItem from "@/components/search/SearchResultItem.vue";
 
 export default {
-  name: "search",
+  name: "Search",
   components: {
     SearchResultItem
   },

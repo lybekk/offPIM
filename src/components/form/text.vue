@@ -1,19 +1,33 @@
-<template lang="pug">
-v-col(cols="12")
-    v-text-field(
-        :value="value"
-        :label="label"
-        dense
-        class="text-capitalize"
-        :hint="hint"
-        @input="handleInput"
-    )
+<template>
+  <v-col cols="12">
+    <v-text-field
+      class="text-capitalize"
+      :value="value"
+      :label="label"
+      dense
+      :hint="hint"
+      @input="handleInput"
+    />
+  </v-col>
 </template>
 
 <script>
 export default {
-    name: 'formText',
-    props: ['label','hint','value'],
+    name: 'FormText',
+    props: {
+        label: {
+            type: String,
+            default: null,
+        },
+        hint: {
+            type: String,
+            default: null,
+        },
+        value: {
+            type: String,
+            default: null,
+        },
+    },
     computed: {
     },
     methods: {

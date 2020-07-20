@@ -1,72 +1,90 @@
-<template lang="pug">
-    v-row
-      v-col(cols="7")
-        v-menu(
-          v-model="dateMenu"
-          :close-on-content-click="false"
-          :nudge-right="40"
-          transition="scale-transition"
-          offset-y
-          min-width="290px"
-        )
-          template(v-slot:activator="{ on }")
-            v-text-field(
-              v-model="date"
-              label="Date"
-              prepend-icon="mdi-calendar"
-              readonly
-              dense 
-              hide-details="auto"
-              v-on="on"
-            )
-              //-:label="fieldName.toUpperCase()"
-          v-date-picker(v-model="date" @input="dateMenu = false")
-      v-col(cols="3")
-        v-menu(
-          ref="menu"
-          v-model="timeMenu"
-          :close-on-content-click="false"
-          :nudge-right="40"
-          transition="scale-transition"
-          offset-y
-          max-width="290px"
-          min-width="290px"
-        )
-          template(v-slot:activator="{ on }")
-            v-text-field(
-              v-model="time"
-              label="Time"
-              dense 
-              hide-details="auto"
-              readonly
-              v-on="on"
-            )
-          v-time-picker(
-            v-if="timeMenu"
+<template>
+  <v-row>
+    <v-col cols="7">
+      <v-menu
+        v-model="dateMenu"
+        :close-on-content-click="false"
+        :nudge-right="40"
+        transition="scale-transition"
+        offset-y
+        min-width="290px"
+      >
+        <template v-slot:activator="{ on }">
+          <v-text-field
+            v-model="date"
+            label="Date"
+            prepend-icon="mdi-calendar"
+            outlined
+            readonly
+            hide-details="auto"
+            v-on="on"
+          />
+        </template>
+        <v-date-picker
+          v-model="date"
+          @input="dateMenu = false"
+        />
+      </v-menu>
+    </v-col>
+    <v-col cols="3">
+      <v-menu
+        ref="menu"
+        v-model="timeMenu"
+        :close-on-content-click="false"
+        :nudge-right="40"
+        transition="scale-transition"
+        offset-y
+        max-width="290px"
+        min-width="290px"
+      >
+        <template v-slot:activator="{ on }">
+          <v-text-field
             v-model="time"
-            full-width
-            format="24hr"
-            @change="setTime(newTime)"
-          )
-      v-col(cols="2")
-        v-btn(
-          icon
-          color="primary"
-          title="Clear date"
-          @click="clearTaskDate"
-        )
-          v-icon mdi-close
-
+            label="Time"
+            hide-details="auto"
+            outlined
+            readonly
+            v-on="on"
+          />
+        </template>
+        <v-time-picker
+          v-if="timeMenu"
+          v-model="time"
+          full-width
+          format="24hr"
+          @change="setTime(newTime)"
+        />
+      </v-menu>
+    </v-col>
+    <v-col cols="2">
+      <v-btn
+        color="secondary"
+        title="Clear date"
+        @click="clearTaskDate"
+      >
+        Clear
+      </v-btn>
+    </v-col>
+  </v-row>
 </template>
 
 <script>
 import pouchMixin from "@/mixins/pouchMixin";
 
 export default {
-  name: "formDatetime",
+  name: "FormDatetime",
   components: {},
   mixins: [pouchMixin],
-  props: ["doc", "fieldName"],
+  props: {
+      doc: {
+          type: Object,
+          default: () => {},
+      },
+      fieldName: {
+          type: String,
+          default: null,
+      },
+  },
   data: () => ({
     dateMenu: false,
     timeMenu: false,

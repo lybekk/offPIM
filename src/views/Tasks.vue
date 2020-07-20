@@ -1,28 +1,30 @@
-<template lang="pug">
-v-main
-  v-navigation-drawer(
-    v-model="drawer"
-    app
-    temporary
-    right
-  )
-    project-list
-  v-scroll-x-transition(mode="out-in")
-    router-view
-
+<template>
+  <v-main>
+    <v-navigation-drawer
+      v-model="drawer"
+      app
+      temporary
+      right
+    >
+      <ProjectList />
+    </v-navigation-drawer>
+    <v-scroll-x-transition mode="out-in">
+      <router-view />
+    </v-scroll-x-transition>
+  </v-main>
 </template>
 
 <script>
 import ProjectList from "@/components/tasks/ProjectList.vue";
 
 export default {
-  name: "tasks",
+  name: "Tasks",
   components: {
     ProjectList
   },
-  props: {
-    source: String
-  },
+  //props: {
+  //  source: String
+  //},
   data: () => ({
     icon: "justify",
     navTabs: [

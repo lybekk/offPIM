@@ -1,28 +1,27 @@
-<template lang="pug">
-        v-skeleton-loader(
-            :loading="this.$store.getters.loaderState"
-            class="mx-auto"
-            transition="scroll-y-reverse-transition"
-            type="article"
-        )
-            v-data-iterator(
-                :items="this.$store.getters.getData"
-                item-key="_id"
-                :items-per-page="20"
-            )
-                template(v-slot:default="props")
-                    v-row
-                        v-col(
-                            v-for="doc in props.items"
-                            :key="doc._id"
-                            cols="12"
-                            sm="6"
-                            md="4"
-                            lg="3"
-                        )
-                            notes-item(
-                                v-bind:doc="doc"
-                            )
+<template>
+  <v-data-iterator
+    :items="this.$store.getters.getData"
+    item-key="_id"
+    :items-per-page="20"
+    :loading="this.$store.getters.loaderState"
+    loading-text="Getting Notes"
+    no-data-text="No notes matching request"
+  >
+    <template v-slot:default="props">
+      <v-row>
+        <v-col
+          v-for="doc in props.items"
+          :key="doc._id"
+          cols="12"
+          sm="6"
+          md="4"
+          lg="3"
+        >
+          <NotesItem :doc="doc" />
+        </v-col>
+      </v-row>
+    </template>
+  </v-data-iterator>
 </template>
 
 <script>
@@ -30,12 +29,17 @@ import pouchMixin from "@/mixins/pouchMixin";
 import NotesItem from "@/components/notes/NotesItem.vue";
 
 export default {
-  name: "notesTag",
+  name: "NotesTag",
   components: {
     NotesItem
   },
   mixins: [pouchMixin],
-  props: ["tag"],
+  props: {
+    tag: {
+      type: String,
+      default: 'No tag'
+    },
+  },
   data: () => ({}),
   watch: {
     $route(to) {

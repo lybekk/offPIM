@@ -1,65 +1,92 @@
-<template lang="pug">
-v-list
-  v-list-item(
-    v-for="link in apps"
-    :key="link.name"
-    link :to="{ name: link.to, params: link.params }"
-  )
-    v-list-item-icon
-      v-icon(v-text="link.icon")
-    v-list-item-content
-      v-list-item-title(
-        v-text="link.name"
-        style="text-transform: capitalize;"
-      )
-    v-list-item-action
-      v-badge(
-        v-if="link.name == 'Tasks'"
-        :content="$store.getters.getTasksAggregate.today"
-        :value="$store.getters.getTasksAggregate.today != 0"
-        bordered
-        overlap
-      )
-      v-badge(
-        v-if="link.name == 'Messages'"
-        :content="badgeMessagesUnread"
-        :value="badgeMessagesUnread != 0"
-        bordered
-      )
-  v-divider
-  v-list
-    v-list-item(link to="/tools")
-      v-list-item-action
-        v-icon mdi-tools
-      v-list-item-content
-        v-list-item-title Tools
-    v-list-item(link to="/settings")
-      v-list-item-action
-        v-icon mdi-cogs
-      v-list-item-content
-        v-list-item-title Settings
-  v-divider
-  v-list
-    v-list-group(
-      prepend-icon="mdi-progress-wrench"
-      no-action
-    )
-      template(v-slot:activator)
-        v-list-item-content
-          v-list-item-title Concepts
-      v-list-item(
-        v-for="link in concepts"
-        :key="link.name"
-        link :to="{ name: link.name }"
-      )
-        v-list-item-action
-          v-icon(v-text="link.icon")
-        v-list-item-content
-          v-list-item-title(
-            v-text="link.name"
-            style="text-transform: capitalize;"
-          )
-
+<template>
+  <v-list shaped>
+    <v-list-item
+      v-for="link in apps"
+      :key="link.name"
+      link
+      :to="{ name: link.to, params: link.params }"
+      active-class="secondary"
+    >
+      <v-list-item-icon>
+        <v-icon v-text="link.icon" />
+      </v-list-item-icon>
+      <v-list-item-content>
+        <v-list-item-title
+          style="text-transform: capitalize;"
+          v-text="link.name"
+        />
+      </v-list-item-content>
+      <v-list-item-action>
+        <v-badge
+          v-if="link.name == 'Tasks'"
+          :content="$store.getters.getTasksAggregate.today"
+          :value="$store.getters.getTasksAggregate.today != 0"
+          bordered
+          overlap
+        />
+        <v-badge
+          v-if="link.name == 'Messages'"
+          :content="badgeMessagesUnread"
+          :value="badgeMessagesUnread != 0"
+          bordered="bordered"
+        />
+      </v-list-item-action>
+    </v-list-item>
+    <v-divider inset />
+    <v-list>
+      <v-list-item
+        link
+        to="/tools"
+      >
+        <v-list-item-action>
+          <v-icon>mdi-tools</v-icon>
+        </v-list-item-action>
+        <v-list-item-content>
+          <v-list-item-title>Tools</v-list-item-title>
+        </v-list-item-content>
+      </v-list-item>
+      <v-list-item
+        link="link"
+        to="/settings"
+      >
+        <v-list-item-action>
+          <v-icon>mdi-cogs</v-icon>
+        </v-list-item-action>
+        <v-list-item-content>
+          <v-list-item-title>Settings</v-list-item-title>
+        </v-list-item-content>
+      </v-list-item>
+    </v-list>
+    <v-divider inset />
+    <v-list>
+      <v-list-group
+        prepend-icon="mdi-progress-wrench"
+        no-action
+      >
+        <template v-slot:activator>
+          <v-list-item-content>
+            <v-list-item-title>Concepts</v-list-item-title>
+          </v-list-item-content>
+        </template>
+        <v-list-item
+          v-for="link in concepts"
+          :key="link.name"
+          link
+          :to="{ name: link.name }"
+        >
+          <v-list-item-action>
+            <v-icon v-text="link.icon" />
+          </v-list-item-action>
+          <v-list-item-content>
+            <v-list-item-title
+              style="text-transform: capitalize;"
+              v-text="link.name"
+            />
+          </v-list-item-content>
+        </v-list-item>
+      </v-list-group>
+    </v-list>
+  </v-list>
 </template>
 
 <script>
@@ -75,33 +102,33 @@ export default {
       {
         name: "Tasks",
         icon: "mdi-check",
-        to: "tasksOverview",
+        to: "tasksOverview"
       },
       {
         name: "Notes",
         icon: "mdi-note",
-        to: "notes",
+        to: "notes"
       },
       {
         name: "Logbook",
         icon: "mdi-book-open",
-        to: "logbook",
+        to: "logbook"
       },
       {
         name: "Messages",
         icon: "mdi-email",
-        to: "messages",
+        to: "messages"
       },
       {
         name: "Search",
         icon: "mdi-magnify",
-        to: "search",
+        to: "search"
       },
       {
         name: "Contacts",
         icon: "mdi-account",
-        to: "contacts",
-      },
+        to: "contacts"
+      }
     ],
     concepts: [
       {
@@ -124,7 +151,7 @@ export default {
   }),
   computed: {
     badgeMessagesUnread: function() {
-      console.log('Fix this')
+      console.log("Fix this");
       let x = this.$store.getters.getMessagesUnreadCount;
       if (x > 10) {
         return "10+";

@@ -1,30 +1,38 @@
-<template lang="pug">
-v-list
-  v-toolbar
-    v-progress-circular(
-      v-if="chronologyLoading" 
-      indeterminate 
-      color="info"
-    )
-    v-icon(v-else) mdi-calendar
-    v-toolbar-title Chronology
-  v-treeview(
-    :items="dateTree"
-    :open.sync="dateTreeOpen"
-    dense
-    shaped
-    hoverable
-    transition
-    open-on-click
-    activatable
-  )
-    template(v-slot:label="{item}")
-      div(@click="getChildren(item)") {{item.name}}
+<template>
+  <v-list>
+    <v-toolbar>
+      <v-progress-circular
+        v-if="chronologyLoading"
+        indeterminate
+        color="info"
+      />
+      <v-icon v-else>
+        mdi-calendar
+      </v-icon>
+      <v-toolbar-title>Chronology</v-toolbar-title>
+    </v-toolbar>
+    <v-treeview
+      :items="dateTree"
+      :open.sync="dateTreeOpen"
+      dense
+      shaped
+      hoverable
+      transition
+      open-on-click
+      activatable
+    >
+      <template v-slot:label="{item}">
+        <div @click="getChildren(item)">
+          {{ item.name }}
+        </div>
+      </template>
+    </v-treeview>
+  </v-list>
 </template>
 
 <script>
 export default {
-  name: "logbookchronology",
+  name: "Logbookchronology",
   components: {},
   data: () => ({
     dateTree: [],

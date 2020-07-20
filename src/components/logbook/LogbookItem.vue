@@ -1,33 +1,68 @@
 <template>
-  <v-timeline-item small :color="dot(doc._id).color" :icon="dot(doc._id).icon">
+  <v-timeline-item
+    small
+    :color="dot(doc._id).color"
+    :icon="dot(doc._id).icon"
+  >
     <v-row>
       <v-col cols="1">
         <p>
-          <strong v-text="dateGet(doc.startDate, 'year')"></strong>
-          <br />
-          <span class="font-weight-light" v-text="dateGet(doc.startDate, 'month')"></span>
-          <span class="font-weight-light" v-text="dateGet(doc.startDate, 'day')"></span>
-          <br />
-          <strong class="font-italic font-weight-light" v-text="dateGet(doc.startDate, 'weekday')"></strong>
-          <br />
-          <strong class="overline" v-text="dateGet(doc.startDate, 'time')"></strong>
-          <br />
-          <strong v-if="dot(doc._id).deleted" class="error--text">Deleted</strong>
+          <strong v-text="dateGet(doc.startDate, 'year')" />
+          <br>
+          <span
+            class="font-weight-light"
+            v-text="dateGet(doc.startDate, 'month')"
+          />
+          <span
+            class="font-weight-light"
+            v-text="dateGet(doc.startDate, 'day')"
+          />
+          <br>
+          <strong
+            class="font-italic font-weight-light"
+            v-text="dateGet(doc.startDate, 'weekday')"
+          />
+          <br>
+          <strong
+            class="overline"
+            v-text="dateGet(doc.startDate, 'time')"
+          />
+          <br>
+          <strong
+            v-if="dot(doc._id)._deleted"
+            class="error--text"
+          >Deleted</strong>
         </p>
       </v-col>
       <v-col>
-        <v-card class="elevation-0" @click="showItemDetailed">
-          <v-card-title class="headline" v-text="doc.name"></v-card-title>
-          <v-card-subtitle v-text="doc.description"></v-card-subtitle>
+        <v-card
+          class="elevation-0"
+          @click="showItemDetailed"
+        >
+          <v-card-title
+            class="headline"
+            v-text="doc.name"
+          />
+          <v-card-subtitle v-text="doc.description" />
           <v-card-text>
-            <p v-if="doc.category" class="subtitle-1" v-text="doc.category"></p>
+            <p
+              v-if="doc.category"
+              class="subtitle-1"
+              v-text="doc.category"
+            />
             <div v-show="doc.keywords.length">
               <!-- text-center removed -->
-              <v-chip v-for="keyword in doc.keywords" :key="keyword" class="ma-2">{{ keyword }}</v-chip>
+              <v-chip
+                v-for="keyword in doc.keywords"
+                :key="keyword"
+                class="ma-2"
+              >
+                {{ keyword }}
+              </v-chip>
             </div>
             <p>
               ID
-              <span v-text="doc._id"></span>
+              <span v-text="doc._id" />
             </p>
             <!-- 
                 <v-expansion-panels>
@@ -52,12 +87,13 @@ import itemMixin from "@/mixins/itemMixin";
 
 export default {
   name: "LogbookTimeline",
-  components: {
-  },
   mixins: [itemMixin],
-  props: ["doc"],
-  data: () => ({}),
-  computed: {},
+  props: {
+      doc: {
+          type: Object,
+          default: () => {},
+      },
+  },
   methods: {
     dateGet: function(dateObj, output) {
       if (!dateObj) {
@@ -116,7 +152,7 @@ export default {
       if (list.includes(id)) {
         j.color = "error";
         j.icon = "mdi-delete";
-        j.deleted = true;
+        j._deleted = true;
       }
       return j;
     }

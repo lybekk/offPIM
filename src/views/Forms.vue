@@ -1,12 +1,14 @@
-<template lang="pug">
-    v-main
-        v-scroll-y-reverse-transition(mode="out-in")
-            router-view
+<template>
+  <v-main>
+    <v-scroll-y-reverse-transition mode="out-in">
+      <router-view />
+    </v-scroll-y-reverse-transition>
+  </v-main>
 </template>
 
 <script>
 export default {
-    name: 'forms',
+    name: 'Forms',
     data: () => ({
         buttonToggle: null,
         buttons: [

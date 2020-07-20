@@ -1,32 +1,26 @@
-<template lang="pug">
-  v-container(fluid)
-    //-v-content
-    span Under construction
-    p bank accounts & investment
-    p credit
-    ul
-      li Accounts: 0
-      li Accounts value
-        v-chip(
-          v-text="this.$store.getters.getFinancialAggregates.valueAccounts"
+<template>
+  <v-container fluid>
+    <span>Under construction</span>
+    <p>bank accounts & investment</p>
+    <p>credit</p>
+    <ul>
+      <li>Accounts: 0</li>
+      <li>
+        Accounts value
+        <v-chip
           label
           :color="getColor(this.$store.getters.getFinancialAggregates.valueAccounts)"
-        )
-    p One-time expenses go in transactions(href)
-    p recurring expenses go in (subscriptions or liabilities?)
+          v-text="this.$store.getters.getFinancialAggregates.valueAccounts"
+        />
+      </li>
+    </ul>
+    <p>One-time expenses go in transactions(href)</p>
+    <p>recurring expenses go in (subscriptions or liabilities?)</p>
+  </v-container>
 </template>
 <script>
 export default {
-  name: "financesOverview",
-  components: {},
-  props: {
-    source: String,
-  },
-  data: () => ({}),
-  computed: {},
-  created: function() {},
-  mounted() {},
-  beforeDestroy() {},
+  name: "FinancesOverview",
   methods: {
     getColor: function(number) {
       return number >= 0 ? "success" : "error";

@@ -1,82 +1,113 @@
-<template lang="pug">
-  v-container(fluid)
-    v-navigation-drawer(
+<template>
+  <v-container fluid>
+    <v-navigation-drawer
       v-model="drawerRight"
       app
       right
-    )
-      v-list
-        v-list-item
-          v-list-item-content
-            v-list-item-title(class="title") Messages
-            v-list-item-subtitle Total:
-              span(v-text="totalMessages")
-      v-divider
-      v-list(dense nav)
-        v-list-item(
-          :to="{ name: 'messages'}"
-        )
-          v-list-item-icon
-            v-icon mdi-inbox
-          v-list-item-content
-            v-list-item-title Unread
-          v-list-item-action
-            //- TODO - get from vuex
-            v-chip(
-              small v-text="tagListUntaggedOnly"
-            ) 0
-        v-list-item(
+    >
+      <v-list>
+        <v-list-item>
+          <v-list-item-content>
+            <v-list-item-title class="title">
+              Messages
+            </v-list-item-title>
+            <v-list-item-subtitle>Total:<span v-text="totalMessages" /></v-list-item-subtitle>
+          </v-list-item-content>
+        </v-list-item>
+      </v-list>
+      <v-divider />
+      <v-list
+        dense
+        nav
+      >
+        <v-list-item :to="{ name: 'messages'}">
+          <v-list-item-icon>
+            <v-icon>mdi-inbox</v-icon>
+          </v-list-item-icon>
+          <v-list-item-content>
+            <v-list-item-title>Unread</v-list-item-title>
+          </v-list-item-content>
+          <v-list-item-action>
+            <!-- TODO - get from vuex-->
+            <v-chip
+              small
+              v-text="tagListUntaggedOnly"
+            >
+              0
+            </v-chip>
+          </v-list-item-action>
+        </v-list-item>
+        <v-list-item
           title="Messages without tags end up here"
           :to="{ name: 'messages', params: { tag: 'untagged'}}"
-        )
-          v-list-item-icon
-            v-icon mdi-inbox
-          v-list-item-content
-            v-list-item-title Inbox
-          v-list-item-action
-            v-chip(
-              small v-text="tagListUntaggedOnly"
-            ) 0
-        v-subheader Tags
-        v-list-item-group(v-model="activeTag")
-          v-list-item(
+        >
+          <v-list-item-icon>
+            <v-icon>mdi-inbox</v-icon>
+          </v-list-item-icon>
+          <v-list-item-content>
+            <v-list-item-title>Inbox</v-list-item-title>
+          </v-list-item-content>
+          <v-list-item-action>
+            <v-chip
+              small
+              v-text="tagListUntaggedOnly"
+            >
+              0
+            </v-chip>
+          </v-list-item-action>
+        </v-list-item>
+        <v-subheader>Tags</v-subheader>
+        <v-list-item-group v-model="activeTag">
+          <v-list-item
             v-for="(tag, i) in tagList"
             :key="i"
             :to="{ name: 'messages', params: { tag: tag.key }}"
-          )
-            v-list-item-icon
-              v-icon mdi-tag
-            v-list-item-content
-              v-list-item-title(class="text-capitalize" v-text="tag.key")
-            v-list-item-action
-              v-chip(small v-text="tag.value")
-        v-subheader Misc
-        v-list-item(
-          @click="getSessionLogs()"
-        )
-          v-list-item-icon
-            v-icon mdi-console
-          v-list-item-content
-            v-list-item-title System messages
-    v-main
-      v-toolbar(flat)
-        v-text-field(
-          v-if="$store.getters.getData.length > 10"
+          >
+            <v-list-item-icon>
+              <v-icon>mdi-tag</v-icon>
+            </v-list-item-icon>
+            <v-list-item-content>
+              <v-list-item-title
+                class="text-capitalize"
+                v-text="tag.key"
+              />
+            </v-list-item-content>
+            <v-list-item-action>
+              <v-chip
+                small
+                v-text="tag.value"
+              />
+            </v-list-item-action>
+          </v-list-item>
+        </v-list-item-group>
+        <v-subheader>Misc</v-subheader>
+        <v-list-item @click="getSessionLogs()">
+          <v-list-item-icon>
+            <v-icon>mdi-console</v-icon>
+          </v-list-item-icon>
+          <v-list-item-content>
+            <v-list-item-title>System messages</v-list-item-title>
+          </v-list-item-content>
+        </v-list-item>
+      </v-list>
+    </v-navigation-drawer>
+    <v-main>
+      <v-toolbar flat>
+        <v-text-field
+          v-if="$store.getters.getData.length &gt; 10"
           v-model="search"
           append-icon="mdi-email-search"
           label="Filter"
           single-line
           hide-details
-        )
-        v-spacer
-        v-app-bar-nav-icon(
-          @click.stop="drawerRight = !drawerRight"
-        )
-      messages-messagelist(
-        v-bind:search="search"
-      )
-      messages-reader
-
+        />
+        <v-spacer />
+        <v-app-bar-nav-icon @click.stop="drawerRight = !drawerRight" />
+      </v-toolbar>
+      <MessagesMessagelist :search="search" />
+      <MessagesReader />
+    </v-main>
+  </v-container>
 </template>
 
 <script>
@@ -85,15 +116,12 @@ import MessagesReader from "@/components/MessagesReader.vue";
 import pouchMixin from "@/mixins/pouchMixin";
 
 export default {
-  name: "messages",
+  name: "Messages",
   components: {
     MessagesMessagelist,
     MessagesReader
   },
   mixins: [pouchMixin],
-  props: {
-    source: String
-  },
   data: () => ({
     drawerRight: false,
     activeTag: null,

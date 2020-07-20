@@ -1,35 +1,43 @@
-<template lang="pug">
-  v-container
-    v-card(flat)
-        v-card-text
-            v-container
-                v-row
-                    v-col(cols="6")
-                      v-btn(
-                        outlined
-                        block
-                        color="primary"
-                        @click="createContact(newPerson)"
-                      )
-                        v-icon mdi-account
-                        span Person
-                    v-col(cols="6")
-                      v-btn(
-                        outlined
-                        block
-                        color="primary"
-                        @click="createContact(newOrganization)"
-                      )
-                        v-icon mdi-domain
-                        span Organization
-
+<template>
+  <v-container>
+    <v-card flat>
+      <v-card-text>
+        <v-container>
+          <v-row>
+            <v-col cols="6">
+              <v-btn
+                outlined
+                block
+                color="primary"
+                @click="createContact(newPerson)"
+              >
+                <v-icon>mdi-account</v-icon>
+                <span>Person</span>
+              </v-btn>
+            </v-col>
+            <v-col cols="6">
+              <v-btn
+                outlined
+                block
+                color="primary"
+                @click="createContact(newOrganization)"
+              >
+                <v-icon>mdi-domain</v-icon>
+                <span>Organization</span>
+              </v-btn>
+            </v-col>
+          </v-row>
+        </v-container>
+      </v-card-text>
+    </v-card>
+  </v-container>
 </template>
 
 <script>
 import pouchMixin from "@/mixins/pouchMixin";
 
 export default {
-  name: "formsNewContact",
+  name: "FormsNewContact",
   mixins: [pouchMixin],
   data: () => ({
     newPerson: {

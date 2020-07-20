@@ -1,72 +1,107 @@
-<template lang="pug">
-  v-card-text
-    v-overlay(
+<template>
+  <v-card-text>
+    <v-overlay
       :value="destroyInProgress"
       color="warning"
-    )
-      v-card
-        v-card-text
-          v-row
-            v-col Destroying local database. This may take a while if it's a large database.
-          v-row
-            v-col
-              div(class="text-center")
-                v-progress-circular(color="error" indeterminate size="64")
-    v-list
-      v-dialog(max-width="500")
-        template(v-slot:activator="{ on }")
-          v-list-item(v-on="on")
-            v-list-item-icon
-              v-icon mdi-information
-            v-list-item-content
-              v-list-item-title Info
-        v-card
-          v-card-title
-          v-card-text
-            p(v-for="tip in localTips" v-html="tip")
-      v-subheader Actions
-      database-compaction(whatdb="localDB")
-      local-database-import
-      v-list-item(
-        :disabled="backupPreparing && !backupDone"
+    >
+      <v-card>
+        <v-card-text>
+          <v-row>
+            <v-col>Destroying local database. This may take a while if it's a large database.</v-col>
+          </v-row>
+          <v-row>
+            <v-col>
+              <div class="text-center">
+                <v-progress-circular
+                  color="error"
+                  indeterminate
+                  size="64"
+                />
+              </div>
+            </v-col>
+          </v-row>
+        </v-card-text>
+      </v-card>
+    </v-overlay>
+    <v-list>
+      <v-dialog max-width="500">
+        <template v-slot:activator="{ on }">
+          <v-list-item v-on="on">
+            <v-list-item-icon><v-icon>mdi-information</v-icon></v-list-item-icon><v-list-item-content><v-list-item-title>Info</v-list-item-title></v-list-item-content>
+          </v-list-item>
+        </template>
+        <v-card>
+          <v-card-title />
+          <v-card-text>
+            <p
+              v-for="(tip, i) in localTips"
+              :key="i"
+              v-html="tip"
+            />
+          </v-card-text>
+        </v-card>
+      </v-dialog>
+      <v-subheader>Actions</v-subheader>
+      <DatabaseCompaction whatdb="localDB" />
+      <LocalDatabaseImport />
+      <v-list-item
+        :disabled="backupPreparing &amp;&amp; !backupDone"
         @click="backupLocalDB"
-      )
-        v-list-item-icon
-          v-icon mdi-database-export
-        v-list-item-content
-          v-list-item-title Create backup
-            v-progress-linear(
-              v-if="backupPreparing && !backupDone"
+      >
+        <v-list-item-icon>
+          <v-icon>mdi-database-export</v-icon>
+        </v-list-item-icon>
+        <v-list-item-content>
+          <v-list-item-title>
+            Create backup
+            <v-progress-linear
+              v-if="backupPreparing &amp;&amp; !backupDone"
               color="info"
               buffer-value="0"
               stream
-            )
-          div(
-            v-if="backupPreparing"
-          )
-            a(
+            />
+          </v-list-item-title>
+          <div v-if="backupPreparing">
+            <a
               id="linkReadyContainer"
               class="backupLink"
               download="offpim_LocalDB_backup"
-            ) Creating backup
-        v-list-item-icon
-          v-icon(v-if="backupDone" color="success") mdi-check
-      v-list-item(@click="")
-        v-list-item-icon
-          v-fab-transition
-            v-btn(
+            >Creating backup</a>
+          </div>
+        </v-list-item-content>
+        <v-list-item-icon>
+          <v-icon
+            v-if="backupDone"
+            color="success"
+          >
+            mdi-check
+          </v-icon>
+        </v-list-item-icon>
+      </v-list-item>
+      <v-list-item @click="console.log('link')">
+        <v-list-item-icon>
+          <v-fab-transition>
+            <v-btn
               :key="activeFab.icon"
               :color="activeFab.color"
               fab
               :elevation="trashIconClicked ? 4 : 0"
               small
               @click="destroyLocalDB"
-            )
-              v-icon(:color="trashIconClicked ? 'black' : ''") {{ activeFab.icon }}
-        v-list-item-content(@click="trashIconClicked = !trashIconClicked")
-          v-list-item-title {{ activeFab.title }}
-          v-list-item-subtitle {{ activeFab.subtitle }}
-
+            >
+              <v-icon :color="trashIconClicked ? 'black' : ''">
+                {{ activeFab.icon }}
+              </v-icon>
+            </v-btn>
+          </v-fab-transition>
+        </v-list-item-icon>
+        <v-list-item-content @click="trashIconClicked = !trashIconClicked">
+          <v-list-item-title>{{ activeFab.title }}</v-list-item-title>
+          <v-list-item-subtitle>{{ activeFab.subtitle }}</v-list-item-subtitle>
+        </v-list-item-content>
+      </v-list-item>
+    </v-list>
+  </v-card-text>
 </template>
 
 <script>
@@ -74,7 +109,7 @@ import DatabaseCompaction from "@/components/app/DatabaseCompaction.vue";
 import LocalDatabaseImport from "@/components/settings/LocalDatabaseImport.vue";
 
 export default {
-  name: "settingslocaldb",
+  name: "Settingslocaldb",
   components: {
     DatabaseCompaction,
     LocalDatabaseImport

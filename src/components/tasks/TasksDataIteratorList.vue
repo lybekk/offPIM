@@ -18,31 +18,47 @@
         :hide-default-footer="tasks.length < 25"
       >
         <template v-slot:header>
-          <v-toolbar class="mb-1" color="transparent" flat="flat">
+          <v-toolbar
+            class="mb-1"
+            dark
+            color="primary darken-1"
+            elevation="1"
+          >
             <v-text-field
               v-model="search"
-              clearable="clearable"
-              flat="flat"
-              hide-details="hide-details"
+              clearable
+              flat
+              solo-inverted
+              hide-details
               prepend-inner-icon="mdi-magnify"
               label="Filter list"
-            ></v-text-field>
-            <v-spacer></v-spacer>
+            />
+            <v-spacer />
             <v-select
               v-model="sortBy"
-              flat="flat"
-              solo="solo"
-              hide-details="hide-details"
+              flat
+              solo-inverted
+              hide-details
               :items="keys"
               prepend-inner-icon="mdi-sort-variant"
               label="Sort"
-            ></v-select>
+            />
           </v-toolbar>
         </template>
         <template v-slot:default="props">
-          <v-list three-line="three-line">
-            <tasks-item v-for="doc in props.items" :key="doc._id" v-bind:docid="doc._id"></tasks-item>
-            <v-divider inset />
+          <v-list three-line>
+            <div
+              v-for="doc in props.items"
+              :key="doc._id"
+            >
+              <TasksItem
+                :docid="doc._id"
+              />
+              <v-divider
+                class="text-disabled"
+                inset
+              />
+            </div>
           </v-list>
         </template>
       </v-data-iterator>
@@ -58,7 +74,12 @@ export default {
   components: {
     TasksItem
   },
-  props: ["tasks"],
+  props: {
+    tasks: {
+      type: Array,
+      default: () => [],
+    }
+  },
   data: () => ({
     search: "",
     sortBy: "due",

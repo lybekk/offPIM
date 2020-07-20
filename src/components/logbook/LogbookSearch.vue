@@ -20,14 +20,16 @@
             rounded
             color="warning"
             height="4"
-          ></v-progress-linear>
+          />
         </template>
         <template v-slot:append>
           <v-tooltip
             bottom
           >
             <template v-slot:activator="{ on }">
-              <v-icon v-on="on">mdi-help-circle</v-icon>
+              <v-icon v-on="on">
+                mdi-help-circle
+              </v-icon>
             </template>
             Press enter to search. Queries may take a while, depending on database size. Case-insensitive.
           </v-tooltip>
@@ -40,7 +42,7 @@
 <script>
 
 export default {
-  name: 'logbooksearch',
+  name: 'Logbooksearch',
   components: {
   },
   data: () => ({

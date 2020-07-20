@@ -1,22 +1,32 @@
-<template lang="pug">
-    //- TODO Conider FAB mdi-send
-    v-btn(
-      :color="insertedOK ? 'success' : 'secondary'"
-      @click="insertDoc"
-    )
-      v-icon(v-if="insertedOK") mdi-check
-      div(v-else)
-        v-icon(left) mdi-send
-        span() Submit
+<template>
+  <v-btn
+    :color="insertedOK ? 'success' : 'secondary'"
+    @click="insertDoc"
+  >
+    <v-icon v-if="insertedOK">
+      mdi-check
+    </v-icon>
+    <div v-else>
+      <v-icon left>
+        mdi-send
+      </v-icon><span>Submit</span>
+    </div>
+    <!-- TODO: Conider FAB mdi-send -->
+  </v-btn>
 </template>
 
 <script>
 import pouchMixin from "@/mixins/pouchMixin";
 
 export default {
-  name: "formsubmit",
+  name: "Formsubmit",
   mixins: [pouchMixin],
-  props: ["doc"],
+  props: {
+      doc: {
+          type: Object,
+          default: () => {},
+      },
+  },
   data: () => ({
     insertedOK: null
   }),

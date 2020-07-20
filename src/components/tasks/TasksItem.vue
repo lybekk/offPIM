@@ -1,63 +1,108 @@
 <template>
-  <v-lazy :options="{ threshold: .5 }" transition="slide-y-reverse-transition">
-    <v-list-item link="link">
+  <v-lazy
+    :options="{ threshold: .5 }"
+    transition="slide-y-reverse-transition"
+  >
+    <v-list-item link>
       <v-fade-transition>
         <v-overlay
-          v-if="isDeleted(doc._id) || doc.deleted"
+          v-if="isDeleted(doc._id) || doc._deleted"
           absolute="absolute"
           color="error"
           z-index="3"
         >
-          <v-btn text="text">Deleted</v-btn>
+          <v-btn text="text">
+            Deleted
+          </v-btn>
         </v-overlay>
       </v-fade-transition>
       <v-list-item-action>
         <v-fab-transition>
           <!-- TODO: Evaluate replacing fab with icon. Cleaner -->
           <v-btn
-            v-show="!isTaskClosed.visible"
-            icon="icon"
-            small="small"
-            :color="doc.status == 'done' ? 'success' : ''"
-            @click="setTaskStatus('done')"
+            :key="activeFab.icon"
+            icon
+            small
+            @click="!isTaskClosed.visible ? setTaskStatus('done') : setTaskStatus('doing')"
           >
             <v-progress-circular
+              v-if="!isTaskClosed.visible"
               :value="taskProgress"
               :color="$store.getters.getStatusColors[doc.status]"
-            ></v-progress-circular>
+            />
+            <v-icon
+              v-else
+              :color="$store.getters.getStatusColors[doc.status]"
+              class="isDone"
+              v-text="$store.getters.getStatusIcons[doc.status]"
+            />
+            <!-- 
+              :color="activeFab.color"
+            -->
           </v-btn>
         </v-fab-transition>
       </v-list-item-action>
       <v-list-item-content @click="sheet = !sheet">
-        <v-list-item-subtitle :class="isTaskClosed.classes" v-text="doc.title" />
+        <v-list-item-subtitle
+          :class="isTaskClosed.classes"
+          v-text="doc.title"
+        />
         <!-- INFO: Info chips used for quick (actionable?) details -->
         <v-list-item-subtitle>
-          <v-chip v-if="doc.archived" color="info lighten-2" label="label">Archived</v-chip>
+          <v-chip
+            v-if="doc.archived"
+            color="info lighten-2"
+            label="label"
+          >
+            Archived
+          </v-chip>
           <!--
-                      TODO - map to status-colors
-          v-card-text v-if postponed x times and additional info
+            TODO - map to status-colors
+            v-card-text v-if postponed x times and additional info
           -->
-          <v-tooltip v-if="isOverdue" top="top">
+          <v-tooltip
+            v-if="isOverdue"
+            top
+          >
             <template v-slot:activator="{ on }">
-              <v-icon color="error" v-on="on">mdi-clock-alert</v-icon>
+              <v-icon
+                color="error"
+                v-on="on"
+              >
+                mdi-clock-alert
+              </v-icon>
             </template>
             <span>{{ overdueAmount(doc.due) }} Overdue</span>
           </v-tooltip>
-          <v-chip v-if="isPostponed(doc._id)" small="small" label="label" color="info">Postponed</v-chip>
-          <v-tooltip top="top">
+          <v-chip
+            v-if="isPostponed(doc._id)"
+            small
+            label
+            color="info"
+          >
+            Postponed
+          </v-chip>
+          <v-tooltip top>
             <template v-slot:activator="{ on }">
-              <v-icon color="secondary" v-on="on" v-text="doc.description ? 'mdi-text' : ''" />
+              <v-icon
+                color="secondary"
+                v-on="on"
+                v-text="doc.description ? 'mdi-text' : ''"
+              />
             </template>
-            <span v-text="doc.description"></span>
+            <span v-text="doc.description" />
           </v-tooltip>
         </v-list-item-subtitle>
       </v-list-item-content>
       <v-list-item-action>
-        <tasks-items-priority v-bind:task="doc" @set-doc="setDoc()"></tasks-items-priority>
-        <v-tooltip top="top">
+        <TasksItemsPriority
+          :task="doc"
+          @set-doc="setDoc()"
+        />
+        <v-tooltip top>
           <template v-slot:activator="{ on }">
             <v-btn
-              icon="icon"
+              icon
               color="info"
               :disabled="isPostponed(doc._id)"
               v-on="on"
@@ -71,75 +116,91 @@
         <v-bottom-sheet
           v-model="sheet"
           :inset="$vuetify.breakpoint.mdAndUp"
-          scrollable="scrollable"
+          scrollable
         >
           <v-card>
             <v-card-title>
-              <tasks-items-title
-                v-bind:id="doc._id"
-                v-bind:title="doc.title"
-                v-bind:status="doc.status"
+              <TasksItemsTitle
+                :id="doc._id"
+                :title="doc.title"
+                :status="doc.status"
                 @set-doc="setDoc()"
-              ></tasks-items-title>
+              />
             </v-card-title>
             <v-card-text>
               <v-list>
-                <tasks-items-description v-bind:task="doc" @set-doc="setDoc()"></tasks-items-description>
-                <tasks-items-project
-                  v-if="doc.type != 'project'"
-                  v-bind:task="doc"
+                <TasksItemsDescription
+                  :task="doc"
                   @set-doc="setDoc()"
-                ></tasks-items-project>
+                />
+                <TasksItemsProject
+                  v-if="doc.type != 'project'"
+                  :task="doc"
+                  @set-doc="setDoc()"
+                />
                 <v-list-item>
                   <v-list-item-content>
-                    <tasks-items-status v-bind:task="doc" @set-status="setTaskStatus"></tasks-items-status>
+                    <TasksItemsStatus
+                      :task="doc"
+                      @set-status="setTaskStatus"
+                    />
                   </v-list-item-content>
                 </v-list-item>
               </v-list>
-              <v-divider inset="inset" width="80%"></v-divider>
+              <v-divider
+                inset
+                width="80%"
+              />
 
               <v-tabs background-color="primary">
-                <v-tab v-for="field in ['due','start','end']" :key="field">
-                  <v-icon left>mdi-calendar</v-icon>
+                <v-tab
+                  v-for="field in ['due','start','end']"
+                  :key="field"
+                >
+                  <v-icon left>
+                    mdi-calendar
+                  </v-icon>
                   <span style="text-transform: capitalize;">{{ field }}</span>
                 </v-tab>
-                <v-tab-item v-for="field in ['due','start','end']" :key="field">
+                <v-tab-item
+                  v-for="field in ['due','start','end']"
+                  :key="field"
+                >
                   <v-card flat>
                     <v-card-text>
-                      <form-datetime v-bind:doc="doc" :field-name="field" @set-doc="setDoc()"></form-datetime>
+                      <FormDatetime
+                        :doc="doc"
+                        :field-name="field"
+                        @set-doc="setDoc()"
+                      />
                     </v-card-text>
                   </v-card>
                 </v-tab-item>
               </v-tabs>
-
-              <!-- 
-              <v-subheader inset>Subheader</v-subheader>
-              <v-divider color="primary" inset="inset" width="80%"></v-divider>
-              -->
-              <tasks-items-tags v-bind:task="doc" @set-doc="setDoc()"></tasks-items-tags>
-              <!-- 
-              <v-divider></v-divider>
-              -->
+              <TasksItemsTags
+                :task="doc"
+                @set-doc="setDoc()"
+              />
               <v-row>
                 <v-col>
                   <div>
                     <span>
                       <v-chip
                         v-if="isOverdue"
-                        small="small"
-                        label="label"
+                        small
+                        label
                         color="error"
                       >{{ overdueAmount(doc.due) }} Overdue</v-chip>
                       <v-chip
                         v-if="doc.status == 'done'"
-                        small="small"
-                        label="label"
+                        small
+                        label
                         color="success"
                       >Done</v-chip>
                       <v-chip
                         v-if="isPostponed(doc._id)"
-                        small="small"
-                        label="label"
+                        small
+                        label
                         color="info"
                       >Postponed</v-chip>
                     </span>
@@ -151,11 +212,11 @@
                 <v-col>
                   <tr class="font-weight-thin">
                     <td>ID:</td>
-                    <td v-text="doc._id"></td>
+                    <td v-text="doc._id" />
                   </tr>
                 </v-col>
                 <v-col>
-                  <main-delete-button v-bind:document-id="doc._id"></main-delete-button>
+                  <MainDeleteButton :document-id="doc._id" />
                 </v-col>
               </v-row>
             </v-card-text>
@@ -179,7 +240,7 @@ import MainDeleteButton from "@/components/MainDeleteButton.vue";
 import pouchMixin from "@/mixins/pouchMixin";
 
 export default {
-  name: "tasksItem",
+  name: "TasksItem",
   components: {
     TasksItemsStatus,
     TasksItemsTitle,
@@ -192,7 +253,12 @@ export default {
     FormDatetime
   },
   mixins: [pouchMixin],
-  props: ["docid"],
+  props: {
+    docid: {
+      type: String,
+      default: null,
+    },
+  },
   data: () => ({
     doc: {
       title: "",
@@ -215,6 +281,14 @@ export default {
             : "text--primary subtitle-1 font-weight-medium"
       };
     },
+
+      activeFab () {
+        switch (this.doc.status) {
+          case 'done': return { icon: 'mdi-check' }
+          case 'cancelled': return { icon: 'mdi-close' }
+          default: return {}
+        }
+      },
 
     taskProgress: function() {
       const s = this.doc.status;
@@ -301,6 +375,9 @@ export default {
 
 <style scoped>
 .isDone {
+  /*
   text-decoration: line-through;
+  */
+  opacity: 0.4;
 }
 </style>

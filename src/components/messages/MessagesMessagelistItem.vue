@@ -1,31 +1,38 @@
-<template lang="pug">
-v-list-item(
-  link
-)
-  v-list-item-icon(
-    @click="readMessage"
-  )
-    v-icon(v-text="isRead(doc.dateRead)")
-  v-list-item-content(
-    @click="readMessage"
-  )
-    v-list-item-title(v-text="doc.sender.name" class="title font-weight-regular primary--text")
-    v-list-item-subtitle(v-text="doc.messageAttachment.headline" class="subtitle-1")
-    v-list-item-subtitle(v-text="doc.messageAttachment.text")
-  v-list-item-action
-    v-btn(
-      v-if="isDeleted(doc._id)"
-      text 
-      x-small 
-      disabled
-    ) Deleted
-    v-btn(
-      v-else 
-      text 
-      icon 
-      @click="deleteMsg(doc._id)"
-    )
-      v-icon mdi-delete
+<template>
+  <v-list-item link>
+    <v-list-item-icon @click="readMessage">
+      <v-icon v-text="isRead(doc.dateRead)" />
+    </v-list-item-icon>
+    <v-list-item-content @click="readMessage">
+      <v-list-item-title
+        class="title font-weight-regular primary--text"
+        v-text="doc.sender.name"
+      />
+      <v-list-item-subtitle
+        class="subtitle-1"
+        v-text="doc.messageAttachment.headline"
+      />
+      <v-list-item-subtitle v-text="doc.messageAttachment.text" />
+    </v-list-item-content>
+    <v-list-item-action>
+      <v-btn
+        v-if="isDeleted(doc._id)"
+        text
+        x-small
+        disabled
+      >
+        Deleted
+      </v-btn>
+      <v-btn
+        v-else
+        text
+        icon
+        @click="deleteMsg(doc._id)"
+      >
+        <v-icon>mdi-delete</v-icon>
+      </v-btn>
+    </v-list-item-action>
+  </v-list-item>
 </template>
 
 <script>
@@ -35,11 +42,15 @@ import pouchMixin from "@/mixins/pouchMixin";
 export default {
   name: "MessagesMessagelistItem",
   mixins: [pouchMixin, itemMixin],
-  props: ["doc"],
-
+  props: {
+      doc: {
+          type: Object,
+          default: () => {},
+      },
+  },
   methods: {
     deleteMsg: function(id) {
-      this.$store.dispatch("deleteDocument", id);
+      this.deleteDoc(id);
       this.$store.dispatch("populateTagsList", "offpim/messages-tag-count");
     },
 

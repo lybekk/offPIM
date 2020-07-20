@@ -1,57 +1,97 @@
-<template lang="pug">
-v-container
-    v-row
-        v-col(cols="12")
-            v-card
-                v-card-title 
-                    span.headline(
-                        v-if="totalOpenTasks"
-                    ) {{ totalOpenTasks }} 
-                        span.title open tasks
-                    span.headline(v-else) No open tasks
-                    v-spacer
-                    div.text-center
-                      v-chip(
-                        v-for="chip in chipsFiltered"
-                        :key="chip.aggregate"
-                        class="ma-2"
-                        :to="chip.to"
-                        :color="chip.color"
-                        :text-color="chip.textColor"
-                        label
-                      )
-                        v-avatar(
-                          left
-                          :class="`${chip.color} darken-2`"
-                        ) {{ getTasksAggregate[chip.aggregate] }}
-                        span {{ chip.text }}
-                    v-spacer
-                    v-btn(
-                        color="secondary"
-                        @click="$store.commit('setRightDrawer', true)"
-                    ) Projects
-        v-col(cols="12" sm="6")
-          metrics-statuses
-        v-col(cols="12" sm="6")
-          metrics-priorities
-        v-col(cols="12")
-          v-list
-              v-list-item
-                  v-list-item-content
-                      v-list-item-title.title.font-regular Other task lists
-              v-divider(inset)
-              v-list-item(link to="/tasks/completed_projectless")
-                  v-list-item-icon
-                      v-icon mdi-check
-                  v-list-item-content
-                      v-list-item-title Completed & projectless
-              v-list-item(link to="/tasks/list/noproject")
-                  v-list-item-icon
-                      v-icon mdi-folder-alert
-                  v-list-item-content
-                      v-list-item-title No project
-        v-col(cols="12")
-          DoneToday
+<template>
+  <v-container>
+    <v-row>
+      <v-col cols="12">
+        <v-card>
+          <v-card-title>
+            <span
+              v-if="totalOpenTasks"
+              class="headline"
+            >{{ totalOpenTasks }} <span class="title">open tasks</span></span><span
+              v-else
+              class="headline"
+            >No open tasks</span>
+            <v-spacer />
+            <div class="text-center">
+              <v-chip
+                v-for="chip in chipsFiltered"
+                :key="chip.aggregate"
+                class="ma-2"
+                :to="chip.to"
+                :color="chip.color"
+                :text-color="chip.textColor"
+                label
+              >
+                <span>{{ chip.text }}</span>
+                <v-avatar
+                  right
+                  :class="`${chip.color} darken-2`"
+                >
+                  {{ getTasksAggregate[chip.aggregate] }}
+                </v-avatar>
+              </v-chip>
+            </div>
+            <v-spacer />
+            <v-btn
+              color="secondary"
+              @click="$store.commit('setRightDrawer', true)"
+            >
+              Projects
+            </v-btn>
+          </v-card-title>
+        </v-card>
+      </v-col>
+      <v-col
+        cols="12"
+        sm="6"
+      >
+        <MetricsStatuses />
+      </v-col>
+      <v-col
+        cols="12"
+        sm="6"
+      >
+        <MetricsPriorities />
+      </v-col>
+      <v-col cols="12">
+        <v-list>
+          <v-list-item>
+            <v-list-item-content>
+              <v-list-item-title class="title font-regular">
+                Other task lists
+              </v-list-item-title>
+            </v-list-item-content>
+          </v-list-item>
+          <v-divider inset />
+          <v-list-item
+            link
+            to="/tasks/completed_projectless"
+          >
+            <v-list-item-icon>
+              <v-icon>mdi-check</v-icon>
+            </v-list-item-icon>
+            <v-list-item-content>
+              <v-list-item-title>Completed & projectless</v-list-item-title>
+            </v-list-item-content>
+          </v-list-item>
+          <v-list-item
+            link
+            to="/tasks/list/noproject"
+          >
+            <v-list-item-icon>
+              <v-icon>mdi-folder-alert</v-icon>
+            </v-list-item-icon>
+            <v-list-item-content>
+              <v-list-item-title>No project</v-list-item-title>
+            </v-list-item-content>
+          </v-list-item>
+        </v-list>
+      </v-col>
+      <v-col cols="12">
+        <DoneToday />
+      </v-col>
+    </v-row>
+  </v-container>
 </template>
 
 <script>
@@ -62,7 +102,7 @@ import DoneToday from "@/components/tasks/DoneToday.vue";
 import { mapGetters } from "vuex";
 
 export default {
-  name: "tasksoverview",
+  name: "Tasksoverview",
   components: {
     MetricsStatuses,
     MetricsPriorities,

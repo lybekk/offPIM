@@ -1,64 +1,80 @@
-<template lang="pug">
-  v-dialog(
-    v-model="dialog" 
+<template>
+  <v-dialog
+    v-model="dialog"
     max-width="25vw"
     overlay-opacity="0.9"
     overlay-color="secondary"
     :fullscreen="$vuetify.breakpoint.mdAndDown"
     :persistent="importInProgress"
-  )
-    template(v-slot:activator="{ on }")
-      v-list-item(v-on="on")
-        v-list-item-icon
-          v-icon mdi-database-import
-        v-list-item-content
-          v-list-item-title Import to local database
-          v-list-item-subtitle Pick a backup file previously exported from offPIM, or a json file containing an array of objects.
-    v-card(
-      :disabled="importInProgress")
-      v-card-text
-        v-row
-          v-col Import to local database
-        v-row
-          v-col
-            v-file-input(
+  >
+    <template v-slot:activator="{ on }">
+      <v-list-item v-on="on">
+        <v-list-item-icon><v-icon>mdi-database-import</v-icon></v-list-item-icon><v-list-item-content><v-list-item-title>Import to local database</v-list-item-title><v-list-item-subtitle>Pick a backup file previously exported from offPIM, or a json file containing an array of objects.</v-list-item-subtitle></v-list-item-content>
+      </v-list-item>
+    </template>
+    <v-card
+      :disabled="importInProgress"
+    >
+      <v-card-text>
+        <v-row>
+          <v-col>Import to local database</v-col>
+        </v-row>
+        <v-row>
+          <v-col>
+            <v-file-input
+              v-model="file"
               label="File input"
               prepend-icon="mdi-file-code"
               accept=".json"
-              show-size
-              v-model="file"
-            )
-        v-row(v-if="file")
-          v-col(cols="12")
-            span File received
-          v-col(cols="12")
-            v-btn(
-              @click="importFile"
-            ) Begin import
-        v-row(v-if="importStatus")
-          v-col(cols="12")
-            p Docs total: {{ docsTotal }}
-          v-col(cols="12")
-            p Docs inserted: {{ docsInserted }}
-          v-col(cols="12")
-            p Docs failed: {{ docsFailed }}
-          v-col(cols="12")
-            p Docs exists: {{ docsExists }}
-      v-divider
-      v-card-actions
-          v-spacer
-          v-btn(
-              color="primary"
-              text
-              @click="dialog = false"
-          ) Close
+              show-size="show-size"
+            />
+          </v-col>
+        </v-row>
+        <v-row v-if="file">
+          <v-col cols="12">
+            <span>File received</span>
+          </v-col>
+          <v-col cols="12">
+            <v-btn @click="importFile">
+              Begin import
+            </v-btn>
+          </v-col>
+        </v-row>
+        <v-row v-if="importStatus">
+          <v-col cols="12">
+            <p>Docs total: {{ docsTotal }}</p>
+          </v-col>
+          <v-col cols="12">
+            <p>Docs inserted: {{ docsInserted }}</p>
+          </v-col>
+          <v-col cols="12">
+            <p>Docs failed: {{ docsFailed }}</p>
+          </v-col>
+          <v-col cols="12">
+            <p>Docs exists: {{ docsExists }}</p>
+          </v-col>
+        </v-row>
+      </v-card-text>
+      <v-divider />
+      <v-card-actions>
+        <v-spacer />
+        <v-btn
+          color="primary"
+          text
+          @click="dialog = false"
+        >
+          Close
+        </v-btn>
+      </v-card-actions>
+    </v-card>
+  </v-dialog>
 </template>
 
 <script>
 import pouchMixin from "@/mixins/pouchMixin";
 
 export default {
-  name: "localdatabaseimport",
+  name: "Localdatabaseimport",
   components: {},
   mixins: [pouchMixin],
   data: () => ({

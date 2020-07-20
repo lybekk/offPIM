@@ -1,33 +1,38 @@
-<template lang="pug">
-    v-container
-        p This search does not use a pre-built index. This may take a while, as it looks through all documents. Max 50 tasks at a time
-        v-btn(
-            @click="getTasks2"
-        ) Get tasks
-        v-data-table(
-            :headers="headers"
-            :items="tasks"
-            :loading="gettingTasks"
-            loading-text="Loading... Please wait"
-            :items-per-page="10"
-        )
-            template(v-slot:item.actions="{ item }")
-                v-btn(
-                    :disabled="item.archived"
-                    @click="archiveDoc(item._id)"
-                )
-                    v-icon(
-                        small
-                        class="mr-2"
-                    ) mdi-archive
-
+<template>
+  <v-container>
+    <p>This search does not use a pre-built index. This may take a while, as it looks through all documents. Max 50 tasks at a time</p>
+    <v-btn @click="getTasks2">
+      Get tasks
+    </v-btn>
+    <v-data-table
+      :headers="headers"
+      :items="tasks"
+      :loading="gettingTasks"
+      loading-text="Loading... Please wait"
+      :items-per-page="10"
+    >
+      <template v-slot:item.actions="{ item }">
+        <v-btn
+          :disabled="item.archived"
+          @click="archiveDoc(item._id)"
+        >
+          <v-icon
+            class="mr-2"
+            small
+          >
+            mdi-archive
+          </v-icon>
+        </v-btn>
+      </template>
+    </v-data-table>
+  </v-container>
 </template>
 
 <script>
 import pouchMixin from '@/mixins/pouchMixin'
 
 export default {
-    name: 'completedProjectless',
+    name: 'CompletedProjectless',
     mixins: [pouchMixin],
     data: () => ({
         headers: [

@@ -7,14 +7,11 @@ import TasksDataIteratorList from "@/components/tasks/TasksDataIteratorList.vue"
 import pouchMixin from "@/mixins/pouchMixin";
 
 export default {
-  name: "tasksList",
+  name: "TasksList",
   components: {
     TasksDataIteratorList
   },
   mixins: [pouchMixin],
-  props: {
-    source: String
-  },
   data: () => ({
     tasks: []
   }),
@@ -47,9 +44,9 @@ export default {
           productivity: true,
           type: "task"
         },
-        limit: 50,
-        use_index: "offpim_mango_indexes",
-        fields: ["_id"]
+        limit: 100,
+        use_index: "offpim_mango_indexes"
+        //fields: ["_id"]
       };
       if (list.slice(0, 6) == "status") {
         this.processQuery(

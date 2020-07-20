@@ -1,22 +1,43 @@
-<template lang="pug">
-    v-lazy(
-        :options="{ threshold: .5 }"
-        transition="slide-y-reverse-transition"
-    )
-      v-list-item(@click="itemLookup(doc._id)")
-        v-list-item-icon
-          v-icon(v-text="icon")
-        v-list-item-content
-          v-list-item-title(v-text="title" class="primary--text")
-          v-list-item-subtitle(class="text--primary" v-text="description")
-          v-list-item-subtitle(v-text="doc._id")
+<template>
+  <v-lazy
+    :options="{ threshold: .5 }"
+    transition="slide-y-reverse-transition"
+  >
+    <v-list-item @click="itemLookup(doc._id)">
+      <v-list-item-icon>
+        <v-icon v-text="icon" />
+      </v-list-item-icon>
+      <v-list-item-content>
+        <v-list-item-title
+          class="primary--text"
+          v-text="title"
+        />
+        <v-list-item-subtitle
+          class="text--primary"
+          v-text="description"
+        />
+        <v-list-item-subtitle v-text="doc._id" />
+      </v-list-item-content>
+    </v-list-item>
+    <!-- 
         //- TODO Action-button for raw JSON-view
+    -->
+  </v-lazy>
 </template>
 
 <script>
 export default {
-  name: "searchitem",
-  props: ["doc", "score"],
+  name: "Searchitem",
+  props: {
+    doc: {
+      type: Object,
+      default: () => {}
+    },
+    score: {
+      type: Number,
+      default: 0
+    }
+  },
   data: () => ({
     title: "",
     description: "",

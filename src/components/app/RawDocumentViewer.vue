@@ -1,95 +1,123 @@
-<template lang="pug">
-v-dialog(
-  v-model="dialog"
-  :fullscreen="$vuetify.breakpoint.mdAndDown"
-  width="50vw"
-  )
-  v-card
-    v-toolbar(
-      color="cyan"
-      dark
-      flat
-    )
-      v-toolbar-title Raw JSON document
-      v-spacer
-      v-btn(
+<template>
+  <v-dialog
+    v-model="dialog"
+    :fullscreen="$vuetify.breakpoint.mdAndDown"
+    width="50vw"
+  >
+    <v-card>
+      <v-toolbar
+        color="cyan"
+        dark
+        flat
+      >
+        <v-toolbar-title>Raw JSON document</v-toolbar-title>
+        <v-spacer />
+        <v-btn
           icon
           @click="dialog = false"
-      )
-        v-icon mdi-close
-      template(v-slot:extension)
-        v-tabs(
-          v-model="tab"
-          color="primary"
-          :grow="$vuetify.breakpoint.smAndDown"
-          :align-with-title="$vuetify.breakpoint.mdAndUp"
-        )
-          v-tabs-slider(color="yellow")
-          v-tab(
-            v-for="tab in tabs" 
-            :key="tab"
-            ) {{ tab }}
-    v-tabs-items(v-model="tab")
-      v-tab-item(
-        v-for="tab in tabs" 
-        :key="tab"
-      )
-        v-card(
-          v-if="tab == 'Raw'"
-          flat
-          class="grey darken-4 info--text pa-2"
-        )
-          v-card-text
-            pre
-              code(
-                v-text="JSON.stringify(doc, null, 2)"
-                class="grey darken-4 info--text pa-2"
-                style="width:100%"
-              )
-        v-card(
-          v-if="tab == 'Iterated'"
-          flat
-          )
-          v-card-text
-            v-simple-table
-              template(v-slot:default)
-                  thead
-                      tr
-                          th(class="text-left") Key
-                          th(class="text-left") Value
-                  tbody
-                      tr(v-for="(value, key) in doc")
-                          td(v-text="key")
-                          td {{ value }}
-        v-card(
-          v-if="tab == 'Editor'"
-          flat
-          )
-          v-card-title
-            v-spacer
-            v-btn(
-              color="primary"
-              :disabled="!validateJSON"
-              @click="saveDoc"
-            ) {{ validateJSON ? 'Save' : 'Invalid JSON' }}
-          v-card-text
-            v-textarea(
-              v-model="jsonInput"
-              filled
-              auto-grow
-              class="jsonValid"
-              :class="validateJSON ? 'jsonValid' : 'jsonInvalid'"
-              label="Edit"
-              spellcheck="false"
-              required
-            )
+        >
+          <v-icon>mdi-close</v-icon>
+        </v-btn><template v-slot:extension>
+          <v-tabs
+            v-model="tab"
+            color="primary"
+            :grow="$vuetify.breakpoint.smAndDown"
+            :align-with-title="$vuetify.breakpoint.mdAndUp"
+          >
+            <v-tabs-slider color="yellow" /><v-tab
+              v-for="tab in tabs"
+              :key="tab"
+            >
+              {{ tab }}
+            </v-tab>
+          </v-tabs>
+        </template>
+      </v-toolbar>
+      <v-tabs-items
+        v-model="tab"
+      >
+        <v-tab-item
+          v-for="tab in tabs"
+          :key="tab"
+        >
+          <v-card
+            v-if="tab == 'Raw'"
+            class="grey darken-4 info--text pa-2"
+            flat
+          >
+            <v-card-text>
+              <pre><code
+class="grey darken-4 info--text pa-2"
+                         style="width:100%"
+v-text="JSON.stringify(doc, null, 2)"
+              /></pre>
+            </v-card-text>
+          </v-card>
+          <v-card
+            v-if="tab == 'Iterated'"
+            flat
+          >
+            <v-card-text>
+              <v-simple-table>
+                <template v-slot:default>
+                  <thead>
+                    <tr>
+                      <th class="text-left">
+                        Key
+                      </th><th class="text-left">
+                        Value
+                      </th>
+                    </tr>
+                  </thead><tbody>
+                    <tr
+                      v-for="(value, key) in doc"
+                      :key="key"
+                    >
+                      <td v-text="key" /><td>{{ value }}</td>
+                    </tr>
+                  </tbody>
+                </template>
+              </v-simple-table>
+            </v-card-text>
+          </v-card>
+          <v-card
+            v-if="tab == 'Editor'"
+            flat
+          >
+            <v-card-title>
+              <v-spacer />
+              <v-btn
+                color="primary"
+                :disabled="!validateJSON"
+                @click="saveDoc"
+              >
+                {{ validateJSON ? 'Save' : 'Invalid JSON' }}
+              </v-btn>
+            </v-card-title>
+            <v-card-text>
+              <v-textarea
+                v-model="jsonInput"
+                class="jsonValid"
+                filled
+                auto-grow
+                :class="validateJSON ? 'jsonValid' : 'jsonInvalid'"
+                label="Edit"
+                spellcheck="false"
+                required
+              />
+            </v-card-text>
+          </v-card>
+        </v-tab-item>
+      </v-tabs-items>
+    </v-card>
+  </v-dialog>
 </template>
 
 <script>
 import pouchMixin from "@/mixins/pouchMixin";
 
 export default {
-  name: "rawdocumentviewer",
+  name: "Rawdocumentviewer",
   mixins: [pouchMixin],
   data: () => ({
     tab: 'Raw',

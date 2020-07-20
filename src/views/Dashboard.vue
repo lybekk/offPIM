@@ -1,108 +1,160 @@
-<template lang="pug">
-v-main
-  v-container
-    v-row
-      v-col
-        v-container
-          v-card(
-            class="mx-auto" 
-            tile
-          )
-            v-list(rounded)
-              v-subheader(class="headline font-weight-light") Status report
-                //- TODO Morning/evening / Key figures
-              v-list-item-group(color="primary")
-                v-list-item(
-                  v-if="this.$store.getters.getTasksAggregate.today != 0"
-                  to="/tasks"
-                )
-                  v-list-item-icon
-                    v-icon mdi-checkbox-marked-circle-outline
-                  v-list-item-content
-                    v-list-item-title {{ reportTasks.main }} 
-                      span(v-if="this.$store.getters.getTasksAggregate.overdue != 0")
-                        span( class="error--text") {{ reportTasks.overdue }} 
-                        span overdue
-                v-list-item(
-                  v-if="this.$store.getters.getMessagesUnreadCount != 0"
-                  to="/messages"
-                )
-                  v-list-item-icon
-                    v-icon mdi-email
-                  v-list-item-content
-                    v-list-item-title(v-text="reportMessages")
-    v-row
-      v-col(cols="12")
-        span.headline Tasks 
-          span.subtitle-1.info--text {{ totalOpenTasks }}
-      v-col(                  
-        md="6"
-        lg="3"
-      )
-        metrics-statuses
-      v-col(                  
-        lg="2"
-      )
-        metrics-priorities
-      //- TODO: Replace with Vue's own progress
-      //-v-col(
-        md="6"
-        lg="3"
-        )
-        chart-tasks-today
-      v-col(lg="2")
-        v-card(v-if="this.$store.getters.getTasksAggregate.initiated && taskProgress.visible")
-          v-card-title
-            v-icon(v-if="allTasksDone" large left color="success") mdi-check
-            span(v-text="!allTasksDone ? 'Done today: ' : 'All due done'") 
-            span(
+<template>
+  <v-main>
+    <v-container>
+      <v-row>
+        <v-col>
+          <v-container>
+            <v-card
+              class="mx-auto"
+              tile
+            >
+              <v-list rounded>
+                <v-subheader class="headline font-weight-light">
+                  Status report
+                  <!-- TODO Morning/evening / Key figures-->
+                </v-subheader>
+                <v-list-item-group color="primary">
+                  <v-list-item
+                    v-if="this.$store.getters.getTasksAggregate.today != 0"
+                    to="/tasks"
+                  >
+                    <v-list-item-icon>
+                      <v-icon>mdi-checkbox-marked-circle-outline</v-icon>
+                    </v-list-item-icon>
+                    <v-list-item-content>
+                      <v-list-item-title>
+                        {{ reportTasks.main }} <span v-if="this.$store.getters.getTasksAggregate.overdue != 0"><span class="error--text">{{ reportTasks.overdue }} </span><span>overdue</span></span>
+                      </v-list-item-title>
+                    </v-list-item-content>
+                  </v-list-item>
+                  <v-list-item
+                    v-if="this.$store.getters.getMessagesUnreadCount != 0"
+                    to="/messages"
+                  >
+                    <v-list-item-icon>
+                      <v-icon>mdi-email</v-icon>
+                    </v-list-item-icon>
+                    <v-list-item-content>
+                      <v-list-item-title v-text="reportMessages" />
+                    </v-list-item-content>
+                  </v-list-item>
+                </v-list-item-group>
+              </v-list>
+            </v-card>
+          </v-container>
+        </v-col>
+      </v-row>
+      <v-row>
+        <v-col cols="12">
+          <span class="headline">Tasks <span class="subtitle-1 info--text">{{ totalOpenTasks }}</span></span>
+        </v-col>
+        <v-col
+          md="6"
+          lg="6"
+        >
+          <MetricsStatuses />
+        </v-col>
+        <v-col lg="6">
+          <MetricsPriorities />
+        </v-col>
+        <!-- TODO: Replace with Vue's own progress-->
+        <!--v-col(md="6"
+lg="3"
+)
+chart-tasks-today-->
+        <v-col lg="2">
+          <v-card v-if="this.$store.getters.getTasksAggregate.initiated &amp;&amp; taskProgress.visible">
+            <v-card-title>
+              <v-icon
+                v-if="allTasksDone"
+                large
+                left
+                color="success"
+              >
+                mdi-check
+              </v-icon><span v-text="!allTasksDone ? 'Done today: ' : 'All due done'" /><span
+                v-if="!allTasksDone"
+                class="success--text ml-1"
+                v-text="this.$store.getters.getTasksAggregate.doneToday"
+              />
+            </v-card-title>
+            <v-card-subtitle
               v-if="!allTasksDone"
-              v-text="this.$store.getters.getTasksAggregate.doneToday"
-              class="success--text ml-1"
-            )
-          v-card-subtitle(v-if="!allTasksDone")
-            v-progress-linear(
-              v-if="this.$store.getters.getTasksAggregate.initiated && taskProgress.visible"
-              :color="taskProgress.color"
-              :value="taskProgress.value" 
-              rounded
-            )
-  v-footer 
-    v-container
-      v-row
-        v-col
-          v-container(
-            v-for="dt in dataTables"
-            :key="dt.name"
-          )
-            v-card
-              v-card-title(class="headline") {{ dt.name }}
-              v-card-text
-                v-simple-table
-                  template(v-slot:default)
-                    tbody
-                      tr(
-                        v-for="data in dt.table" 
-                        :key="data.key"
-                      )
-                        th {{ data.key }}
-                        td {{ data.value }}
-        v-col
-          v-container
-            v-card
-              v-card-title(class="headline") Remote database
-              v-card-text(v-if="!$store.getters.remoteDBIsOnline") Remote database is not connected
-              v-card-text(v-else)
-                v-simple-table
-                  template(v-slot:default)
-                    tbody
-                      tr(v-for="(value, name, index) in remoteDBInfo" :key="index")
-                        th {{ name }}
-                        td {{ value }}
+            >
+              <v-progress-linear
+                v-if="this.$store.getters.getTasksAggregate.initiated &amp;&amp; taskProgress.visible"
+                :color="taskProgress.color"
+                :value="taskProgress.value"
+                rounded
+              />
+            </v-card-subtitle>
+          </v-card>
+        </v-col>
+      </v-row>
+    </v-container>
+    <v-footer>
+      <v-container>
+        <v-row>
+          <v-col>
+            <v-container
+              v-for="dt in dataTables"
+              :key="dt.name"
+            >
+              <v-card>
+                <v-card-title class="headline">
+                  {{ dt.name }}
+                </v-card-title>
+                <v-card-text>
+                  <v-simple-table>
+                    <template v-slot:default>
+                      <tbody>
+                        <tr
+                          v-for="data in dt.table"
+                          :key="data.key"
+                        >
+                          <th>{{ data.key }}</th><td>{{ data.value }}</td>
+                        </tr>
+                      </tbody>
+                    </template>
+                  </v-simple-table>
+                </v-card-text>
+              </v-card>
+            </v-container>
+          </v-col>
+          <v-col>
+            <v-container>
+              <v-card>
+                <v-card-title class="headline">
+                  Remote database
+                </v-card-title>
+                <v-card-text v-if="!$store.getters.remoteDBIsOnline">
+                  Remote database is not connected
+                </v-card-text>
+                <v-card-text v-else>
+                  <v-simple-table>
+                    <template v-slot:default>
+                      <tbody>
+                        <tr
+                          v-for="(value, name, index) in remoteDBInfo"
+                          :key="index"
+                        >
+                          <th>{{ name }}</th><td>{{ value }}</td>
+                        </tr>
+                      </tbody>
+                    </template>
+                  </v-simple-table>
+                </v-card-text>
+              </v-card>
+            </v-container>
+          </v-col>
+        </v-row>
+      </v-container>
+    </v-footer>
+  </v-main>
 </template>
 
 <script>
-import ChartTasksToday from "@/components/charts/ChartTasksToday.vue"
+// TODO: Refactor to vuetify components import ChartTasksToday from "@/components/charts/ChartTasksToday.vue"
 import formatMixin from '@/mixins/formatMixin'
 import { mapGetters } from 'vuex'
 
@@ -110,9 +162,8 @@ import MetricsStatuses from "@/components/tasks/MetricsStatuses.vue"
 import MetricsPriorities from "@/components/tasks/MetricsPriorities.vue"
 
 export default {
-  name: 'dashboard',
+  name: 'Dashboard',
   components: {
-    ChartTasksToday,
     MetricsStatuses,
     MetricsPriorities
   },

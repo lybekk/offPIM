@@ -1,32 +1,38 @@
 <template>
-<v-card v-if="statusList.length">
+  <v-card v-if="statusList.length">
     <v-card-title>Status</v-card-title>
     <v-card-text>
-        <v-chip-group column>
-          <v-chip
-            v-for="status in statusList"
-            :key="status"
-            :to="`/tasks/list/status${status}`"
-            :color="$store.getters.getStatusColors[status]"
-            class="text-capitalize"
-            label
+      <v-chip-group column>
+        <v-chip
+          v-for="status in statusList"
+          :key="status"
+          :to="`/tasks/list/status${status}`"
+          color="secondary"
+          class="text-capitalize"
+          label
+        >
+          <v-icon 
+            left
+            :color="`${$store.getters.getStatusColors[status]} lighten-2`"
           >
-            <v-avatar left>
-              <v-icon>{{ $store.getters.getStatusIcons[status] }}</v-icon>
-            </v-avatar>
-            {{ status }}
-            <v-avatar right :class="`${$store.getters.getStatusColors[status]} darken-1`">
-                <small> {{ statusCount(status) }} </small>
-            </v-avatar>            
-          </v-chip>
-        </v-chip-group>
+            {{ $store.getters.getStatusIcons[status] }}
+          </v-icon>
+          {{ status }}
+          <v-avatar
+            right
+            color="secondary darken-3"
+          >
+            <small> {{ statusCount(status) }} </small>
+          </v-avatar>
+        </v-chip>
+      </v-chip-group>
     </v-card-text>
-</v-card>
+  </v-card>
 </template>
 
 <script>
 export default {
-  name: "metricsstatuses",
+  name: "Metricsstatuses",
   data: () => ({}),
   computed: {
     statusList() {

@@ -1,34 +1,47 @@
-<template lang="pug">
-div
-  v-treeview(
-    :load-children="fetch"
-    :items="items"
-    :open.sync="treeOpen"
-    open-on-click
-    activatable
-    expand-icon="mdi-chevron-down"
-    indeterminate-icon="mdi-bookmark-minus"
-    transition
-  )
-    template(slot="label" slot-scope="{ item }")
-      v-chip(
-        v-if="!item.children"
-        class="ma-2"
-        label
-        @click="getByTag(item)"
-      )
-        v-tooltip(bottom)
-          template(v-slot:activator="{ on }")
-            div(left v-on="on")
-              v-icon mdi-label
-              | {{ item.name }}
-          span(v-text="tagCount(item)")
-      span(v-else) {{ item.name }}
+<template>
+  <div>
+    <v-treeview
+      :load-children="fetch"
+      :items="items"
+      :open.sync="treeOpen"
+      open-on-click
+      activatable
+      expand-icon="mdi-chevron-down"
+      indeterminate-icon="mdi-bookmark-minus"
+      transition
+    >
+      <template
+        slot="label"
+        slot-scope="{ item }"
+      >
+        <v-chip
+          v-if="!item.children"
+          class="ma-2"
+          label="label"
+          @click="getByTag(item)"
+        >
+          <v-tooltip bottom>
+            <template v-slot:activator="{ on }">
+              <div
+                left
+                v-on="on"
+              >
+                <v-icon>mdi-label</v-icon>{{ item.name }}
+              </div>
+            </template>
+            <span
+              v-text="tagCount(item)"
+            />
+          </v-tooltip>
+        </v-chip><span v-else>{{ item.name }}</span>
+      </template>
+    </v-treeview>
+  </div>
 </template>
 
 <script>
 export default {
-  name: "logbooktaglist",
+  name: "Logbooktaglist",
   components: {},
   data: () => ({
     tags: [],
@@ -121,8 +134,6 @@ export default {
         this.$store.commit("loaderActive");
         let mango = {
           selector: {
-            //realm: "logs",
-            //logbook: true,
             "@type":"Event",
             keywords: {
               $in: [tag]
@@ -136,7 +147,6 @@ export default {
 
         try {
           let data = await window.db.find(mango);
-          //this.$emit("add-logs", data.docs);
           this.$store.commit("addDataArray", data.docs);
           this.$store.commit("loaderInactive");
         } catch (error) {
@@ -149,7 +159,6 @@ export default {
     },
 
     tagCount: function(item) {
-      //const x = this.tags.find(tag => tag.key === item.key);
       const x = this.tags.find(tag => tag.key === item.key);
       return x.value;
     }

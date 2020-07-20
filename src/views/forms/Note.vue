@@ -1,43 +1,50 @@
-<template lang="pug">
-  v-container
-    v-card(flat)
-      v-card-title
-          v-spacer
-          submit-button(:doc="doc")
-      v-card-text
-          v-container
-            v-row
-              v-col(cols='12')
-                v-text-field(
-                  v-model='newNote.title'
-                  label='Title'
-                  autofocus
-                  filled
-                  )
-              v-col(cols='12')
-                v-textarea(
-                  v-model='newNote.description'
-                  label='Description'
-                  filled
-                  )
-              v-col(cols='12')
-                v-combobox(
-                  v-model='newNote.tags'
-                  :items='tagsListItems'
-                  label='Tags'
-                  multiple
-                  chips
-                  filled
-                  )
-          small *indicates required field
-
+<template>
+  <v-container>
+    <v-card flat>
+      <v-card-title>
+        <v-spacer />
+        <SubmitButton :doc="doc" />
+      </v-card-title>
+      <v-card-text>
+        <v-container>
+          <v-row>
+            <v-col cols="12">
+              <v-text-field
+                v-model="newNote.title"
+                label="Title"
+                autofocus
+                filled
+              />
+            </v-col>
+            <v-col cols="12">
+              <v-textarea
+                v-model="newNote.description"
+                label="Description"
+                filled
+              />
+            </v-col>
+            <v-col cols="12">
+              <v-combobox
+                v-model="newNote.tags"
+                :items="tagsListItems"
+                label="Tags"
+                multiple
+                chips
+                filled
+              />
+            </v-col>
+          </v-row>
+        </v-container><small>*indicates required field</small>
+      </v-card-text>
+    </v-card>
+  </v-container>
 </template>
 
 <script>
 import SubmitButton from "@/components/form/submit";
 
 export default {
-  name: "formsNewNote",
+  name: "FormsNewNote",
   components: {
     SubmitButton
   },

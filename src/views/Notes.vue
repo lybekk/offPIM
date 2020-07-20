@@ -1,64 +1,73 @@
-<template lang="pug">
-  v-container(fluid)
-    v-navigation-drawer(
+<template>
+  <v-container fluid>
+    <v-navigation-drawer
       v-model="drawer"
       app
       right
-    )
-      v-list(
-        nav
-        dense
-        subheader
-      )
-        v-list-item(
-          v-for="(tag, i) in tagsList"
-          :key="i"
-          link
-          :to="{ name: 'notesTag', params: { tag: tag.key }}"
-        )
-          v-list-item-icon
-            v-icon(
-              color="grey lighten-1" 
-              small
-            ) mdi-tag
-            v-icon(
-              small 
-              color="grey lighten-1" 
-              v-text="tag.key[0]"
-            ) mdi-tag
-          v-list-item-content
-            v-list-item-title(
-              v-text="tag.key"
-            )
-          v-list-item-action
-            v-list-item-action-text(v-text="tag.value")
-    v-main
-      v-container(
+      temporary
+    >
+      <v-sheet
+        class="pa-4 primary lighten-2"
+        dark
+      >
+        <v-icon>mdi-tag</v-icon>
+        Tags
+      </v-sheet>
+      <v-sheet class="pa-1">
+        <v-list
+          nav
+          dense
+          subheader
+        >
+          <v-list-item
+            v-for="(tag, i) in tagsList"
+            :key="i"
+            link
+            :to="{ name: 'notesTag', params: { tag: tag.key }}"
+          >
+            <v-list-item-content>
+              <v-list-item-title v-text="tag.key" />
+            </v-list-item-content>
+            <v-list-item-action>
+              <v-list-item-action-text v-text="tag.value" />
+            </v-list-item-action>
+          </v-list-item>
+        </v-list>
+      </v-sheet>
+    </v-navigation-drawer>
+    <v-main>
+      <v-container
         class="fill-height"
         fluid
-      )
-        v-toolbar(
-          flat
-        )
-          v-btn(            
+      >
+        <v-toolbar flat>
+          <v-btn
             color="secondary"
             @click="getNotesByTag()"
-          )
-            v-icon mdi-note-text
-            span Untagged
-          v-spacer
-          v-btn(
-            class="ma-2" 
+          >
+            <v-icon>mdi-note-text</v-icon><span>Untagged</span>
+          </v-btn>
+          <v-spacer />
+          <v-btn
+            class="ma-2"
             color="secondary"
-            rounded 
             @click="drawer = !drawer"
-            )
-            v-icon(left) mdi-tag
-            span Tags
-            v-icon(right) mdi-menu
-        v-row
-          router-view
-    notes-detailed
+          >
+            <v-icon left>
+              mdi-tag
+            </v-icon><span>Tags</span>
+            <v-icon right>
+              mdi-menu
+            </v-icon>
+          </v-btn>
+        </v-toolbar>
+        <v-row>
+          <router-view />
+        </v-row>
+      </v-container>
+    </v-main>
+    <NotesDetailed />
+  </v-container>
 </template>
 
 <script>
@@ -66,14 +75,11 @@ import NotesDetailed from "@/components/notes/NotesDetailed.vue";
 import pouchMixin from "@/mixins/pouchMixin";
 
 export default {
-  name: "notes",
+  name: "Notes",
   components: {
     NotesDetailed
   },
   mixins: [pouchMixin],
-  props: {
-    source: String
-  },
   data: () => ({
     drawer: false
   }),
