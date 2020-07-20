@@ -2,17 +2,22 @@ import '@mdi/font/css/materialdesignicons.css' // Ensure you are using css-loade
 import Vue from 'vue';
 import Vuetify from 'vuetify/lib';
 import colors from 'vuetify/lib/util/colors'
+import minifyTheme from 'minify-css-string'
 
 Vue.use(Vuetify);
 
 export default new Vuetify({
-    icons: {
-        iconfont: 'mdi',
-    },
     theme: {
+        options: {
+            minifyTheme,
+            themeCache: {
+                get: key => localStorage.getItem(key),
+                set: (key, value) => localStorage.setItem(key, value),
+            },
+        },
         themes: {
             light: {
-                primary: colors.blueGrey,
+                primary: colors.blueGrey.darken1,
                 secondary: colors.teal,
                 accent: colors.shades.black,
                 info: colors.cyan,
