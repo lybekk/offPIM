@@ -1,58 +1,65 @@
-<template lang="pug">
-v-container(fluid)
-    v-card(elevation="0")
-        v-card-title(
-            class="headline"
-        ) Project
-            v-spacer
-            v-row
-              v-col(
-                v-for="(value, key) in statuses"
-                :class="[value == 0 ? 'fadedIfStatusZero': '']"
-                :key="key"
-              )
-                v-progress-circular(
-                  size="100"
-                  width="15"
-                  :value="statusValuePercent(key)"
-                  :color="$store.getters.getStatusColors[key]"
-                ) {{ value }}
-                v-switch(
-                  v-model="tasksFilter"
-                  class="overline"
-                  :value="key"
-                  :label="key"
-                  :color="$store.getters.getStatusColors[key]"
-                )
-            v-spacer
-            tasks-project-archival(
-                v-bind:project="details"
-                v-bind:tasks="tasks"
-                @get-project="getProject"
-            )
-    v-row
-        v-col(cols="12")
-            tasks-item(
-                v-if="details._id"
-                v-bind:docid="details._id"
-            )
-    v-skeleton-loader(
-      :loading="this.$store.getters.loaderState"
+<template>
+  <v-container fluid>
+    <v-card elevation="0">
+      <v-card-title class="headline">
+        Project
+        <v-spacer />
+        <v-row>
+          <v-col
+            v-for="(value, key) in statuses"
+            :key="key"
+            :class="[value == 0 ? 'fadedIfStatusZero': '']"
+          >
+            <v-progress-circular
+              size="100"
+              width="15"
+              :value="statusValuePercent(key)"
+              :color="$store.getters.getStatusColors[key]"
+            >
+              {{ value }}
+            </v-progress-circular>
+            <v-switch
+              v-model="tasksFilter"
+              class="overline"
+              :value="key"
+              :label="key"
+              color="secondary"
+            />
+          </v-col>
+        </v-row>
+        <v-spacer />
+        <TasksProjectArchival
+          :project="details"
+          :tasks="tasks"
+          @get-project="getProject"
+        />
+      </v-card-title>
+    </v-card>
+    <v-row>
+      <v-col cols="12">
+        <TasksItem
+          v-if="details._id"
+          :docid="details._id"
+        />
+      </v-col>
+    </v-row>
+    <v-skeleton-loader
       class="mx-auto"
-      transition="slide-y-reverse-transition"      
+      :loading="this.$store.getters.loaderState"
+      transition="slide-y-reverse-transition"
       type="sentences"
-    )
-      v-card(
-        elevation="0"
-      )
-        v-card-title(
-          class="headline"
-        ) {{ tasks.length }} Tasks in 
-          span(class="primary--text font-weight-thin ml-1") {{ details.title }}
-        v-card-subtitle(
-          class="subtitle font-weight-thin"
-        ) Showing {{ filteredTasks.length }} 
-    TasksDataIteratorList(:tasks="filteredTasks")
+    >
+      <v-card elevation="0">
+        <v-card-title class="headline">
+          {{ tasks.length }} Tasks in <span class="primary--text font-weight-thin ml-1">{{ details.title }}</span>
+        </v-card-title>
+        <v-card-subtitle class="subtitle font-weight-thin">
+          Showing {{ filteredTasks.length }}
+        </v-card-subtitle>
+      </v-card>
+    </v-skeleton-loader>
+    <TasksDataIteratorList :tasks="filteredTasks" />
+  </v-container>
 </template>
 
 <script>
@@ -62,14 +69,19 @@ import TasksDataIteratorList from "@/components/tasks/TasksDataIteratorList.vue"
 import pouchMixin from "@/mixins/pouchMixin";
 
 export default {
-  name: "tasksProject",
+  name: "TasksProject",
   components: {
     TasksItem,
     TasksProjectArchival,
     TasksDataIteratorList
   },
   mixins: [pouchMixin],
-  props: ["projectid"],
+  props: {
+    projectid: {
+      type: String,
+      default: null,
+    }
+  },
   data: () => ({
     showClosedTasks: false,
     tasksFilter: ["wait", "plan", "todo", "next", "doing"],
@@ -128,7 +140,6 @@ export default {
     },
     resetStatuses: function() {
       for (let x of Object.keys(this.statuses)) {
-        console.log(x);
         this.statuses[x] = 0;
       }
     },
@@ -141,8 +152,7 @@ export default {
           type: "task",
           project: this.projectid
         },
-        limit: 1000,
-        fields: ["_id", "status"]
+        limit: 1000
       };
       try {
         let data = await window.db.find(mango);
