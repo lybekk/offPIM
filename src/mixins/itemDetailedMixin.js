@@ -1,101 +1,99 @@
 export default {
-    computed: {
+  computed: {
 
-        doc() {
-            return this.$store.getters.selectedDoc;
-        },
-
-        dialogItemDetailed: {
-            get: function () {
-                return this.$store.getters.dialogItemDetailed;
-            },
-            set: function (val) {
-                const mutation = val
-                    ? "dialogItemDetailedShow"
-                    : "dialogItemDetailedHide";
-                this.$store.commit(mutation, "dialogItemDetailed");
-            }
-        },
-
-        startDate() {
-            const d = this.doc.startDate;
-            if (d) {
-              return new Date(d).toISOString().substr(0, 10);
-            } else {
-              return null;
-            }
-          },
-
-          startTime() {
-            const d = this.doc.startDate;
-            if (d) {
-              return new Date(d).toISOString().slice(11,16);
-            } else {
-              return null;
-            }
-          },
-
-          endDate() {
-            const d = this.doc.endDate;
-            if (d) {
-              return new Date(d).toISOString().substr(0, 10);
-            } else {
-              return null;
-            }
-          },
-
+    doc() {
+      return this.$store.getters.selectedDoc;
     },
-    methods: {
 
-      getDateOnly: function(value) {
-        //const d = this.doc[key];
-        if (value) {
-          return new Date(value).toISOString().substr(0, 10);
-        } else {
-          return null;
-        }
+    dialogItemDetailed: {
+      get: function () {
+        return this.$store.getters.dialogItemDetailed;
       },
+      set: function (val) {
+        const mutation = val
+          ? "dialogItemDetailedShow"
+          : "dialogItemDetailedHide";
+        this.$store.commit(mutation, "dialogItemDetailed");
+      }
+    },
 
-      getTimeOnly: function(value) {
-        //const d = this.doc[key];
-        if (value) {
-          return new Date(value).toISOString().slice(11,16);
-        } else {
-          return null;
-        }
-      },
+    startDate() {
+      const d = this.doc.startDate;
+      if (d) {
+        return new Date(d).toISOString().substr(0, 10);
+      } else {
+        return null;
+      }
+    },
 
+    startTime() {
+      const d = this.doc.startDate;
+      if (d) {
+        return new Date(d).toISOString().slice(11, 16);
+      } else {
+        return null;
+      }
+    },
 
-        setDate: async function(key, value) {
-            let freshDoc = await this.getDoc(this.doc._id);
+    endDate() {
+      const d = this.doc.endDate;
+      if (d) {
+        return new Date(d).toISOString().substr(0, 10);
+      } else {
+        return null;
+      }
+    },
 
-            let newDate = new Date(value);
-            let currentDate = new Date( freshDoc[key] );
+  },
+  methods: {
 
-            currentDate.setFullYear( newDate.getFullYear() );
-            currentDate.setMonth( newDate.getMonth() );
-            currentDate.setDate( newDate.getDate() );
+    getDateOnly: function (value) {
+      //const d = this.doc[key];
+      if (value) {
+        return new Date(value).toISOString().substr(0, 10);
+      } else {
+        return null;
+      }
+    },
 
-            this.setDocField(key, currentDate.toISOString());
-          },
+    getTimeOnly: function (value) {
+      if (value) {
+        return new Date(value).toISOString().slice(11, 16);
+      } else {
+        return null;
+      }
+    },
 
-          setTime: async function(key, value) {
-            let freshDoc = await this.getDoc(this.doc._id);
-            let currentDate = new Date( freshDoc[key] );
-            
-            const timeHour = value.split(":");
-            currentDate.setUTCHours( timeHour[0] );
-            currentDate.setMinutes( timeHour[1] );
+    setDate: async function (key, value) {
+      let freshDoc = await this.getDoc(this.doc._id);
 
-            this.setDocField(key, currentDate.toISOString());
-          },
+      let newDate = new Date(value);
+      let currentDate = new Date(freshDoc[key]);
 
-        setDocField: async function (key, value) {
-            let id = this.doc._id;
-            let freshDoc = await this.getDoc(id);
-            freshDoc[key] = value;
-            await this.putDoc(freshDoc);
-            this.$store.dispatch("refreshDoc", id);
-        },
-    }
+      currentDate.setFullYear(newDate.getFullYear());
+      currentDate.setMonth(newDate.getMonth());
+      currentDate.setDate(newDate.getDate());
+
+      this.setDocField(key, currentDate.toISOString());
+    },
+
+    setTime: async function (key, value) {
+      let freshDoc = await this.getDoc(this.doc._id);
+      let currentDate = new Date(freshDoc[key]);
+
+      const timeHour = value.split(":");
+      currentDate.setUTCHours(timeHour[0]);
+      currentDate.setMinutes(timeHour[1]);
+
+      this.setDocField(key, currentDate.toISOString());
+    },
+
+    setDocField: async function (key, value) {
+      let id = this.doc._id;
+      let freshDoc = await this.getDoc(id);
+      freshDoc[key] = value;
+      await this.putDoc(freshDoc);
+      this.$store.dispatch("refreshDoc", id);
+    },
+  }
 };
