@@ -52,11 +52,8 @@ v-container(fluid)
 <script>
 
 export default {
-  name: 'financesAccounts',
+  name: 'FinancesAccounts',
   components: {
-  },
-  props: {
-    source: String,
   },
   data: () => ({
     search: null,

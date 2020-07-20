@@ -120,7 +120,7 @@ import itemDetailedMixin from "@/mixins/itemDetailedMixin";
 import pouchMixin from "@/mixins/pouchMixin";
 
 export default {
-    name: 'contactsitemdetailedemail',
+    name: 'Contactsitemdetailedemail',
     mixins: [
         pouchMixin,
         itemDetailedMixin

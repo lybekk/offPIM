@@ -160,7 +160,7 @@ function getCurrencies() {
 }
 
 export default {
-  name: "formsNewFinance",
+  name: "FormsNewFinance",
   components: {
     SubmitButton
   },

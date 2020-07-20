@@ -57,7 +57,7 @@ import itemDetailedMixin from "@/mixins/itemDetailedMixin";
 import pouchMixin from "@/mixins/pouchMixin";
 
 export default {
-  name: "contactsitemdetailedlocations",
+  name: "Contactsitemdetailedlocations",
   mixins: [pouchMixin, itemDetailedMixin],
   computed: {
     address() {

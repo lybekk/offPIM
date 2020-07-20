@@ -1,9 +1,10 @@
 <template>
-<v-content>
-  <v-container fluid>
-
-  <p class="headline">Setup</p>
-    <!--  or radiobuttons
+  <v-content>
+    <v-container fluid>
+      <p class="headline">
+        Setup
+      </p>
+      <!--  or radiobuttons
     v-row(v-if="!dbChoice")
       v-col
         p Pick a database
@@ -46,176 +47,237 @@
 
 
 
-  <v-stepper v-model="e6" vertical>
-    <!-- :rules="[() => false]" -->
-    <!-- Consider using editable steppers instead -->
-    <v-stepper-step :complete="e6 > 1" :rules="[() => databaseServerConnectionSuccess]" step="1">
-      Database server connection
-    </v-stepper-step>
-    <v-stepper-content step="1">
-      <v-card v-if="!databaseServerConnectionSuccess" class="mb-12">
-        If no connection. See settings.json in /offpim/settings.json. Change db-path to xx
-        <br>
-        <v-btn @click="databaseServerConnection">Retry connection</v-btn>
-      </v-card>
-      <v-card v-else>
-        Database server connection established
-        <br>
-        <v-btn color="primary" @click="e6 = 2">Continue</v-btn>
-      </v-card>
-    </v-stepper-content>
+      <v-stepper
+        v-model="e6"
+        vertical
+      >
+        <!-- :rules="[() => false]" -->
+        <!-- Consider using editable steppers instead -->
+        <v-stepper-step
+          :complete="e6 > 1"
+          :rules="[() => databaseServerConnectionSuccess]"
+          step="1"
+        >
+          Database server connection
+        </v-stepper-step>
+        <v-stepper-content step="1">
+          <v-card
+            v-if="!databaseServerConnectionSuccess"
+            class="mb-12"
+          >
+            If no connection. See settings.json in /offpim/settings.json. Change db-path to xx
+            <br>
+            <v-btn @click="databaseServerConnection">
+              Retry connection
+            </v-btn>
+          </v-card>
+          <v-card v-else>
+            Database server connection established
+            <br>
+            <v-btn
+              color="primary"
+              @click="e6 = 2"
+            >
+              Continue
+            </v-btn>
+          </v-card>
+        </v-stepper-content>
 
-    <v-stepper-step :complete="e6 > 2" step="2" :rules="[() => databaseConnectionSuccess]">
-      Database state
-    </v-stepper-step>
-    <v-stepper-content step="2">
-      <v-card v-if="!databaseConnectionSuccess" class="mb-12">
-        Database <code>{{ dbName }}</code> does not exist on database server. 
-        By default name is 'vault'. Change in settings.json if another name is desired.
-        <v-btn @click="databaseConnection">Retry connection</v-btn>
-      </v-card>
-      <v-card v-else>
-        Database <code>{{ dbName }}</code> exists. Great!
-        <br>
-        <!-- 
+        <v-stepper-step
+          :complete="e6 > 2"
+          step="2"
+          :rules="[() => databaseConnectionSuccess]"
+        >
+          Database state
+        </v-stepper-step>
+        <v-stepper-content step="2">
+          <v-card
+            v-if="!databaseConnectionSuccess"
+            class="mb-12"
+          >
+            Database <code>{{ dbName }}</code> does not exist on database server. 
+            By default name is 'vault'. Change in settings.json if another name is desired.
+            <v-btn @click="databaseConnection">
+              Retry connection
+            </v-btn>
+          </v-card>
+          <v-card v-else>
+            Database <code>{{ dbName }}</code> exists. Great!
+            <br>
+            <!-- 
         <v-btn color="primary" @click="e6 = 1">Back</v-btn>
         -->
-        <v-btn color="primary" @click="e6 = 3">Continue</v-btn>
-      </v-card>
-    </v-stepper-content>
+            <v-btn
+              color="primary"
+              @click="e6 = 3"
+            >
+              Continue
+            </v-btn>
+          </v-card>
+        </v-stepper-content>
 
-    <v-stepper-step :complete="e6 > 3" step="3" :rules="[() => offpimDesignDocumentSuccess]">
-      offpim Design document
-    </v-stepper-step>
-    <v-stepper-content step="3">
-      <v-card
-        v-if="offpimDoc.authenticationRequired"
-      >
-        <v-card>
-          Authentication required for design document to be uploaded
-          <br>
-          <v-btn
-            color="warning"
-            @click.stop="authDialog = true"
+        <v-stepper-step
+          :complete="e6 > 3"
+          step="3"
+          :rules="[() => offpimDesignDocumentSuccess]"
+        >
+          offpim Design document
+        </v-stepper-step>
+        <v-stepper-content step="3">
+          <v-card
+            v-if="offpimDoc.authenticationRequired"
           >
-            Authenticate
-          </v-btn>
-        </v-card>
-      </v-card>
-      <v-card v-if="offpimDesignDocumentSuccess">
-        <p>Design document up to date</p>
-        <v-btn color="primary" @click="e6 = 4">Continue</v-btn>
-      </v-card>
-      <v-card v-if="!offpimDesignDocumentSuccess && !offpimDoc.authenticationRequired">
-        <!-- 
+            <v-card>
+              Authentication required for design document to be uploaded
+              <br>
+              <v-btn
+                color="warning"
+                @click.stop="authDialog = true"
+              >
+                Authenticate
+              </v-btn>
+            </v-card>
+          </v-card>
+          <v-card v-if="offpimDesignDocumentSuccess">
+            <p>Design document up to date</p>
+            <v-btn
+              color="primary"
+              @click="e6 = 4"
+            >
+              Continue
+            </v-btn>
+          </v-card>
+          <v-card v-if="!offpimDesignDocumentSuccess && !offpimDoc.authenticationRequired">
+            <!-- 
           <p>offpim server design document version higher than doc in Database</p>
         -->
-        <p>Insert design document</p>
-        <v-btn color="primary" @click="offpimDesignDocument">Insert</v-btn>
-      </v-card>
-    </v-stepper-content>
+            <p>Insert design document</p>
+            <v-btn
+              color="primary"
+              @click="offpimDesignDocument"
+            >
+              Insert
+            </v-btn>
+          </v-card>
+        </v-stepper-content>
 
-    <v-stepper-step step="4" :rules="[() => mangoDesignDocumentSuccess]">
-      Mango query indexes document
-    </v-stepper-step>
-    <v-stepper-content step="4">
-      <v-card
-        v-if="mangoDoc.authenticationRequired"
-      >
-        <v-card>
-          Authentication required for design document to be uploaded
-          <br>
-          <v-btn
-            color="warning"
-            @click.stop="authDialog = true"
-          >
-            Authenticate
-          </v-btn>
-        </v-card>
-      </v-card>
-      <v-card v-if="!mangoDesignDocumentSuccess && !mangoDoc.authenticationRequired">
-        <p>Insert mango query index document</p>
-        <v-btn color="primary" @click="mangoDesignDocument">Insert</v-btn>
-      </v-card>
-      <v-card v-if="mangoDesignDocumentSuccess">
-        <p>Mango query index document up to date</p>
-        <p color="success--text">Setup complete</p>
-        <!-- @click="e6 = 1" -->
-        <v-btn to="/" color="success">Go to Dashboard</v-btn>
-      </v-card>
-      <!-- If all is well, btn to Dashboard -->
-    </v-stepper-content>
-  </v-stepper>
-
-  <!-- Authentication dialog -->
-  <div class="text-center">
-    <v-dialog
-      v-model="authDialog"
-      width="500"
-    >
-      <v-card>
-        <v-card-title
-          class="headline grey lighten-2"
-          primary-title
+        <v-stepper-step
+          step="4"
+          :rules="[() => mangoDesignDocumentSuccess]"
         >
-          Authentication
-        </v-card-title>
-        <v-card-text>
-          Provide credentials for a user/admin with permission to upload design documents
-          <v-form>
-            <v-row>
-              <v-col cols="12" >
-                <v-text-field
-                  v-model="username"
-                  label="Username"
-                  outlined
-                  shaped
-                ></v-text-field>
-              </v-col>
-            </v-row>
-            <v-row>
-              <v-col cols="12" >
-                <v-text-field
-                  v-model="password"
-                  :append-icon="show1 ? 'mdi-eye' : 'mdi-eye-off'"
-                  :rules="[rules.required, rules.min]"
-                  :type="show1 ? 'text' : 'password'"
-                  name="pwd"
-                  label="Password"
-                  outlined
-                  shaped
-                  @click:append="show1 = !show1"
-                ></v-text-field>
-              </v-col>
-            </v-row>
-            <v-row v-if="authMsg">
-              <p class="error--text">{{ authMsg }}</p>
-            </v-row>
-          </v-form>
-        </v-card-text>
-        <v-divider></v-divider>
-        <v-card-actions>
-          <v-spacer></v-spacer>
-          <v-btn
-            color="primary"
-            text
-            @click="requestAuthCookie"
+          Mango query indexes document
+        </v-stepper-step>
+        <v-stepper-content step="4">
+          <v-card
+            v-if="mangoDoc.authenticationRequired"
           >
-            Request auth cookie
-          </v-btn>
-        </v-card-actions>
-      </v-card>
-    </v-dialog>
-  </div>
+            <v-card>
+              Authentication required for design document to be uploaded
+              <br>
+              <v-btn
+                color="warning"
+                @click.stop="authDialog = true"
+              >
+                Authenticate
+              </v-btn>
+            </v-card>
+          </v-card>
+          <v-card v-if="!mangoDesignDocumentSuccess && !mangoDoc.authenticationRequired">
+            <p>Insert mango query index document</p>
+            <v-btn
+              color="primary"
+              @click="mangoDesignDocument"
+            >
+              Insert
+            </v-btn>
+          </v-card>
+          <v-card v-if="mangoDesignDocumentSuccess">
+            <p>Mango query index document up to date</p>
+            <p color="success--text">
+              Setup complete
+            </p>
+            <!-- @click="e6 = 1" -->
+            <v-btn
+              to="/"
+              color="success"
+            >
+              Go to Dashboard
+            </v-btn>
+          </v-card>
+          <!-- If all is well, btn to Dashboard -->
+        </v-stepper-content>
+      </v-stepper>
 
-  </v-container>
-</v-content>
+      <!-- Authentication dialog -->
+      <div class="text-center">
+        <v-dialog
+          v-model="authDialog"
+          width="500"
+        >
+          <v-card>
+            <v-card-title
+              class="headline grey lighten-2"
+              primary-title
+            >
+              Authentication
+            </v-card-title>
+            <v-card-text>
+              Provide credentials for a user/admin with permission to upload design documents
+              <v-form>
+                <v-row>
+                  <v-col cols="12">
+                    <v-text-field
+                      v-model="username"
+                      label="Username"
+                      outlined
+                      shaped
+                    />
+                  </v-col>
+                </v-row>
+                <v-row>
+                  <v-col cols="12">
+                    <v-text-field
+                      v-model="password"
+                      :append-icon="show1 ? 'mdi-eye' : 'mdi-eye-off'"
+                      :rules="[rules.required, rules.min]"
+                      :type="show1 ? 'text' : 'password'"
+                      name="pwd"
+                      label="Password"
+                      outlined
+                      shaped
+                      @click:append="show1 = !show1"
+                    />
+                  </v-col>
+                </v-row>
+                <v-row v-if="authMsg">
+                  <p class="error--text">
+                    {{ authMsg }}
+                  </p>
+                </v-row>
+              </v-form>
+            </v-card-text>
+            <v-divider />
+            <v-card-actions>
+              <v-spacer />
+              <v-btn
+                color="primary"
+                text
+                @click="requestAuthCookie"
+              >
+                Request auth cookie
+              </v-btn>
+            </v-card-actions>
+          </v-card>
+        </v-dialog>
+      </div>
+    </v-container>
+  </v-content>
 </template>
 
 <script>
 
 export default {
-  name: 'setup',
+  name: 'Setup',
   components: {
   },
   data: () => ({

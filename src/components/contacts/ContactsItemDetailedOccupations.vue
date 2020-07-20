@@ -75,7 +75,7 @@ import itemDetailedMixin from "@/mixins/itemDetailedMixin";
 import pouchMixin from "@/mixins/pouchMixin";
 
 export default {
-  name: "contactsitemdetailedoccupations",
+  name: "Contactsitemdetailedoccupations",
   mixins: [pouchMixin, itemDetailedMixin],
   data: () => ({
     dialog: false,

@@ -50,11 +50,8 @@ v-content
 <script>
 
 export default {
-  name: 'financesAssets',
+  name: 'FinancesAssets',
   components: {
-  },
-  props: {
-    source: String,
   },
   data: () => ({
     headers: [

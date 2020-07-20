@@ -65,14 +65,9 @@
 <script>
 
 export default {
-  name: 'finances',
-  props: {
-    source: String,
-  },
+  name: 'Finances',
   data: () => ({
     tab: null,
-    //showNav: false,
-    //bottomNav:null,
     links: [
       {
         name: 'Overview',

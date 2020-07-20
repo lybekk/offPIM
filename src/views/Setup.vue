@@ -92,11 +92,9 @@ v-content
 </template>
 
 <script>
-//import OffPIMDesignDoc from '@/components/designdocs/offpim_design_doc.json'
-//import MangoDesignDoc from '@/components/designdocs/mango_indexes.json'
 
 export default {
-  name: "setup",
+  name: "Setup",
   components: {},
   data: () => ({
     e6: 0, // stepper

@@ -43,12 +43,9 @@ v-content
 import FormNew from '@/components/inventory/FormNew.vue'
 
 export default {
-    name: 'inventory',
+    name: 'Inventory',
     components: {
         FormNew
-    },
-    props: {
-        source: String,
     },
     data: () => ({
         inventoryItems: [],

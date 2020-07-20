@@ -9,36 +9,36 @@
         solo-inverted
         hide-details
         clearable
-      ></v-text-field>
+      />
     </v-sheet>
     <v-sheet class="pa-1">
-
-    <v-list>
-      <v-list-group
-        v-for="item in items"
-        :key="item.title"
-        v-model="item.active"
-        :prepend-icon="$store.getters.getStatusIcons[item.title]"
-        no-action
-      >
-        <template v-slot:activator>
-          <v-list-item-content>
-            <v-list-item-title v-text="item.title" style="text-transform: capitalize;" />
-          </v-list-item-content>
-        </template>
-
-        <v-list-item
-          v-for="subItem in item.children"
-          :key="subItem.title"
-          @click="showProject(subItem._id)"
+      <v-list>
+        <v-list-group
+          v-for="item in items"
+          :key="item.title"
+          v-model="item.active"
+          :prepend-icon="$store.getters.getStatusIcons[item.title]"
+          no-action
         >
-          <v-list-item-content>
-            <v-list-item-title v-text="subItem.title" />
-          </v-list-item-content>
-        </v-list-item>
-      </v-list-group>
-    </v-list>
-
+          <template v-slot:activator>
+            <v-list-item-content>
+              <v-list-item-title
+                style="text-transform: capitalize;"
+                v-text="item.title"
+              />
+            </v-list-item-content>
+          </template>
+          <v-list-item
+            v-for="subItem in item.children"
+            :key="subItem.title"
+            @click="showProject(subItem._id)"
+          >
+            <v-list-item-content>
+              <v-list-item-title v-text="subItem.title" />
+            </v-list-item-content>
+          </v-list-item>
+        </v-list-group>
+      </v-list>
     </v-sheet>
   </v-sheet>
 </template>
@@ -47,7 +47,7 @@
 import pouchMixin from "@/mixins/pouchMixin";
 
 export default {
-  name: "projectList",
+  name: "ProjectList",
   mixins: [pouchMixin],
   data: () => ({
     closedProjects: [],
@@ -66,17 +66,17 @@ export default {
         "wait",
         "done",
         "cancelled"
-      ]
+      ];
 
-      const obj = {}
+      const obj = {};
 
       for (let key of statuses) {
         obj[key] = {
           _id: key,
           title: key,
           children: [],
-          active: key == 'doing' ? true: undefined,
-        }
+          active: key == "doing" ? true : undefined
+        };
       }
 
       for (let p of this.$store.getters.getOpenProjects) {
@@ -91,7 +91,9 @@ export default {
       }
 
       for (let key in obj) {
-        if (!obj[key].children.length) { delete obj[key] }
+        if (!obj[key].children.length) {
+          delete obj[key];
+        }
       }
 
       return Object.values(obj);
