@@ -30,16 +30,17 @@ In an age where everything is about collaboration and sharing... This is a count
 * Works offline, as in offline-first
 * Local storage in browser. No server needed
 * Sync back and forth to an external database (any DB supporting the CouchDB replication protocol). Full master-master replication
-* Export/import to/from JSON
 * Apps
     * Task management
+        * Projects
     * Notes
     * Contacts
     * Journalling/logging
-    * Messaging (Used for general purpose information between devices and such, or whatever you feel like)
+    * Messaging (For general purpose information between devices and such, or whatever you feel like)
     * Search
         * Find items in offPIM by searching
 * Progressive web app (PWA)
+* Export/import to/from JSON
 * Open source. No proprietary technologies. No external requests. No tracking.
 * BYOS(Bring Your Own Server). Self-hosted. No backend or complicated installation procedure. Just unzip on a web server.
 
