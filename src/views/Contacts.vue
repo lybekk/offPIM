@@ -1,13 +1,45 @@
 <template>
   <v-main>
-    <v-container :fluid="$vuetify.breakpoint.mdAndDown">
+    <v-navigation-drawer
+      v-model="drawer" 
+      app 
+      right 
+      temporary
+    >
+      <v-sheet
+        class="pa-4 primary lighten-2"
+        dark
+      >
+        <v-icon>mdi-tag</v-icon>Tags
+      </v-sheet>
+      <v-sheet class="pa-1">
+        <v-list
+          nav
+          dense
+          subheader
+        >
+          <v-list-item
+            v-for="(tag, i) in tagList"
+            :key="i"
+            link
+            @click="filterByTag = tag"
+          >
+            <v-list-item-content>
+              <v-list-item-title v-text="tag" />
+            </v-list-item-content>
+          </v-list-item>
+        </v-list>
+      </v-sheet>
+    </v-navigation-drawer>
+    <v-container fluid>
       <v-skeleton-loader
-        class="mx-auto"
         :loading="this.$store.getters.loaderState"
         transition="scroll-y-reverse-transition"
         type="list-item-avatar-two-line"
       >
+        <!-- class="mx-auto" removed -->
         <v-data-iterator
+          ref="contactsDataIterator"
           :items="contactList"
           item-key="_id"
           :items-per-page="50"
@@ -18,34 +50,93 @@
           no-data-text="No contacts matching request"
         >
           <template v-slot:header>
-            <v-toolbar class="mb-1" color="transparent" flat="flat">
+            <v-toolbar
+              class="mb-1"
+              dark
+              color="primary darken-1"
+              elevation="1"
+            >
               <v-text-field
                 v-model="search"
-                clearable="clearable"
-                hide-details="hide-details"
+                clearable
+                hide-details
+                solo-inverted
+                flat
                 prepend-inner-icon="mdi-magnify"
                 label="Filter list"
-              ></v-text-field>
-              <v-spacer></v-spacer>
+              />
+              <v-chip
+                v-if="filterByTag"
+                class="ma-2"
+                close
+                color="teal"
+                text-color="white"
+                close-icon="mdi-close"
+                @click:close="filterByTag = null"
+              >
+                <v-avatar left>
+                  <v-icon>mdi-tag</v-icon>
+                </v-avatar>
+                {{ filterByTag }}
+              </v-chip>
+              <v-spacer />
               <v-select
                 v-model="sortBy"
-                flat="flat"
-                solo-inverted="solo-inverted"
-                hide-details="hide-details"
+                flat
+                solo-inverted
+                hide-details
                 :items="keys"
                 prepend-inner-icon="mdi-sort-variant"
                 label="Sort by"
-              ></v-select>
+              />
+              <v-spacer />
+              <v-btn
+                class="ma-2"
+                color="secondary"
+                @click="drawer = !drawer"
+              >
+                <v-icon left>
+                  mdi-tag
+                </v-icon>
+                <span>Tags</span>
+              </v-btn>
+              <v-spacer />
+              <v-menu>
+                <template v-slot:activator="{ on }">
+                  <v-btn
+                    icon
+                    aria-label="Sync dialog"
+                    v-on="on"
+                  >
+                    <v-icon>mdi-dots-vertical</v-icon>
+                  </v-btn>
+                </template>
+                <v-list>
+                  <v-list-item @click="exportAllToVCF">
+                    <v-list-item-title>Export all - VCF</v-list-item-title>
+                  </v-list-item>
+                  <v-list-item @click="exportCurrentListToVCF">
+                    <v-list-item-title>Export List - VCF</v-list-item-title>
+                  </v-list-item>
+                  <v-list-item @click="exportToGoogleCSV">
+                    <v-list-item-title>Export all - Google CSV</v-list-item-title>
+                  </v-list-item>
+                </v-list>
+              </v-menu>
             </v-toolbar>
           </template>
           <template v-slot:default="props">
-            <v-list two-line="two-line">
-              <contacts-item v-for="doc in props.items" :key="doc._id" v-bind:doc="doc"></contacts-item>
+            <v-list two-line>
+              <ContactsItem
+                v-for="doc in props.items"
+                :key="doc._id"
+                :doc="doc"
+              />
             </v-list>
           </template>
         </v-data-iterator>
       </v-skeleton-loader>
-      <contacts-item-detailed></contacts-item-detailed>
+      <ContactsItemDetailed />
     </v-container>
   </v-main>
 </template>
@@ -54,15 +145,20 @@
 import ContactsItem from "@/components/contacts/ContactsItem.vue";
 import ContactsItemDetailed from "@/components/contacts/ContactsItemDetailed.vue";
 import pouchMixin from "@/mixins/pouchMixin";
+var vCardsJS = require('vcards-js');
+import { saveAs } from 'file-saver';
 
 export default {
-  name: "contacts",
+  name: "Contacts",
   components: {
     ContactsItem,
     ContactsItemDetailed
   },
   mixins: [pouchMixin],
   data: () => ({
+    drawer: false,
+    tagList: [],
+    filterByTag: null,
     search: "",
     sortBy: "Given name",
     keys: ["Given name", "Family name"],
@@ -95,8 +191,15 @@ export default {
   }),
   computed: {
     contactList() {
-      const data = this.$store.getters.getData;
+      let data = this.$store.getters.getData;
       const list = this.$route.params.list;
+
+      let f = this.filterByTag;
+      if (f) {
+        data = data.filter(function(contact) {
+          return contact.keywords.includes(f)
+        })
+      }
 
       return data.filter(function(el) {
         if (list == "people") {
@@ -129,6 +232,7 @@ export default {
       try {
         let data = await this.getQuery("offpim/contacts-all", null, null, true);
         this.$store.commit("addDataArray", data);
+        this.populateTagList();
       } catch (error) {
         this.$store.dispatch("infoBridge", {
           color: "error",
@@ -136,7 +240,49 @@ export default {
           error: error
         });
       }
+    },
+
+    populateTagList: async function() {
+      const data = this.$store.getters.getData;
+      let tagsFound = new Set();
+      for await (let contact of data) {
+        let k = contact.keywords;
+        if (k.length) {
+          tagsFound.add(...k);
+        }
+      }
+      this.tagList = tagsFound;
+    },
+
+    exportAllToVCF: async function() {
+      const data = this.$store.getters.getData;
+      this.convertContactsToVCF(data)
+    },
+
+    exportCurrentListToVCF: async function() {
+      this.convertContactsToVCF(
+        this.contactList
+      )
+    },
+
+    convertContactsToVCF: async function(data) {
+      let exportContent = [];
+      for await (let contact of data) {
+        let vCard = vCardsJS();
+        vCard.firstName = contact.givenName;
+        vCard.lastName = contact.familyName;
+        vCard.test = 'testings';
+        exportContent.push(vCard.getFormattedString())
+      }
+      const blob = await new Blob(exportContent, {type: "text/plain;charset=utf-8"});
+      saveAs(blob, "contacts.vcf");
+    },
+
+    exportToGoogleCSV: function() {
+      const headers = "Name,Given Name,Additional Name,Family Name,Yomi Name,Given Name Yomi,Additional Name Yomi,Family Name Yomi,Name Prefix,Name Suffix,Initials,Nickname,Short Name,Maiden Name,Birthday,Gender,Location,Billing Information,Directory Server,Mileage,Occupation,Hobby,Sensitivity,Priority,Subject,Notes,Language,Photo,Group Membership,E-mail 1 - Type,E-mail 1 - Value,IM 1 - Type,IM 1 - Service,IM 1 - Value,Website 1 - Type,Website 1 - Value";
+      console.log(headers.split(','))
     }
+
   }
 };
 </script>
