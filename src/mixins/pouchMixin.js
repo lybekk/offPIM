@@ -62,7 +62,24 @@ export default {
         },
 
         deleteDoc: async function(id) {
-            this.$store.dispatch('deleteDocument', id)
+            let result;
+            try {
+                var doc = await window.db.get(id);
+                doc._deleted = true;
+
+                var response = await this.putDoc(doc);
+
+                this.$store.commit('addDeleted', id)
+                this.$store.dispatch("infoBridge", {
+                    text: 'Document deleted',
+                    color: 'info',
+                    error: id + ' Doc delete result: ' + response,
+                });
+            } catch (error) {
+                this.dispatch("infoBridge", { color: 'error', text: 'Deleting document failed: ', level: 'error', error: error });
+                result = error
+            }
+            return await result;
         },
 
         setFieldDate: async function(payload) {
