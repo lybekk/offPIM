@@ -1,73 +1,98 @@
-<template lang="pug">
-  v-app(id="inspire")
-    v-navigation-drawer(
+<template>
+  <v-app id="inspire">
+    <v-navigation-drawer
       v-model="drawer"
       app
-    )
-      navbar-apps
-      v-divider
-      v-list-item(
-        link 
+      :expand-on-hover="$vuetify.breakpoint.lgAndUp"
+      dark
+      color="primary darken-3"
+    >
+      <v-list
+        dense
+        flat
+      >
+        <v-list-item
+          link
+          to="/"
+        >
+          <v-list-item-icon>
+            <v-icon color="secondary">
+              mdi-circle
+            </v-icon>
+          </v-list-item-icon>
+          <v-list-item-content>
+            <v-list-item-title>offPIM</v-list-item-title>
+          </v-list-item-content>
+          <!-- DO NOT REMOVE
+          <div class="d-flex align-center">
+            <v-slide-x-transition :hide-on-leave="true">
+              <span class="headline" v-if="this.$route.name == 'welcome'">offPIM</span>
+              <v-btn v-else icon to="/">
+                <v-icon>mdi-apps</v-icon>
+              </v-btn>
+            </v-slide-x-transition>
+          </div>
+          -->
+        </v-list-item>
+      </v-list>
+      <v-divider />
+      <NavbarApps />
+      <v-divider inset />
+      <v-list-item
+        link
         href="https://lybekk.github.io/offPIM/"
         target="_blank"
         rel="noreferrer"
-        )
-        v-list-item-icon
-          v-icon mdi-book-information-variant
-        v-list-item-content
-          v-list-item-title Docs
-        v-list-item-action
-          v-icon mdi-open-in-new
-    v-app-bar(
+      >
+        <v-list-item-icon>
+          <v-icon>mdi-book-information-variant</v-icon>
+        </v-list-item-icon>
+        <v-list-item-content>
+          <v-list-item-title>Docs</v-list-item-title>
+        </v-list-item-content>
+        <v-list-item-action>
+          <v-icon>mdi-open-in-new</v-icon>
+        </v-list-item-action>
+      </v-list-item>
+    </v-navigation-drawer>
+    <v-app-bar
       app
       color="primary"
       dark
       hide-on-scroll
       elevate-on-scroll
-    )
-      v-app-bar-nav-icon(
-        @click.stop="drawer = !drawer"
+    >
+      <v-progress-linear
+        :active="loading"
+        :indeterminate="loading"
+        absolute
+        top
+        color="info"
+        height="4"
+      />
+      <v-app-bar-nav-icon
         aria-label="Apps menu"
-      )
-      div(class="d-flex align-center")
-        v-slide-x-transition(:hide-on-leave="true")
-          span(
-            v-if="this.$route.name == 'welcome'"
-            class="headline" 
-          ) offPIM
-          v-btn(
-            v-else  
-            icon
-            to="/"
-          )
-            v-icon mdi-apps
-      v-spacer
-      LocalWhiteboard
-      navbar-actions
-      template(v-slot:extension)
-        v-tabs(
+        @click.stop="drawer = !drawer"
+      />
+      <v-spacer />
+      <LocalWhiteboard />
+      <NavbarActions />
+      <template v-slot:extension>
+        <v-tabs
           align-with-title
           show-arrows
-          icons-and-text
           active-class="primary darken-1"
-        )
-          v-tab(
-            v-for="(tab, i) in $store.getters.appBarTabs" 
+        >
+          <v-tab
+            v-for="(tab, i) in $store.getters.appBarTabs"
             :key="i"
             :to="{ name: tab.to, params: tab.params }"
-          )
-            span
-              v-icon(v-text="tab.icon")
-              span  {{ tab.name }}
-        v-progress-linear(
-          :active="loading"
-          :indeterminate="loading"
-          absolute
-          bottom
-          color="secondary"
-          )
-        v-fab-transition
-          v-btn(
+          >
+            {{ tab.name }}
+          </v-tab>
+        </v-tabs>
+        <v-fab-transition>
+          <v-btn
             v-show="!$store.getters.buttonFormNewHidden"
             color="secondary"
             fab
@@ -75,20 +100,28 @@
             right
             absolute
             @click="openNewEntryForm"
-          )
-            v-icon mdi-plus
-    v-scroll-x-transition(mode="out-in")
-      router-view
-    v-snackbar(
+          >
+            <v-icon>mdi-plus</v-icon>
+          </v-btn>
+        </v-fab-transition>
+      </template>
+    </v-app-bar>
+    <v-scroll-x-transition mode="out-in">
+      <router-view />
+    </v-scroll-x-transition>
+    <v-snackbar
       v-model="snackbar.visible"
       :timeout="snackbar.timeout"
       :multi-line="snackbar.multiline === true"
       :color="snackbar.color"
       app
       :top="$vuetify.breakpoint.mdAndDown"
-    ) {{ snackbar.text }}
-    database-connection-dialog
-    raw-document-viewer
+    >
+      {{ snackbar.text }}
+    </v-snackbar>
+    <DatabaseConnectionDialog />
+    <RawDocumentViewer />
+  </v-app>
 </template>
 
 <script>
@@ -138,21 +171,24 @@ export default {
       this.$store.commit("setGenericStateBooleanFalse", "buttonFormNewHidden");
     }, 1000);
 
+    setTimeout(() => {
+      if (this.$vuetify.breakpoint.lgAndUp) {
+        this.drawer = true;
+      }
+    }, 2000);
     /**
-      * Keyboard shortcuts
+     * Keyboard shortcuts
      */
     var vm = this;
-    window.addEventListener('keydown', function (event) {
+    window.addEventListener("keydown", function(event) {
       // NOTE: metaKey == Command on Mac
-      if ((event.metaKey || event.ctrlKey) && event.key === 'd') {
-        event.preventDefault()
-        vm.openNewEntryForm()
+      if ((event.metaKey || event.ctrlKey) && event.key === "d") {
+        event.preventDefault();
+        vm.openNewEntryForm();
       }
-    })
-
+    });
   },
   methods: {
-
     startupcheck: async function() {
       let v = this.$store;
       v.dispatch("checkThemeSettings"); //store/themes.js
@@ -177,11 +213,11 @@ export default {
         v.dispatch("setTotals");
         v.dispatch("setMessagesUnreadCount");
       } catch (err) {
-          this.$store.dispatch("infoBridge", {
-            text: "Something went wrong during design doc verification: ",
-            color: "error",
-            error: err
-          });
+        this.$store.dispatch("infoBridge", {
+          text: "Something went wrong during design doc verification: ",
+          color: "error",
+          error: err
+        });
       }
     },
     insertDesignDocument: async function(serverDoc, docId) {
@@ -212,12 +248,11 @@ export default {
     openNewEntryForm: function() {
       const routeInfo = {
         name: this.$route.name,
-        params: this.$route.params,
-      }
-      window.localStorage.setItem('currentRoute', JSON.stringify(routeInfo));
-      this.$router.push({ name: 'formsNew' })
-    },
-
+        params: this.$route.params
+      };
+      window.localStorage.setItem("currentRoute", JSON.stringify(routeInfo));
+      this.$router.push({ name: "formsNew" });
+    }
   }
 };
 </script>
