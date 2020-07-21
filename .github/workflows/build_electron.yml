@@ -51,14 +51,14 @@ jobs:
         uses: actions/upload-artifact@v2
         if: matrix.os == 'windows-latest'
         with:
-          name: electron-linux-artifact
+          name: electron-windows-artifact
           path: dist_electron/offpim_desktop.exe
 
       - name: Archive production artifact - Mac
         uses: actions/upload-artifact@v2
         if: matrix.os == 'macos-latest'
         with:
-          name: electron-linux-artifact
+          name: electron-mac-artifact
           path: dist_electron/offpim_desktop.dmg
 
 
