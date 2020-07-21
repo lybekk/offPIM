@@ -171,7 +171,7 @@ export default {
   data: () => ({
     dataTables: {
       localDB: {
-        name: 'Local DB',
+        name: 'Local database',
         table: []
       },
     }

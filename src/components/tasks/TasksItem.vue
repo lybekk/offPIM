@@ -117,6 +117,7 @@
           v-model="sheet"
           :inset="$vuetify.breakpoint.mdAndUp"
           scrollable
+          overlay-color="primary"
         >
           <v-card>
             <v-card-title>
@@ -138,14 +139,10 @@
                   :task="doc"
                   @set-doc="setDoc()"
                 />
-                <v-list-item>
-                  <v-list-item-content>
-                    <TasksItemsStatus
-                      :task="doc"
-                      @set-status="setTaskStatus"
-                    />
-                  </v-list-item-content>
-                </v-list-item>
+                <TasksItemsStatus
+                  :task="doc"
+                  @set-status="setTaskStatus"
+                />
               </v-list>
               <v-divider
                 inset

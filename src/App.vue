@@ -81,7 +81,7 @@
         <v-tabs
           align-with-title
           show-arrows
-          active-class="primary darken-1"
+          active-class="primary darken-1 text--primary"
         >
           <v-tab
             v-for="(tab, i) in $store.getters.appBarTabs"

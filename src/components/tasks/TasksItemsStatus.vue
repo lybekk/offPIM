@@ -1,32 +1,56 @@
-<template lang="pug">
-v-slider(
-  v-model="value"
-  readonly
-  :color="color"
-  :track-color="colorLighter"
-  max="6"
-  left
-)
-  template(v-slot:prepend)
-    v-menu(offset-y)
-      template(v-slot:activator="{ on }")
-        v-btn(
-          rounded
-          v-on="on"
-          :color="$store.getters.getStatusColors[task.status]"
-        ) {{ task.status }}
-      v-list
-        v-list-item(
-          v-for="(item, index) in statusList"
-          :key="index"
-          @click="$emit('set-status', item)"
-        )
-          v-list-item-avatar
-            v-icon(
-              v-text="$store.getters.getStatusIcons[item]"
-              :color="$store.getters.getStatusColors[item]"
-            )
-          v-list-item-title.text-capitalize {{ item }}
+<template>
+  <v-menu offset-y>
+    <template v-slot:activator="{ on, attrs }">
+      <v-list-item v-on="on">
+        <v-list-item-icon>
+          <v-icon
+            :color="$store.getters.getStatusColors[task.status]"
+            large
+            v-text="$store.getters.getStatusIcons[task.status]"
+          />
+        </v-list-item-icon>
+
+        <v-list-item-content>
+          <v-list-item-title>
+            <v-chip 
+              label
+              disabled
+              :color="$store.getters.getStatusColors[task.status]"
+              class="text-capitalize"
+              v-text="task.status"
+            />
+          </v-list-item-title>
+          <v-list-item-subtitle>
+            <v-slider
+              v-model="value"
+              readonly="readonly"
+              :color="color"
+              :track-color="colorLighter"
+              max="6"
+              hide-details
+            />
+          </v-list-item-subtitle>
+        </v-list-item-content>
+      </v-list-item>
+    </template>
+    <v-list>
+      <v-list-item
+        v-for="(item, index) in statusList"
+        :key="index"
+        @click="$emit('set-status', item)"
+      >
+        <v-list-item-avatar>
+          <v-icon
+            :color="$store.getters.getStatusColors[item]"
+            v-text="$store.getters.getStatusIcons[item]"
+          />
+        </v-list-item-avatar>
+        <v-list-item-title class="text-capitalize">
+          {{ item }}
+        </v-list-item-title>
+      </v-list-item>
+    </v-list>
+  </v-menu>
 </template>
 
 <script>
@@ -35,7 +59,12 @@ export default {
   name: 'TasksItemsStatus',
   components: {
   },
-  props: ["task"],
+  props: {
+    task: {
+      type: Object,
+      default: () => {}
+    }
+  },
   data: () => ({
     menu: false,
     statusList: [
@@ -51,7 +80,8 @@ export default {
   computed: {
     value: {
       get () {
-        const index = this.statusList.findIndex(status => status === this.task.status);
+        const reversedStatusList = [...this.statusList].reverse()
+        const index = reversedStatusList.findIndex(status => status === this.task.status);
         return index
       },
       set (val) {
