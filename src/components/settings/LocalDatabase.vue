@@ -1,28 +1,10 @@
 <template>
   <v-card-text>
-    <v-overlay
-      :value="destroyInProgress"
-      color="warning"
-    >
-      <v-card>
-        <v-card-text>
-          <v-row>
-            <v-col>Destroying local database. This may take a while if it's a large database.</v-col>
-          </v-row>
-          <v-row>
-            <v-col>
-              <div class="text-center">
-                <v-progress-circular
-                  color="error"
-                  indeterminate
-                  size="64"
-                />
-              </div>
-            </v-col>
-          </v-row>
-        </v-card-text>
-      </v-card>
-    </v-overlay>
+    <OverlayDisruptive
+      :title="'Destroying local database'"
+      :message="'This may take a while on a large database.'"
+      :show-overlay="destroyInProgress"
+    />
     <v-list>
       <v-dialog max-width="500">
         <template v-slot:activator="{ on }">
@@ -107,12 +89,14 @@
 <script>
 import DatabaseCompaction from "@/components/app/DatabaseCompaction.vue";
 import LocalDatabaseImport from "@/components/settings/LocalDatabaseImport.vue";
+import OverlayDisruptive from "@/components/app/OverlayDisruptive.vue";
 
 export default {
   name: "Settingslocaldb",
   components: {
     DatabaseCompaction,
-    LocalDatabaseImport
+    LocalDatabaseImport,
+    OverlayDisruptive
   },
   data: () => ({
     backupPreparing: false,

@@ -13,7 +13,7 @@
             <p
               v-for="(tip,i) in remoteTips"
               :key="i"
-              ,v-html="tip"
+              v-html="tip"
             />
           </v-card-text>
         </v-card>
