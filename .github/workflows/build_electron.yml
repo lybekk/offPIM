@@ -1,15 +1,7 @@
 name: Build offPIM Electron
 
 on:
-  repository_dispatch:
-    types: build-electron
-  #push:
-  #  branches:
-  #    - master
-  #  paths:
-  #    - 'src/**'
-  #pull_request:
-  #  branches: [ master ]
+  workflow_dispatch
 
 jobs:
   build:
