@@ -9,7 +9,7 @@ const inventory = {
             console.log('Inventory prints this',type); //placeholder to avoid EsLint
             const mango = {
                 "selector": {
-                    "realm": "inventory"
+                    //"realm": "inventory" // Replace with Shcema.org
                     //"type": type
                     //"type": "transaction"
                 },

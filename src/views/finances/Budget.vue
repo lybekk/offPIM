@@ -287,7 +287,7 @@ export default {
     budgetStructureTemporary: function () {
       const j = {
         _id: '1234-5678-91011-121314',
-        realm: 'finance',
+        //"realm": "finance" // Replace with Shcema.org
         type: 'income', //income/expense
         category: 'salary' //salary, subscription
       };

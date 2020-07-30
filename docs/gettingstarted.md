@@ -36,7 +36,7 @@ Getting offPIM up and running can be done in several ways.
 ### The still-easy-but-requires-a-few-more-steps way (for techies)
 
 1. [Download self-hosted offPIM](https://lybekk.tech/downloads/offpim_self_hosted.zip)
-2. Copy contents of the zip-file into a directory (or root) to an HTTP-server of your choosing.
+2. Copy contents of the zip-file into a directory (or root) to an HTTP-server of your choosing. *offPIM uses relative paths, so any directory should work*
 
 ### The hard way - Build it yourself
 1. Clone the repository

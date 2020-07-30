@@ -201,13 +201,12 @@ export default {
             }
         },
         insertNewEntry: async function () {
-            // ADD REALM inventory
             var now = new Date().toISOString();
             let n = this.newEntry;
 
             let j = {
                 _id: this.generateUUID(),
-                realm: 'inventory',
+                //realm: 'inventory', // replace with Schema.org
                 created: now,
                 quantity: parseInt(n.quantity),
                 value: Number(n.value),

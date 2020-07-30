@@ -45,7 +45,7 @@ const logs = {
             let now = new Date().toISOString().slice(0, 16);
             let mango = {
                 "selector": {
-                    "realm": "logs",
+                    //"realm": "logs",
                     "created": { "$lte": now }
                 },
                 "limit": p,
@@ -74,7 +74,7 @@ const logs = {
             //context.commit('flushLogs');
             let mango = {
                 "selector": {
-                    "realm": "logs",
+                    //"realm": "logs",
                     "tags": {
                         "$in": [tag]
                     }

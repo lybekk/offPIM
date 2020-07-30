@@ -64,7 +64,7 @@ export default {
     assetsStructureTemporary: function () {
       const j = {
         _id: '1234-5678-91011-121314',
-        realm: 'finance',
+        //"realm": "finance" // Replace with Shcema.org
         type: 'asset' // type: {string} - The account type in the list ['none', 'bank', 'cash', 'asset', 'credit card', 'liability']
         // category?
       };
