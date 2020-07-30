@@ -1,5 +1,8 @@
 <template>
-  <v-menu offset-y>
+  <v-menu
+    offset-y 
+    absolute
+  >
     <template v-slot:activator="{ on, attrs }">
       <v-list-item v-on="on">
         <v-list-item-icon>
@@ -23,7 +26,7 @@
           <v-list-item-subtitle>
             <v-slider
               v-model="value"
-              readonly="readonly"
+              readonly
               :color="color"
               :track-color="colorLighter"
               max="6"

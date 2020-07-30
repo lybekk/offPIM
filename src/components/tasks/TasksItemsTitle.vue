@@ -1,25 +1,30 @@
-<template lang="pug">
-v-dialog(v-model="dialog" scrollable max-width="400px")
-  template(v-slot:activator="{ on }")
-    span(
-      v-text="titleFormatted"
-      v-on="on"
-      :class="[ status == 'done' ? 'subheading success--text' : 'subheading font-weight-regular' ]"
-    )
-  v-card
-    v-card-title
-      span(class="headline") Edit title
-    v-card-text
-      v-container
-        v-text-field(
-          v-model="value"
-          autofocus
-          label="Title"
-        )
-    v-card-actions
-      v-spacer
-      v-btn(color="blue darken-1" text @click="dialog = false") Close
-      v-btn(color="blue darken-1" text @click="setTaskField") Save
+<template>
+  <v-dialog
+    v-model="dialog"
+    scrollable
+    max-width="400px"
+  >
+    <template v-slot:activator="{ on }">
+      <span
+        :class="[status == 'done' ? 'subheading success--text' : 'subheading font-weight-regular']"
+        v-on="on"
+        v-text="titleFormatted"
+      />
+    </template>
+    <v-card>
+      <v-card-title><span class="headline">Edit title</span></v-card-title>
+      <v-card-text>
+        <v-container>
+          <v-text-field
+            v-model="value"
+            autofocus
+            label="Title"
+            @change="setTaskField"
+          />
+        </v-container>
+      </v-card-text>
+    </v-card>
+  </v-dialog>
 </template>
 
 <script>
@@ -30,7 +35,20 @@ export default {
   components: {
   },
   mixins: [pouchMixin],
-  props: ["id","title","status"],
+  props: {
+    id: {
+      type: String,
+      default: '',
+    },
+    title: {
+      type: String,
+      default: '',
+    },
+    status: {
+      type: String,
+      default: '',
+    }
+  },
   data: () => ({
     dialog:false,
     newValue: null

@@ -1,29 +1,36 @@
-<template lang="pug">
-v-dialog(v-model="dialog" scrollable max-width="400px")
-  template(v-slot:activator="{ on }")
-    v-list-item(v-on="on" )
-      v-list-item-icon
-        v-icon mdi-text
-      v-list-item-content
-        v-list-item-subtitle(
-          v-text="taskDescription(task.description)" 
-          )
-  v-card
-    v-card-title
-    v-card-text
-      v-container
-        v-textarea(
-          v-model="value"
-          label="Description"
-          autofocus
-          rows="3"
-          auto-grow
-          dense
-        )
-    v-card-actions
-      v-spacer
-      v-btn(color="blue darken-1" text @click="dialog = false") Close
-      v-btn(color="blue darken-1" text @click="setTaskField") Save
+<template>
+  <v-dialog
+    v-model="dialog"
+    scrollable
+    max-width="400px"
+  >
+    <template v-slot:activator="{ on }">
+      <v-list-item v-on="on">
+        <v-list-item-icon>
+          <v-icon>mdi-text</v-icon>
+        </v-list-item-icon>
+        <v-list-item-content>
+          <v-list-item-subtitle v-text="taskDescription(task.description)" />
+        </v-list-item-content>
+      </v-list-item>
+    </template>
+    <v-card>
+      <v-card-title />
+      <v-card-text>
+        <v-container>
+          <v-textarea
+            v-model="value"
+            label="Description"
+            autofocus
+            rows="3"
+            auto-grow
+            dense
+            @change="setTaskField"
+          />
+        </v-container>
+      </v-card-text>
+    </v-card>
+  </v-dialog>
 </template>
 
 <script>
@@ -33,7 +40,12 @@ export default {
   name: "TasksItemsDescription",
   components: {},
   mixins: [pouchMixin],
-  props: ["task"],
+  props: {
+    task: {
+      type: Object,
+      default: () => {}
+    }
+  },
   data: () => ({
     dialog: false,
     newValue: null
