@@ -160,8 +160,8 @@ export default {
     tagList: [],
     filterByTag: null,
     search: "",
-    sortBy: "Given name",
-    keys: ["Given name", "Family name"],
+    sortBy: "Full name",
+    keys: ["Given name", "Family name", "Full name"],
     navTabs: [
       {
         name: "All",
@@ -231,6 +231,15 @@ export default {
     getContacts: async function() {
       try {
         let data = await this.getQuery("offpim/contacts-all", null, null, true);
+
+        for await (let doc of data) {
+          if (doc.givenName) {
+            doc.fullName = [doc.givenName, doc.additionalName].join(" ");
+          } else {
+            doc.fullName = doc.legalName;
+          }
+        }
+
         this.$store.commit("addDataArray", data);
         this.populateTagList();
       } catch (error) {

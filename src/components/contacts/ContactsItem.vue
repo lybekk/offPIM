@@ -1,25 +1,23 @@
 <template>
   <v-list-item
     :disabled="doc._deleted"
+    three-line
     @click="showItemDetailed"
   >
-    <v-list-item-avatar :color="doc._deleted ? 'error' : 'info'">
-      <v-icon v-if="doc['@type'] == 'Person'">
-        mdi-account
-      </v-icon>
-      <v-icon v-else>
-        mdi-domain
-      </v-icon>
-    </v-list-item-avatar>
+    <v-list-item-icon>
+      <v-icon
+        :color="doc._deleted ? 'error' : 'secondary'"
+        v-text="doc['@type'] == 'Person' ? 'mdi-account' : 'mdi-domain'"
+      />
+    </v-list-item-icon>
     <v-list-item-content>
       <v-list-item-title
-        class="title font-regular"
+        v-if="doc['@type'] == 'Person'"
         v-text="displayedName"
       />
       <v-list-item-subtitle
-        v-if="doc['@type'] == 'Person'"
-        class="subtitle-1 font-weight-light"
-        v-text="doc.familyName"
+        :class="doc['@type'] == 'Person' ? '' : 'title font-regular'"
+        v-text="doc['@type'] == 'Person' ? doc.familyName : displayedName"
       />
     </v-list-item-content>
   </v-list-item>
