@@ -2,15 +2,15 @@
   <v-container>
     <v-row>
       <v-col cols="12">
-        <v-card>
+        <v-card elevation="1">
           <v-card-title>
             <span
               v-if="totalOpenTasks"
               class="headline"
-            >{{ totalOpenTasks }} <span class="title">open tasks</span></span><span
+            >{{ totalOpenTasks }} <span class="title">open tasks</span></span>
+            <span
               v-else
-              class="headline"
-            >No open tasks</span>
+            >0 open tasks</span>
             <v-spacer />
             <div class="text-center">
               <v-chip
@@ -18,14 +18,14 @@
                 :key="chip.aggregate"
                 class="ma-2"
                 :to="chip.to"
-                :color="chip.color"
+                color="secondary"
+                pill
                 :text-color="chip.textColor"
-                label
               >
                 <span>{{ chip.text }}</span>
                 <v-avatar
                   right
-                  :class="`${chip.color} darken-2`"
+                  :class="`${chip.color} `"
                 >
                   {{ getTasksAggregate[chip.aggregate] }}
                 </v-avatar>

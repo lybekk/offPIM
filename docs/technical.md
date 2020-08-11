@@ -176,6 +176,8 @@ PS: *Category is not a part of Schema.org/Event*
 
 ### Messages
 
+Untagged messages, either when <code>tag:[]</code> or when tag field missing from document, will be show in 'Inbox'.
+
 Key distinguishing property:
     `"@type": "Message"`
 

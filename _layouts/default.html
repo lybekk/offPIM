@@ -2,7 +2,6 @@
 <html lang="{{ site.lang | default: " en-US " }}">
 
 <head>
-
     <meta charset="UTF-8"> {% seo %}
     <meta name="viewport"
         content="width=device-width, initial-scale=1">
@@ -12,45 +11,105 @@
         content="black-translucent">
     <link rel="stylesheet"
         href="{{ '/assets/css/style.css?v=' | append: site.github.build_revision | relative_url }}">
+    <!-- Material Components for the Web-->
+    <link href="{{ '/assets/material-components/bundle.css?v=' | append: site.github.build_revision | relative_url }}"
+        rel="stylesheet">
+    <!--
+        <link href="https://unpkg.com/material-components-web@latest/dist/material-components-web.min.css"
+            rel="stylesheet">
+        <script src="https://unpkg.com/material-components-web@latest/dist/material-components-web.min.js"></script>
+    -->
+    <link rel="stylesheet"
+        href="https://fonts.googleapis.com/icon?family=Material+Icons">
+    <style>
+    </style>
+    <!-- Matomo -->
+    <script type="text/javascript">
+        var _paq = window._paq = window._paq || [];
+        /* tracker methods like "setCustomDimension" should be called before "trackPageView" */
+        _paq.push(['trackPageView']);
+        _paq.push(['enableLinkTracking']);
+        (function () {
+            var u = "https://www.analytics.lybekk.tech/";
+            _paq.push(['setTrackerUrl', u + 'matomo.php']);
+            _paq.push(['setSiteId', '3']);
+            var d = document, g = d.createElement('script'), s = d.getElementsByTagName('script')[0];
+            g.type = 'text/javascript'; g.async = true; g.src = u + 'matomo.js'; s.parentNode.insertBefore(g, s);
+        })();
+    </script>
+    <noscript>
+        <p><img src="https://www.analytics.lybekk.tech/matomo.php?idsite=3&amp;rec=1"
+                style="border:0;"
+                alt="" /></p>
+    </noscript>
+    <!-- End Matomo Code -->
 </head>
 
 <body>
-
-    <header class="page-header"
-        role="banner">
-        <h1 class="project-name">{{ page.title | default: site.title | default: site.github.repository_name }}</h1>
-        <h2 class="project-tagline">
-            {{ page.description | default: site.description | default: site.github.project_tagline }}</h2>
-        {% if site.github.is_project_page %}
-        <a href="https://offpim.app/"
-            class="btn"
-            target="_blank">Use now</a>
-        <a href="#downloads"
-            class="btn">Download</a>
-        <a href="{{ site.github.repository_url }}"
-            class="btn">View on GitHub</a> {% endif %}
+    <div id="splashscreen">
+        <h1>
+            offPIM
+        </h1>
+    </div>
+    <header class="mdc-top-app-bar mdc-top-app-bar--short">
+        <div class="mdc-top-app-bar__row">
+            <section class="mdc-top-app-bar__section mdc-top-app-bar__section--align-start">
+                <!-- KEEP
+                    <button class="material-icons mdc-top-app-bar__navigation-icon mdc-icon-button">menu</button>
+                -->
+                <a class="mdc-top-app-bar__title mdc-button mdc-button--unelevated"
+                    href="https://lybekk.github.io/offPIM/">
+                    <span class="mdc-button__label">
+                        {{ page.title | default: site.title | default: site.github.repository_name }}
+                    </span>
+                </a>
+            </section>
+            <section class="mdc-top-app-bar__section mdc-top-app-bar__section--align-end"
+                role="toolbar">
+                <a class="material-icons mdc-top-app-bar__action-item mdc-icon-button"
+                    aria-label="Contact form"
+                    href="https://docs.google.com/forms/d/e/1FAIpQLScdBp2iPp4vd1NCfwmAbl5NMOzYj4LaRtiPUuGK-rBfXkyUEA/viewform?usp=pp_url&entry.1456738885=None+needed">contact_mail</a>
+            </section>
+        </div>
     </header>
-    <nav>
-        <ul class="nav-left">
-            <li><a href="{{ site.baseurl }}/">offPIM</a></li>
-        </ul>
-        <ul class="nav-right">
-            <li><a href="{{ site.baseurl }}/docs/gettingstarted">Getting started</a></li>
-            <li><a href="{{ site.baseurl }}/docs/apps">Apps</a></li>
-            <li><a href="{{ site.baseurl }}/docs/roadmap">Roadmap</a></li>
-            <li><a href="{{ site.baseurl }}/docs/technical">Behind the scenes</a></li>
-            <li><a href="{{ site.baseurl }}/docs/about">About</a></li>
-            <li><a
-                    href="https://docs.google.com/forms/d/e/1FAIpQLScdBp2iPp4vd1NCfwmAbl5NMOzYj4LaRtiPUuGK-rBfXkyUEA/viewform?usp=pp_url&entry.1456738885=None+needed">Contact</a>
-            </li>
-        </ul>
-    </nav>
+    <div id="hero">
+        <h2>
+            {{ page.description | default: site.description | default: site.github.project_tagline }}</h2>
 
+        <a class="mdc-button mdc-button--raised"
+            href="https://offpim.app/"
+            target="_blank">
+            <div class="mdc-button__ripple"></div>
+            <i class="material-icons mdc-button__icon"
+                aria-hidden="true">web</i>
+            <span class="mdc-button__label">Use now</span>
+        </a>
+        <a class="mdc-button mdc-button--outlined"
+            href="#downloads">
+            <div class="mdc-button__ripple"></div>
+            <i class="material-icons mdc-button__icon"
+                aria-hidden="true">get_app</i>
+            <span class="mdc-button__label">Download</span>
+        </a>
+        <a class="mdc-button mdc-button--outlined"
+            href="{{ site.github.repository_url }}"
+            target="_blank">
+            <div class="mdc-button__ripple"></div>
+            <i class="material-icons mdc-button__icon"
+                aria-hidden="true">code</i>
+            <span class="mdc-button__label">Source</span>
+        </a>
+        <br />
+        <a class="mdc-button"
+            href="{{ site.baseurl }}/#gettingstarted">
+            <div class="mdc-button__ripple"></div>
+            <span class="mdc-button__label">Getting started</span>
+        </a>
+    </div>
     <main id="content"
         class="main-content"
         role="main">
         {{ content }}
-
         <footer class="site-footer">
             {% if site.github.is_project_page %}
             <span class="site-footer-owner"><a
@@ -60,13 +119,28 @@
                     href="https://pages.github.com">GitHub Pages</a>.</span> {% if site.show_downloads %}
             <div class="card">
                 <a href="{{ site.github.zip_url }}"
-                    class="btn">Download repo as .zip</a>
+                    class="mdc-button mdc-button--raised">Download repo as .zip</a>
                 <a href="{{ site.github.tar_url }}"
-                    class="btn">Download repo as .tar.gz</a>
+                    class="mdc-button mdc-button--raised">Download repo as .tar.gz</a>
             </div>
             {% endif %}
+            <nav>
+                <ul class="nav-right">
+                    <li><a href="{{ site.baseurl }}/docs/technical">Behind the scenes</a></li>
+                </ul>
+                <li><a
+                        href="https://docs.google.com/forms/d/e/1FAIpQLScdBp2iPp4vd1NCfwmAbl5NMOzYj4LaRtiPUuGK-rBfXkyUEA/viewform?usp=pp_url&entry.1456738885=None+needed">Contact</a>
+                </li>
+            </nav>
         </footer>
     </main>
+    <script>
+        setTimeout(() => {
+            document.querySelector('#splashscreen').remove()
+        }, 1400);
+    </script>
+    <script
+        src="{{ '/assets/material-components/bundle.js?v=' | append: site.github.build_revision | relative_url }}"></script>
 </body>
 
 </html>

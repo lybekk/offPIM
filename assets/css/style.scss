@@ -22,8 +22,14 @@ body {
   color: $base-color;
 }
 
+/*
 a {
   color: $secondary-color;
+}
+*/
+
+a:hover {
+  text-decoration: none;
 }
 
 nav {
@@ -166,4 +172,53 @@ nav li a:hover {
 
 .btn:hover {
   background-color: lighten( $secondary-color, 5% );
+}
+
+#splashscreen {
+  display: grid;
+  place-items: center;
+  height: 100vh;
+  width: 100vw;
+  z-index: 9000;
+  position: fixed;
+  top: 0;
+  left: 0;
+  background-color: whitesmoke;
+  animation-name: splashscreen;
+  animation-duration: .6s;
+  animation-delay: .6s;
+  animation-fill-mode: forwards;
+  animation-timing-function: ease-in-out;
+}
+
+#splashscreen h1 {
+  color: teal;
+  animation-name: splashscreen;
+  animation-duration: .4s;
+  animation-delay: .2s;
+  animation-fill-mode: forwards;
+  animation-timing-function: ease-in-out;
+}
+
+@keyframes splashscreen {
+from {opacity: 1;}
+to {opacity: 0;}
+}
+
+#hero {
+  text-align: center;
+  color: black;
+  background-color: whitesmoke;
+  padding-top: 5rem;
+  padding-bottom: 5rem;
+}
+
+#hero a {
+  margin: .3rem;
+}
+
+@media screen and (min-width: 64em) {
+  #hero {
+      padding: 5rem 6rem;
+  }
 }

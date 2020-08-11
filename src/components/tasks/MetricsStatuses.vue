@@ -9,14 +9,16 @@
           :to="`/tasks/list/status${status}`"
           color="secondary"
           class="text-capitalize"
-          label
+          pill
         >
-          <v-icon 
+          <v-avatar 
             left
-            :color="`${$store.getters.getStatusColors[status]} lighten-2`"
+            :color="`${$store.getters.getStatusColors[status]} `"
           >
-            {{ $store.getters.getStatusIcons[status] }}
-          </v-icon>
+            <v-icon>
+              {{ $store.getters.getStatusIcons[status] }}
+            </v-icon>
+          </v-avatar>
           {{ status }}
           <v-avatar
             right

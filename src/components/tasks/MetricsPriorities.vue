@@ -10,16 +10,18 @@
           v-for="btn in priorityOpenTasks"
           :key="btn.pri"
           :to="`/tasks/list/priority${btn.pri}`"
-          color="secondary"
           class="text-capitalize"
-          label
+          color="secondary"
+          pill
         >
-          <v-icon 
+          <v-avatar 
             left
             :color="`${priorityStarColor[btn.pri]} lighten-2`"
           >
-            mdi-star
-          </v-icon>
+            <v-icon>
+              mdi-star
+            </v-icon>
+          </v-avatar>
           {{ btn.pri }}
           <v-avatar
             right

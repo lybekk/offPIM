@@ -122,8 +122,7 @@ const routes = [{
     {
         path: '/maps',
         name: 'maps',
-        component: () =>
-            import ( /* webpackChunkName: "maps" */ '../views/Maps.vue')
+        component: () => import ( /* webpackChunkName: "maps" */ '../views/Maps.vue'),
     },
     {
         path: '/messages/:tag?',

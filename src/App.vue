@@ -165,10 +165,10 @@ export default {
       level: "debug"
     });
     this.$store.commit("loadLocalSettings");
-    this.startupcheck();
     this.$vuetify.theme.dark = localStorage.getItem("darkMode");
     setTimeout(() => {
       this.$store.commit("setGenericStateBooleanFalse", "buttonFormNewHidden");
+      this.startupcheck();
     }, 1000);
 
     setTimeout(() => {

@@ -1,10 +1,8 @@
 module.exports = {
     publicPath: '',
-
     "transpileDependencies": [
         "vuetify"
     ],
-
     pluginOptions: {
         electronBuilder: {
             builderOptions: {
@@ -12,7 +10,6 @@ module.exports = {
             }
         }
     },
-
     pwa: {
         name: 'offPIM',
         themeColor: '#005a6a',
@@ -20,13 +17,11 @@ module.exports = {
         appleMobileWebAppCapable: 'yes',
         appleMobileWebAppStatusBarStyle: 'teal',
         manifestOptions: {
-            background_color: '#005a6a'
+            background_color: '#546e7a'
         },
     },
-
     productionSourceMap: false,
-
     css: {
-      extract: false
+        extract: false
     }
 }
