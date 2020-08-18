@@ -25,6 +25,7 @@
           spellcheck="false"
           hide-details
           autofocus
+          class="whiteboard"
         />
       </v-card-text>
       <v-card-actions>
@@ -73,3 +74,10 @@ export default {
   }
 };
 </script>
+
+<style scoped>
+.whiteboard {
+  line-height: normal;
+  font-family: cursive;
+}
+</style>
