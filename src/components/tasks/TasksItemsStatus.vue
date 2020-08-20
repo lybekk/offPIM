@@ -23,16 +23,6 @@
               v-text="task.status"
             />
           </v-list-item-title>
-          <v-list-item-subtitle>
-            <v-slider
-              v-model="value"
-              readonly
-              :color="color"
-              :track-color="colorLighter"
-              max="6"
-              hide-details
-            />
-          </v-list-item-subtitle>
         </v-list-item-content>
       </v-list-item>
     </template>
