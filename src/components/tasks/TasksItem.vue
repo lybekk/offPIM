@@ -106,7 +106,7 @@
               color="info"
               :disabled="isPostponed(doc._id)"
               v-on="on"
-              @click="postponeTask(doc._id)"
+              @click="postponeTask(1)"
             >
               <v-icon>mdi-update</v-icon>
             </v-btn>
@@ -170,6 +170,22 @@
                         :field-name="field"
                         @set-doc="setDoc()"
                       />
+                      <div class="text-right">
+                        <div v-if="field == 'due'">
+                          Postpone
+                          <v-btn-toggle>
+                            <v-btn
+                              v-for="btn in postponeButtons"
+                              :key="btn[1]"
+                              color="secondary"
+                              small
+                              @click="postponeTask(btn[1])"
+                            >
+                              {{ btn[0] }}
+                            </v-btn>
+                          </v-btn-toggle>
+                        </div>
+                      </div>
                     </v-card-text>
                   </v-card>
                 </v-tab-item>
@@ -263,7 +279,12 @@ export default {
     },
     fab: false,
     sheet: false,
-    statusList: ["cancelled", "plan", "wait", "todo", "next", "doing", "done"]
+    statusList: ["cancelled", "plan", "wait", "todo", "next", "doing", "done"],
+    postponeButtons: [
+      ["Tomorrow", 1],
+      ["+2 days", 2],
+      ["+7 days", 7],
+    ],
   }),
   computed: {
     isTaskClosed: function() {
@@ -336,18 +357,19 @@ export default {
     getTaskStatus: function(id) {
       return this.$store.getters.getTaskStatus(id);
     },
-    postponeTask: async function(id) {
+    postponeTask: async function(amount = 1) {
       var currentDate = new Date();
-      currentDate.setDate(currentDate.getDate() + 1);
-      let tom = currentDate.toISOString().slice(0, 10);
+      currentDate.setDate(currentDate.getDate() + amount);
+      let newDate = currentDate.toISOString().slice(0, 10);
       let payload = {
-        _id: id,
+        _id: this.docid,
         field: "due",
-        value: tom
+        value: newDate
       };
       await this.setFieldDate(payload);
-      this.$store.commit("addPostponed", id);
+      this.$store.commit("addPostponed", this.docid);
       this.setDoc();
+      this.sheet = false;
     },
     isPostponed: function(id) {
       let list = this.$store.getters.getPostponedTasks;
@@ -372,9 +394,6 @@ export default {
 
 <style scoped>
 .isDone {
-  /*
-  text-decoration: line-through;
-  */
   opacity: 0.4;
 }
 </style>
