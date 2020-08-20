@@ -25,7 +25,7 @@ module.exports = {
                 "params": {
                   "title": "Share to offPIM",
                   "text": "text",
-                  "url": "/new/task"
+                  "url": "/#/new/task",
                 }
               },
               "shortcuts": [
@@ -33,7 +33,7 @@ module.exports = {
                   "name": "App shortcut test",
                   "short_name": "Test shortcut",
                   "description": "Will be used for adding tasks",
-                  "url": "/new/task",
+                  "url": "/#/new/task",
                   "icons": [{ "src": "/img/icons/android-chrome-192x192.png", "sizes": "192x192" }]
                 }
               ],
