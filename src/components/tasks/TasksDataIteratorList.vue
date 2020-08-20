@@ -47,6 +47,7 @@
           >
             <TasksItem
               :docid="doc._id"
+              :task-score="doc.score"
             />
             <v-divider
               class="text-disabled"

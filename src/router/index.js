@@ -96,6 +96,12 @@ const routes = [{
                 component: () =>
                     import ( /* webpackChunkName: "tasks" */ '../views/tasks/ArchivalCompletedProjectless.vue')
             },
+            {
+                path: 'ranking',
+                name: 'taskRanking',
+                component: () =>
+                    import ( /* webpackChunkName: "tasks" */ '../views/tasks/Ranking.vue')
+            },
         ]
     },
     {

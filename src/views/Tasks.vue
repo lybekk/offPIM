@@ -50,7 +50,12 @@ export default {
         to: "tasksList",
         params: { list: "postponed" },
         icon: "mdi-calendar-arrow-right"
-      }
+      },
+      {
+        name: "Ranking",
+        to: "taskRanking",
+        icon: "mdi-calendar-arrow-right"
+      },
     ]
   }),
   computed: {

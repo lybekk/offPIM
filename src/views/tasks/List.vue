@@ -15,15 +15,6 @@ export default {
   data: () => ({
     tasks: []
   }),
-  computed: {
-    list: function() {
-      let x = this.$route.params.list;
-      if (x) {
-        return x;
-      }
-      return "";
-    }
-  },
   watch: {
     $route(to) {
       if (to) {
@@ -37,7 +28,7 @@ export default {
   methods: {
     getTaskList: async function() {
       this.tasks = [];
-      let list = this.list;
+      let list = this.$route.params.list;
       this.$store.commit("loaderActive");
       let mango = {
         selector: {
@@ -46,8 +37,8 @@ export default {
         },
         limit: 100,
         use_index: "offpim_mango_indexes"
-        //fields: ["_id"]
       };
+
       if (list.slice(0, 6) == "status") {
         this.processQuery(
           "offpim/task-status-count",
@@ -55,41 +46,49 @@ export default {
           list.slice(6)
         );
         return;
-      } else if (list.slice(0, 7) == "project") {
-        mango.selector["$nor"] = [{ status: "cancelled" }, { status: "done" }];
-        mango.selector.project = list.slice(7);
+      /* WAIT: May be redundant code. Further testing required
+        } else if (list.slice(0, 7) == "project") {
+          mango.selector["$nor"] = [{ status: "cancelled" }, { status: "done" }];
+          mango.selector.project = list.slice(7);
+      */
       } else if (list.slice(0, 8) == "priority") {
         const pri = parseInt(list.slice(8));
         this.processQuery("offpim/task-priority-count", pri, pri);
         return;
-      } else if (list.slice(0, 11) == "noproject") {
-        mango.selector["$nor"] = [{ status: "cancelled" }, { status: "done" }];
-        mango.selector["project"] = null;
-        delete mango.use_index;
-      } else if (list.slice(0, 11) == "postponed") {
-        mango.selector["$nor"] = [{ status: "cancelled" }, { status: "done" }];
-        mango.selector.postponed = { $gt: 5 };
-        delete mango.use_index;
-      } else if (list.slice(0, 8) == "tomorrow") {
-        let today = new Date();
-        let dayAfterTomorrowMilli = new Date().setDate(today.getDate() + 2);
-        let dayAfterTomorrow = new Date(dayAfterTomorrowMilli);
-        this.processQuery(
-          "offpim/tasks-due",
-          today.toISOString().slice(0, 10),
-          dayAfterTomorrow.toISOString().slice(0, 10)
-        );
-        return;
-      } else {
-        let d = new Date();
-        d.setDate(d.getDate() + 1);
+      } 
 
-        this.processQuery(
-          "offpim/tasks-due",
-          "2000-01-01",
-          d.toISOString().slice(0, 10)
-        );
-        return;
+      switch(list) {
+        case "postponed":
+          mango.selector["$nor"] = [{ status: "cancelled" }, { status: "done" }];
+          mango.selector.postponed = { $gt: 5 };
+          delete mango.use_index;
+          break;          
+        case "tomorrow": {
+          let today = new Date();
+          let dayAfterTomorrowMilli = new Date().setDate(today.getDate() + 2);
+          let dayAfterTomorrow = new Date(dayAfterTomorrowMilli);
+          this.processQuery(
+            "offpim/tasks-due",
+            today.toISOString().slice(0, 10),
+            dayAfterTomorrow.toISOString().slice(0, 10)
+          );
+          return;
+        }
+        case 'noproject':
+          mango.selector["$nor"] = [{ status: "cancelled" }, { status: "done" }];
+          mango.selector["project"] = null;
+          delete mango.use_index;
+          break
+        default: {
+          let d = new Date();
+          d.setDate(d.getDate() + 1);
+          this.processQuery(
+            "offpim/tasks-due",
+            "2000-01-01",
+            d.toISOString().slice(0, 10)
+          );
+          return;
+        }
       }
 
       let data = await this.getMango(mango);

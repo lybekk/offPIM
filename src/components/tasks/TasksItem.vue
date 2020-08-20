@@ -92,6 +92,12 @@
             </template>
             <span v-text="doc.description" />
           </v-tooltip>
+          <v-chip
+            small
+            label
+          >
+            Score: {{ taskScore }}
+          </v-chip>
         </v-list-item-subtitle>
       </v-list-item-content>
       <v-list-item-action>
@@ -269,6 +275,10 @@ export default {
   props: {
     docid: {
       type: String,
+      default: null,
+    },
+    taskScore: {
+      type: Number,
       default: null,
     },
   },
