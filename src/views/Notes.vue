@@ -1,41 +1,41 @@
 <template>
-  <v-container fluid>
-    <v-navigation-drawer
-      v-model="drawer"
-      app
-      right
-      temporary
-    >
-      <v-sheet
-        class="pa-4 primary lighten-2"
-        dark
+  <v-main>
+    <v-container fluid>
+      <v-navigation-drawer
+        v-model="drawer"
+        app
+        right
+        temporary
       >
-        <v-icon>mdi-tag</v-icon>
-        Tags
-      </v-sheet>
-      <v-sheet class="pa-1">
-        <v-list
-          nav
-          dense
-          subheader
+        <v-sheet
+          class="pa-4 primary lighten-2"
+          dark
         >
-          <v-list-item
-            v-for="(tag, i) in tagsList"
-            :key="i"
-            link
-            :to="{ name: 'notesTag', params: { tag: tag.key }}"
+          <v-icon>mdi-tag</v-icon>
+          Tags
+        </v-sheet>
+        <v-sheet class="pa-1">
+          <v-list
+            nav
+            dense
+            subheader
           >
-            <v-list-item-content>
-              <v-list-item-title v-text="tag.key" />
-            </v-list-item-content>
-            <v-list-item-action>
-              <v-list-item-action-text v-text="tag.value" />
-            </v-list-item-action>
-          </v-list-item>
-        </v-list>
-      </v-sheet>
-    </v-navigation-drawer>
-    <v-main>
+            <v-list-item
+              v-for="(tag, i) in tagsList"
+              :key="i"
+              link
+              :to="{ name: 'notesTag', params: { tag: tag.key }}"
+            >
+              <v-list-item-content>
+                <v-list-item-title v-text="tag.key" />
+              </v-list-item-content>
+              <v-list-item-action>
+                <v-list-item-action-text v-text="tag.value" />
+              </v-list-item-action>
+            </v-list-item>
+          </v-list>
+        </v-sheet>
+      </v-navigation-drawer>
       <v-container
         class="fill-height"
         fluid
@@ -65,9 +65,9 @@
           <router-view />
         </v-row>
       </v-container>
-    </v-main>
-    <NotesDetailed />
-  </v-container>
+      <NotesDetailed />
+    </v-container>
+  </v-main>
 </template>
 
 <script>

@@ -1,7 +1,14 @@
 <template>
-  <v-card v-if="priorityOpenTasks.length">
+  <v-card
+    v-if="priorityOpenTasks.length"
+    height="20vh"
+  >
     <v-card-title>Priority</v-card-title>
     <v-card-text>
+      <v-progress-circular
+        v-if="!total"
+        indeterminate
+      />
       <v-chip-group
         column
         active-class="primary--text"
@@ -69,16 +76,19 @@ export default {
 
     priorityValues() {
       return this.priorityOpenTasks.map(item => this.priorityCount(item.pri));
-    }
-  },
-  mounted() {
-    const s = this.$store.getters.getTaskPriorities;
-    let total = Object.values(s).reduce(
+    },
+
+    total() {
+    return Object.values(this.$store.getters.getTaskPriorities).reduce(
       (accumulator, currentValue) => accumulator + currentValue,
       0
-    );
+    )
+    }
 
-    if (!total) {
+
+  },
+  mounted() {
+    if (!this.total) {
       this.$store.dispatch("getTaskPriorities");
     }
   },

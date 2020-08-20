@@ -1,7 +1,14 @@
 <template>
-  <v-card v-if="statusList.length">
+  <v-card
+    v-if="statusList.length" 
+    height="20vh"
+  >
     <v-card-title>Status</v-card-title>
     <v-card-text>
+      <v-progress-circular
+        v-if="!total"
+        indeterminate
+      />
       <v-chip-group column>
         <v-chip
           v-for="status in statusList"
@@ -49,16 +56,18 @@ export default {
       const s = this.$store.getters.getTaskStatuses;
       let sum = s.wait + s.plan + s.todo + s.next + s.doing;
       return sum;
-    }
+    },
+
+    total() {
+      const s = this.$store.getters.getTaskStatuses
+      return Object.values(s).reduce(
+        (accumulator, currentValue) => accumulator + currentValue, 0
+      )
+    } 
+
   },
   mounted() {
-    const s = this.$store.getters.getTaskStatuses;
-    let total = Object.values(s).reduce(
-      (accumulator, currentValue) => accumulator + currentValue,
-      0
-    );
-
-    if (!total) {
+    if (!this.total) {
       this.$store.dispatch("getTaskStatuses");
     }
   },

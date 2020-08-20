@@ -2,7 +2,7 @@
   <v-container>
     <v-row>
       <v-col cols="12">
-        <v-card elevation="1">
+        <v-card>
           <v-card-title>
             <span
               v-if="totalOpenTasks"
@@ -13,23 +13,25 @@
             >0 open tasks</span>
             <v-spacer />
             <div class="text-center">
-              <v-chip
-                v-for="chip in chipsFiltered"
-                :key="chip.aggregate"
-                class="ma-2"
-                :to="chip.to"
-                color="secondary"
-                pill
-                :text-color="chip.textColor"
-              >
-                <span>{{ chip.text }}</span>
-                <v-avatar
-                  right
-                  :class="`${chip.color} `"
+              <v-chip-group column>
+                <v-chip
+                  v-for="chip in chipsFiltered"
+                  :key="chip.aggregate"
+                  class="ma-2"
+                  :to="chip.to"
+                  color="secondary"
+                  pill
+                  :text-color="chip.textColor"
                 >
-                  {{ getTasksAggregate[chip.aggregate] }}
-                </v-avatar>
-              </v-chip>
+                  <span>{{ chip.text }}</span>
+                  <v-avatar
+                    right
+                    :class="`${chip.color} `"
+                  >
+                    {{ getTasksAggregate[chip.aggregate] }}
+                  </v-avatar>
+                </v-chip>
+              </v-chip-group>
             </div>
             <v-spacer />
             <v-btn
@@ -112,7 +114,7 @@ export default {
     chips: [
       {
         aggregate: "today",
-        text: "Due today",
+        text: "Due",
         color: "warning",
         textColor: "white",
         to: { name: "tasksList", params: { list: "today" } }
@@ -126,7 +128,7 @@ export default {
       },
       {
         aggregate: "tomorrow",
-        text: "Due tomorrow",
+        text: "Tomorrow",
         color: "info",
         textColor: "white",
         to: { name: "tasksList", params: { list: "tomorrow" } }
