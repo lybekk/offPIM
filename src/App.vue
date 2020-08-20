@@ -54,6 +54,21 @@
           <v-icon>mdi-open-in-new</v-icon>
         </v-list-item-action>
       </v-list-item>
+      <template v-slot:append>
+        <v-list shaped>
+          <v-list-item
+            link="link"
+            to="/settings"
+          >
+            <v-list-item-action>
+              <v-icon>mdi-cogs</v-icon>
+            </v-list-item-action>
+            <v-list-item-content>
+              <v-list-item-title>Settings</v-list-item-title>
+            </v-list-item-content>
+          </v-list-item>
+        </v-list>
+      </template>
     </v-navigation-drawer>
     <v-app-bar
       app

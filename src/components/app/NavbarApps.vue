@@ -45,17 +45,6 @@
           <v-list-item-title>Tools</v-list-item-title>
         </v-list-item-content>
       </v-list-item>
-      <v-list-item
-        link="link"
-        to="/settings"
-      >
-        <v-list-item-action>
-          <v-icon>mdi-cogs</v-icon>
-        </v-list-item-action>
-        <v-list-item-content>
-          <v-list-item-title>Settings</v-list-item-title>
-        </v-list-item-content>
-      </v-list-item>
     </v-list>
     <v-divider inset />
     <v-list>
