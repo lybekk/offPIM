@@ -78,6 +78,8 @@ Getting offPIM up and running can be done in several ways.
 * **Self-hosted static bundle (SPA)**
     1. [Download](#downloads) and unzip contents in any directory (even root) on any HTTP-server.
     **Note:** Suitable for placing on a private VPS served by Apache, or any other http-server (I.E. python http.server or Node.js http.createServer)
+* **(Alternative) Self-hosted static bundle (SPA)**
+    1. [Download](#downloads) and unzip contents in any directory on your computer. As long as a browser is available, offPIM will run.
 
 ### The very easy way - Use now - Official [offpim.app](https://offpim.app)
 
@@ -109,6 +111,8 @@ Getting offPIM up and running can be done in several ways.
 
 1. [Download self-hosted offPIM](#downloads)
 2. Copy contents of the zip-file into a directory (or root) to an HTTP-server of your choosing. *offPIM uses relative paths, so any directory should work*
+
+**Note: A HTTP-server is not necessary, as offPIM has a "simple" tech stack, making it runnable can be run from a directory on the desktop**
 
 ### The hard way - Build it yourself
 1. Clone the repository
