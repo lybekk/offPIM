@@ -36,9 +36,6 @@
               class="isDone"
               v-text="$store.getters.getStatusIcons[doc.status]"
             />
-            <!-- 
-              :color="activeFab.color"
-            -->
           </v-btn>
         </v-fab-transition>
       </v-list-item-action>
@@ -49,6 +46,11 @@
         />
         <!-- INFO: Info chips used for quick (actionable?) details -->
         <v-list-item-subtitle>
+          <TasksItemsPriority
+            v-if="doc.priority == 1"
+            :task="doc"
+            @set-doc="setDoc()"
+          />
           <v-chip
             v-if="doc.archived"
             color="info lighten-2"
@@ -93,6 +95,7 @@
             <span v-text="doc.description" />
           </v-tooltip>
           <v-chip
+            v-if="taskScore"
             small
             label
           >
@@ -101,24 +104,44 @@
         </v-list-item-subtitle>
       </v-list-item-content>
       <v-list-item-action>
-        <TasksItemsPriority
-          :task="doc"
-          @set-doc="setDoc()"
-        />
-        <v-tooltip top>
-          <template v-slot:activator="{ on }">
+        <v-menu
+          bottom
+          left
+        >
+          <template v-slot:activator="{ on, attrs }">
             <v-btn
               icon
-              color="info"
-              :disabled="isPostponed(doc._id)"
+              v-bind="attrs"
               v-on="on"
-              @click="postponeTask(1)"
             >
-              <v-icon>mdi-update</v-icon>
+              <v-icon>mdi-dots-vertical-circle</v-icon>
             </v-btn>
           </template>
-          <span>Postpone until tomorrow</span>
-        </v-tooltip>
+          <v-list>
+            <v-list-item
+              :disabled="isPostponed(doc._id)"
+              @click="postponeTask(1)"
+            >
+              <v-list-item-content>
+                <v-list-item-title>
+                  Postpone for tomorrow
+                  <v-tooltip top>
+                    <span>Postpone to tomorrow</span>
+                  </v-tooltip>
+                </v-list-item-title>
+              </v-list-item-content>
+              <v-list-item-icon>
+                <v-icon color="info">
+                  mdi-update
+                </v-icon>
+              </v-list-item-icon>
+            </v-list-item>
+            <ConvertTaskToNote
+              :docid="doc._id"
+              @set-doc="setDoc()"
+            />
+          </v-list>
+        </v-menu>
         <v-bottom-sheet
           v-model="sheet"
           :inset="$vuetify.breakpoint.mdAndUp"
@@ -131,6 +154,11 @@
                 :id="doc._id"
                 :title="doc.title"
                 :status="doc.status"
+                @set-doc="setDoc()"
+              />
+              <v-spacer />
+              <TasksItemsPriority
+                :task="doc"
                 @set-doc="setDoc()"
               />
             </v-card-title>
@@ -253,7 +281,7 @@ import TasksItemsDescription from "@/components/tasks/TasksItemsDescription.vue"
 import TasksItemsProject from "@/components/tasks/TasksItemsProject.vue";
 import TasksItemsTags from "@/components/tasks/TasksItemsTags.vue";
 import TasksItemsPriority from "@/components/tasks/TasksItemsPriority.vue";
-//import TasksItemsDates from "@/components/tasks/TasksItemsDates.vue";
+import ConvertTaskToNote from "@/components/tasks/ConvertTaskToNote.vue";
 import FormDatetime from "@/components/form/formDatetime.vue";
 import MainDeleteButton from "@/components/MainDeleteButton.vue";
 import pouchMixin from "@/mixins/pouchMixin";
@@ -264,11 +292,11 @@ export default {
     TasksItemsStatus,
     TasksItemsTitle,
     TasksItemsDescription,
-    //TasksItemsDates,
     MainDeleteButton,
     TasksItemsProject,
     TasksItemsTags,
     TasksItemsPriority,
+    ConvertTaskToNote,
     FormDatetime
   },
   mixins: [pouchMixin],

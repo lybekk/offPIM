@@ -1,9 +1,9 @@
 
 const priorityWeighting = {
-    1: 500,
-    2: 400,
-    3: 200,
-    4: 100,
+    1: 3000,
+    2: 1000,
+    3: 400,
+    4: 200,
     5: 50,
     6: -50,
     7: -100,
@@ -21,7 +21,6 @@ const statusWeighting = {
     cancelled: -20000,
     done: -10000,
 }
-
 
 function rankTask(task) {
 
@@ -51,6 +50,11 @@ function rankTask(task) {
     if (t.tags != null) t.score += 20;
     if (t.project != null) t.score += 20;
 
+    /**
+     * 
+     * @param {Date} d1 
+     * @param {Date} d2 
+     */
     function isDueToday(d1, d2) {
         return d1.getFullYear() === d2.getFullYear() &&
             d1.getMonth() === d2.getMonth() &&
@@ -58,18 +62,22 @@ function rankTask(task) {
     }
 
     if (t.due && isDueToday(new Date(t.due), new Date())) {
-        t.score += 1000;
+        t.score += 2000;
         t.discoveries.push("Due today");
     }
 
     if (new Date(t.due) < new Date()) {
-        t.score += 2000;
+        t.score += 3000;
         t.discoveries.push("Overdue");
     }
 
     return t
 }
 
+/**
+ * Used for ranking/grading a tasks (or array of tasks) importance based on a set of criteria's
+ * @param {Object} payload - Can be a 'task document' {} or an array of 'tasks' [{},{}]
+ */
 export default async function (payload) {
 
     if (Array.isArray(payload)) {

@@ -1,5 +1,8 @@
 <template>
-  <v-container :fluid="$vuetify.breakpoint.mdAndDown">
+  <v-container
+    :fluid="isSmallScreen"
+    :class="isSmallScreen ? 'pa-0' : ''"
+  >
     <v-data-iterator
       :items="tasks"
       item-key="_id"
@@ -7,7 +10,8 @@
       :loading="this.$store.getters.loaderState"
       loading-text="Getting tasks"
       no-data-text="No tasks matching request"
-      :sort-by="sortBy.toLowerCase()"
+      :sort-by="sortByProperty"
+      :sort-desc="sortDesc"
       :items-per-page="25"
       :hide-default-footer="tasks.length < 25"
     >
@@ -16,7 +20,6 @@
           class="mb-1"
           dark
           color="primary darken-1"
-          elevation="1"
         >
           <v-text-field
             v-model="search"
@@ -36,6 +39,8 @@
             :items="keys"
             prepend-inner-icon="mdi-sort-variant"
             label="Sort"
+            class="ml-2"
+            style=""
           />
         </v-toolbar>
       </template>
@@ -64,13 +69,11 @@
         />
       </template>
     </v-data-iterator>
-    <!-- 
-    </v-skeleton-loader>
-      -->
   </v-container>
 </template>
 
 <script>
+import formatMixin from '@/mixins/formatMixin'
 import TasksItem from "@/components/tasks/TasksItem.vue";
 
 export default {
@@ -78,6 +81,7 @@ export default {
   components: {
     TasksItem
   },
+  mixins: [formatMixin],
   props: {
     tasks: {
       type: Array,
@@ -88,6 +92,17 @@ export default {
     search: "",
     sortBy: "due",
     keys: ["Due", "Status", "Priority", "Project"]
-  })
+  }),
+  computed: {
+
+    sortDesc() {
+      return this.$route.name == 'taskRanking' ? true : false
+    },
+
+    sortByProperty() {
+      return this.$route.name == 'taskRanking' ? 'score' : this.sortBy
+      },
+
+  },
 };
 </script>
