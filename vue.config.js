@@ -11,30 +11,36 @@ module.exports = {
         }
     },
     pwa: {
-        name: 'offPIM',
-        themeColor: '#009688',
+        name: 'offPIM - Offline-first Personal Information Management',
+        themeColor: '#0d2933', // Toolbar color
         msTileColor: '#009688',
         appleMobileWebAppCapable: 'yes',
         appleMobileWebAppStatusBarStyle: 'teal',
         manifestOptions: {
-            display: 'fullscreen', // change to 'standalone' if fullscreen creates inconvenience
-            background_color: '#546e7a',
-            "share_target": {
-                "action": "/share-target/",
-                "method": "GET",
-                "params": {
-                  "title": "Share to offPIM",
-                  "text": "text",
-                  "url": "/#/new/task",
+            name: 'offPIM - Offline-first Personal Information Management',
+            short_name: "offPIM",
+            description: 'A tool trying to offer a wayt to organize your information and present it in a practical way.',
+            display: 'standalone',
+            background_color: '#253e49', // Usen on splash screen
+            share_target: { /* Work in progress */
+                action: "/#/new/task",
+                method: "GET",
+                params: {
+                  title: "Share to offPIM",
+                  text: "text",
+                  url: "/#/new/task",
                 }
               },
-              "shortcuts": [
+              shortcuts: [ 
+                /**
+                 * Shortcuts API is not generally available yet
+                 */
                 {
-                  "name": "App shortcut test",
-                  "short_name": "Test shortcut",
-                  "description": "Will be used for adding tasks",
-                  "url": "/#/new/task",
-                  "icons": [{ "src": "/img/icons/android-chrome-192x192.png", "sizes": "192x192" }]
+                  name: "Add task",
+                  short_name: "Add task",
+                  description: "Add a task",
+                  url: "/#/new/task",
+                  icons: [{ "src": "/img/icons/android-chrome-192x192.png", "sizes": "192x192" }]
                 }
               ],
         },
