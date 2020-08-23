@@ -2,7 +2,7 @@
   <v-container>
     <v-row>
       <v-col cols="12">
-        <v-card>
+        <v-card flat>
           <v-card-title>
             <span
               v-if="totalOpenTasks"
@@ -12,6 +12,15 @@
               v-else
             >0 open tasks</span>
             <v-spacer />
+            <v-btn
+              color="secondary"
+              @click="$store.commit('setRightDrawer', true)"
+            >
+              Projects
+            </v-btn>
+          </v-card-title>
+          <v-divider inset />
+          <v-card-text>
             <div class="text-center">
               <v-chip-group column>
                 <v-chip
@@ -33,14 +42,7 @@
                 </v-chip>
               </v-chip-group>
             </div>
-            <v-spacer />
-            <v-btn
-              color="secondary"
-              @click="$store.commit('setRightDrawer', true)"
-            >
-              Projects
-            </v-btn>
-          </v-card-title>
+          </v-card-text>
         </v-card>
       </v-col>
       <v-col

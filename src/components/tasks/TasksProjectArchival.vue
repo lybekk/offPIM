@@ -45,7 +45,7 @@
           three-line
           subheader
         >
-          <v-subheader>Archival makes it so that this project and its tasks will not be synced to offPIM after a full database resync, increassing performance.</v-subheader>
+          <v-subheader>Archival makes it so that this project and its tasks will not be synced to offPIM after a full database resync, increasing performance.</v-subheader>
           <v-list-item>
             <v-list-item-content>
               <v-list-item-title>Project: {{ project.project }}</v-list-item-title>

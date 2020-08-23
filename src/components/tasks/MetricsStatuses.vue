@@ -1,9 +1,10 @@
 <template>
   <v-card
-    v-if="statusList.length" 
-    height="20vh"
+    v-if="statusList.length"
+    flat
   >
     <v-card-title>Status</v-card-title>
+    <v-divider inset />
     <v-card-text>
       <v-progress-circular
         v-if="!total"

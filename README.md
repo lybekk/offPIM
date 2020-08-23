@@ -1,6 +1,4 @@
 # offPIM
-**Formerly known as pimpim**
-*(rebranded as not to be confused with a "male performance product" solving a different problem)*
 
 >offPIM - A PIM - A Personal information management system
 >
@@ -270,6 +268,10 @@ PWA Service workers may need 24 hours to update to the newest version automatica
 Using, and downloading [Brave Browser](https://brave.com/off167) from [this link](https://brave.com/off167) gets me a cup of coffee.
 
 ## Design choices
+
+### Name
+**Formerly known as pimpim**
+*(rebranded as not to be confused with a "male performance product" solving a different problem)*
 
 ### Frontend only
 No backend is provided or required. For synchronization, a CouchDB/PouchDB/Cloudant database is needed.

@@ -6,6 +6,7 @@ export default {
                 doc = await window.db.get(payload._id);
                 doc[payload.field] = payload.value;
                 this.putDoc(doc)
+                this.$emit("set-doc");
             } catch (error) {
                 this.$store.dispatch("infoBridge", { color: 'error', text: error, level: 'error' });
             }

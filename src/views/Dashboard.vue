@@ -3,50 +3,47 @@
     <v-container>
       <v-row>
         <v-col>
-          <v-container>
-            <v-card
-              class="mx-auto"
-              tile
-            >
-              <v-list rounded>
-                <v-subheader class="headline font-weight-light">
-                  Status report
-                  <!-- TODO Morning/evening / Key figures-->
-                </v-subheader>
-                <v-list-item-group color="primary">
-                  <v-list-item
-                    v-if="this.$store.getters.getTasksAggregate.today != 0"
-                    to="/tasks"
-                  >
-                    <v-list-item-icon>
-                      <v-icon>mdi-checkbox-marked-circle-outline</v-icon>
-                    </v-list-item-icon>
-                    <v-list-item-content>
-                      <v-list-item-title>
-                        {{ reportTasks.main }} <span v-if="this.$store.getters.getTasksAggregate.overdue != 0"><span class="error--text">{{ reportTasks.overdue }} </span><span>overdue</span></span>
-                      </v-list-item-title>
-                    </v-list-item-content>
-                  </v-list-item>
-                  <v-list-item
-                    v-if="this.$store.getters.getMessagesUnreadCount != 0"
-                    to="/messages"
-                  >
-                    <v-list-item-icon>
-                      <v-icon>mdi-email</v-icon>
-                    </v-list-item-icon>
-                    <v-list-item-content>
-                      <v-list-item-title v-text="reportMessages" />
-                    </v-list-item-content>
-                  </v-list-item>
-                </v-list-item-group>
-              </v-list>
-            </v-card>
-          </v-container>
+          <h2>Dashboard</h2>
+          <v-divider />
+          <span
+            class="ml-1 text-overline text--secondary font-weight-black"
+            v-text="new Date().toDateString()"
+          />
+          <br>
+          <span
+            class="ml-1 text-caption text--secondary font-weight-bold"
+            v-text="new Date().toTimeString()"
+          />
+          <v-card
+            class="mx-auto"
+            flat
+          >
+            <v-list rounded>
+              <!-- TODO Morning/evening / Key figures-->
+              <v-list-item-group color="primary">
+                <ReportTasks />
+                <v-list-item
+                  v-if="this.$store.getters.getMessagesUnreadCount != 0"
+                  to="/messages"
+                >
+                  <v-list-item-icon>
+                    <v-icon>mdi-email</v-icon>
+                  </v-list-item-icon>
+                  <v-list-item-content>
+                    <v-list-item-title v-text="reportMessages" />
+                  </v-list-item-content>
+                </v-list-item>
+              </v-list-item-group>
+            </v-list>
+          </v-card>
         </v-col>
       </v-row>
       <v-row>
         <v-col cols="12">
-          <span class="headline">Tasks <span class="subtitle-1 info--text">{{ totalOpenTasks }}</span></span>
+          <h3>
+            Tasks
+            <span class="text-h6 info--text">{{ totalOpenTasks }}</span>
+          </h3>
         </v-col>
         <v-col
           md="6"
@@ -63,7 +60,10 @@ lg="3"
 )
 chart-tasks-today-->
         <v-col lg="2">
-          <v-card v-if="this.$store.getters.getTasksAggregate.initiated &amp;&amp; taskProgress.visible">
+          <v-card
+            v-if="this.$store.getters.getTasksAggregate.initiated &amp;&amp; taskProgress.visible"
+            flat
+          >
             <v-card-title>
               <v-icon
                 v-if="allTasksDone"
@@ -95,57 +95,53 @@ chart-tasks-today-->
     <v-footer>
       <v-container>
         <v-row>
-          <v-col>
-            <v-container
-              v-for="dt in dataTables"
-              :key="dt.name"
-            >
-              <v-card>
-                <v-card-title class="headline">
-                  {{ dt.name }}
-                </v-card-title>
-                <v-card-text>
-                  <v-simple-table>
-                    <template v-slot:default>
-                      <tbody>
-                        <tr
-                          v-for="data in dt.table"
-                          :key="data.key"
-                        >
-                          <th>{{ data.key }}</th><td>{{ data.value }}</td>
-                        </tr>
-                      </tbody>
-                    </template>
-                  </v-simple-table>
-                </v-card-text>
-              </v-card>
-            </v-container>
+          <v-col
+            v-for="dt in dataTables"
+            :key="dt.name"
+          >
+            <v-card>
+              <v-card-title class="headline">
+                {{ dt.name }}
+              </v-card-title>
+              <v-card-text>
+                <v-simple-table>
+                  <template v-slot:default>
+                    <tbody>
+                      <tr
+                        v-for="data in dt.table"
+                        :key="data.key"
+                      >
+                        <th>{{ data.key }}</th><td>{{ data.value }}</td>
+                      </tr>
+                    </tbody>
+                  </template>
+                </v-simple-table>
+              </v-card-text>
+            </v-card>
           </v-col>
           <v-col>
-            <v-container>
-              <v-card>
-                <v-card-title class="headline">
-                  Remote database
-                </v-card-title>
-                <v-card-text v-if="!$store.getters.remoteDBIsOnline">
-                  Remote database is not connected
-                </v-card-text>
-                <v-card-text v-else>
-                  <v-simple-table>
-                    <template v-slot:default>
-                      <tbody>
-                        <tr
-                          v-for="(value, name, index) in remoteDBInfo"
-                          :key="index"
-                        >
-                          <th>{{ name }}</th><td>{{ value }}</td>
-                        </tr>
-                      </tbody>
-                    </template>
-                  </v-simple-table>
-                </v-card-text>
-              </v-card>
-            </v-container>
+            <v-card>
+              <v-card-title class="headline">
+                Remote database
+              </v-card-title>
+              <v-card-text v-if="!$store.getters.remoteDBIsOnline">
+                Remote database is not connected
+              </v-card-text>
+              <v-card-text v-else>
+                <v-simple-table>
+                  <template v-slot:default>
+                    <tbody>
+                      <tr
+                        v-for="(value, name, index) in remoteDBInfo"
+                        :key="index"
+                      >
+                        <th>{{ name }}</th><td>{{ value }}</td>
+                      </tr>
+                    </tbody>
+                  </template>
+                </v-simple-table>
+              </v-card-text>
+            </v-card>
           </v-col>
         </v-row>
       </v-container>
@@ -154,18 +150,21 @@ chart-tasks-today-->
 </template>
 
 <script>
-// TODO: Refactor to vuetify components import ChartTasksToday from "@/components/charts/ChartTasksToday.vue"
 import formatMixin from '@/mixins/formatMixin'
 import { mapGetters } from 'vuex'
 
 import MetricsStatuses from "@/components/tasks/MetricsStatuses.vue"
 import MetricsPriorities from "@/components/tasks/MetricsPriorities.vue"
 
+// Report messages
+import ReportTasks from "@/components/dashboard/ReportTasks.vue"
+
 export default {
   name: 'Dashboard',
   components: {
     MetricsStatuses,
-    MetricsPriorities
+    MetricsPriorities,
+    ReportTasks,
   },
   mixins: [formatMixin],
   data: () => ({
@@ -238,31 +237,6 @@ export default {
       let mx = ''
       if (m>1) {mx = 's'}
       return `${m} unread message${mx}`
-      },
-    reportTasks: function () {
-      const encouragements = [
-        'Buckle up!',
-        'Strap up!',
-        'Roll up your sleeves.'
-      ]
-      var randomEncouragement = encouragements[Math.floor(Math.random() * encouragements.length)];
-      let r = '';
-      let ov = '';
-      const t = this.$store.getters.getTasksAggregate;
-      let tod = t.today;
-      let tov = t.overdue;
-      if (tod == 1) {
-        // combine and compare with overdue //r = `Only ${tod} task needs your attention.`
-        r = `Only ${tod} task due today.`
-      } else if (tod >= 10) {
-        r = `${randomEncouragement} ${tod} tasks ahead.`
-      } else if (tod < 10) {
-        r = `You have ${tod} tasks due today.`
-      }
-      if (tov != 0) {
-        ov = `${tov}`
-      }
-      return { main: r, overdue: ov }
     },
     totalOpenTasks() {
       const s = this.$store.getters.getTaskStatuses;

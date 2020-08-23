@@ -112,7 +112,7 @@ export default {
       }
     },
     docDescription() {
-      let t = this.doc.description;
+      let t = this.doc.description || '';
       if (t.length > 120) {
         return t.slice(0, 120) + '...'
       } else {

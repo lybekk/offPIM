@@ -72,7 +72,7 @@
     </v-navigation-drawer>
     <v-app-bar
       app
-      color="primary"
+      color="primary darken-2"
       dark
       hide-on-scroll
       elevate-on-scroll
@@ -121,9 +121,9 @@
         </v-fab-transition>
       </template>
     </v-app-bar>
-    <v-scroll-x-transition mode="out-in">
+    <v-scroll-y-transition mode="out-in">
       <router-view />
-    </v-scroll-x-transition>
+    </v-scroll-y-transition>
     <v-snackbar
       v-model="snackbar.visible"
       :timeout="snackbar.timeout"

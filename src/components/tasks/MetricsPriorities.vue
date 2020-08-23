@@ -1,9 +1,10 @@
 <template>
   <v-card
     v-if="priorityOpenTasks.length"
-    height="20vh"
+    flat
   >
     <v-card-title>Priority</v-card-title>
+    <v-divider inset />
     <v-card-text>
       <v-progress-circular
         v-if="!total"
