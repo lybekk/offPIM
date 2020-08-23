@@ -78,6 +78,11 @@ const tasks = {
                 overdue: 0
             }
 
+            /**
+             * TODO
+             * This needs cleaning up.
+             * Must respect timezones
+             */
             let today = new Date();
             const todayDate = today.toISOString().slice(0, 10);
             let tomorrowMilli = new Date().setDate(today.getDate() + 1);
