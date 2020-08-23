@@ -44,6 +44,7 @@
             Tasks
             <span class="text-h6 info--text">{{ totalOpenTasks }}</span>
           </h3>
+          <v-divider />
         </v-col>
         <v-col
           md="6"
@@ -249,12 +250,12 @@ export default {
   mounted () {
     setTimeout(() => {
       this.$store.dispatch('setMessagesUnreadCount');
+      this.$store.dispatch("tasksDueAggregation");
       this.fillDataTable();
       if (this.$store.getters.remoteDBIsOnline) {
         this.$store.dispatch('remoteDBInfo');
       }
     }, 600);
-
 
   },
   methods: {
