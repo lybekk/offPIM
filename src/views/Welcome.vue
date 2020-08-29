@@ -46,13 +46,16 @@
             justify="center"
             no-gutters
           >
-            <v-col cols="6">
+            <v-col
+              cols="8"
+              md="6"
+            >
               <v-sheet>
                 <v-navigation-drawer
                   floating
                   permanent
                 >
-                  <v-list shaped>
+                  <v-list rounded>
                     <v-list-item
                       v-for="item in links"
                       :key="item.title"
@@ -88,35 +91,34 @@ export default {
       {
         text: "Tasks",
         icon: "mdi-check",
-        link: "/tasks"
+        link: "/tasks",
       },
       {
         text: "Notes",
         icon: "mdi-note",
-        link: "/notes"
+        link: "/notes",
       },
       {
         text: "Dashboard",
         icon: "mdi-view-dashboard",
-        link: "/dashboard"
+        link: "/dashboard",
       },
       {
         text: "Logbook",
         icon: "mdi-book-open",
-        link: "/logbook"
-      }
+        link: "/logbook",
+      },
     ],
     slides: [
       "offPIM",
       new Date().toDateString(),
-      new Date().toLocaleTimeString()
-    ]
+      new Date().toLocaleTimeString(),
+    ],
     /*
      */
   }),
   computed: {},
-  created() {
-  },
+  created() {},
   mounted() {
     setTimeout(() => {
       this.carousel = 1;
@@ -124,7 +126,7 @@ export default {
     setTimeout(() => {
       this.carousel = 2;
     }, 2000);
-     this.updateClock()
+    this.updateClock();
   },
   methods: {
     /* keep. will be used for setting: autopush route dashboard 
@@ -135,13 +137,13 @@ export default {
     },
     */
 
-    updateClock: function() {
+    updateClock: function () {
       var v = this;
-      setInterval(function() {
+      setInterval(function () {
         let t = new Date().toLocaleTimeString();
         v.slides.splice(2, 1, t);
       }, 1000);
-    }
-  }
+    },
+  },
 };
 </script>
