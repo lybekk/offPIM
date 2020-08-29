@@ -328,7 +328,9 @@ export default {
     if (!this.$store.getters.getOpenProjects.length) {
       this.$store.dispatch("populateOpenProjects");
     }
+    /** Use somewhere else
     this.checkIfShare();
+    */
   },
   methods: {
     checkIfShare : function() {

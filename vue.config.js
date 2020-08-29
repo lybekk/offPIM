@@ -32,9 +32,6 @@ module.exports = {
                 }
               },
               shortcuts: [ 
-                /**
-                 * Shortcuts API is not generally available yet
-                 */
                 {
                   name: "Add task",
                   short_name: "Add task",
