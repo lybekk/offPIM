@@ -60,6 +60,12 @@ export default new Vuex.Store({
      * Detailed item dialog
      */
     dialogItemDetailed: false,
+
+    /**
+     * View a single document in the main document dialog. 
+     * Will replace the property above eventually.
+     */
+    dialogDocumentViewer: false,
     selectedDoc: {},
 
     /**

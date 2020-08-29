@@ -80,6 +80,11 @@ export default {
         return state.rawDocumentViewerDocument
     },
 
+    dialogDocumentViewer: state => {
+        return state.dialogDocumentViewer
+    },
+    
+
     buttonFormNewHidden: state => {
         return state.buttonFormNewHidden
     },

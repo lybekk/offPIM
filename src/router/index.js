@@ -209,7 +209,13 @@ const routes = [{
                     import ( /* webpackChunkName: "finances" */ '../views/finances/Assets.vue'),
             }
         ]
-    }
+    },
+    {
+        path: '/reader',
+        name: 'reader',
+        component: () =>
+            import ( /* webpackChunkName: "tools" */ '../views/Reader.vue')
+    },
 ]
 
 const router = new VueRouter({

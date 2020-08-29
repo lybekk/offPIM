@@ -136,6 +136,10 @@ export default {
         state.dialogItemDetailed = true
     },
 
+    showDocumentViewer: state => {
+        state.dialogDocumentViewer = true
+    },
+
     refreshDoc(state, doc) {
         const index = state.data.findIndex(({ _id }) => _id === doc._id);
         Vue.set(state.data, index, doc)

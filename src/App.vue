@@ -124,6 +124,9 @@
     <v-scroll-y-transition mode="out-in">
       <router-view />
     </v-scroll-y-transition>
+    <!-- KEEP: Work in progress
+    <NewDocButtons />
+    -->
     <v-snackbar
       v-model="snackbar.visible"
       :timeout="snackbar.timeout"
@@ -135,6 +138,7 @@
       {{ snackbar.text }}
     </v-snackbar>
     <DatabaseConnectionDialog />
+    <DocumentViewer />
     <RawDocumentViewer />
   </v-app>
 </template>
@@ -144,7 +148,9 @@ import NavbarApps from "@/components/app/NavbarApps.vue";
 import NavbarActions from "@/components/app/NavbarActions.vue";
 import DatabaseConnectionDialog from "@/components/app/DatabaseConnectionDialog.vue";
 import RawDocumentViewer from "@/components/app/RawDocumentViewer.vue";
+import DocumentViewer from "@/components/app/DocumentViewer.vue";
 import LocalWhiteboard from "@/components/app/LocalWhiteboard.vue";
+import NewDocButtons from "@/components/app/NewDocButtons.vue";
 
 import offPIMDesignDoc from "@/components/designdocs/offpim_design_doc.json";
 import MangoDesignDoc from "@/components/designdocs/mango_indexes.json";
@@ -156,7 +162,9 @@ export default {
     NavbarActions,
     DatabaseConnectionDialog,
     RawDocumentViewer,
-    LocalWhiteboard
+    DocumentViewer,
+    LocalWhiteboard,
+    NewDocButtons
   },
   computed: {
     drawer: {
