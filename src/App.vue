@@ -150,7 +150,7 @@ import DatabaseConnectionDialog from "@/components/app/DatabaseConnectionDialog.
 import RawDocumentViewer from "@/components/app/RawDocumentViewer.vue";
 import DocumentViewer from "@/components/app/DocumentViewer.vue";
 import LocalWhiteboard from "@/components/app/LocalWhiteboard.vue";
-import NewDocButtons from "@/components/app/NewDocButtons.vue";
+//import NewDocButtons from "@/components/app/NewDocButtons.vue";
 
 import offPIMDesignDoc from "@/components/designdocs/offpim_design_doc.json";
 import MangoDesignDoc from "@/components/designdocs/mango_indexes.json";
@@ -164,7 +164,7 @@ export default {
     RawDocumentViewer,
     DocumentViewer,
     LocalWhiteboard,
-    NewDocButtons
+    //NewDocButtons
   },
   computed: {
     drawer: {
