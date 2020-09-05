@@ -140,6 +140,10 @@ export default {
         state.dialogDocumentViewer = true
     },
 
+    hideDocumentViewer: state => {
+        state.dialogDocumentViewer = false
+    },
+
     refreshDoc(state, doc) {
         const index = state.data.findIndex(({ _id }) => _id === doc._id);
         Vue.set(state.data, index, doc)

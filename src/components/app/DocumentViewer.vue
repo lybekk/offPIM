@@ -3,42 +3,37 @@
     v-model="dialog"
     :fullscreen="$vuetify.breakpoint.smAndDown"
     min-width="50vw"
-    max-width="80vw"
+    max-width="55vw"
     transition="scroll-y-transition"
   >
-    <!-- 
-    -->
-    <v-card>
+    <v-card 
+      :disabled="doc._deleted"
+    >
       <v-toolbar
-        color="cyan"
+        color="primary"
         dark
         flat
       >
-        <v-toolbar-title>Document viewer</v-toolbar-title>
+        <v-toolbar-title>{{ infomaticator }}</v-toolbar-title>
         <v-spacer />
         <v-btn
           icon
           @click="dialog = false"
         >
           <v-icon>mdi-close</v-icon>
-        </v-btn><template v-slot:extension>
-          <p>Extension slot</p>
+        </v-btn>
+        <template v-slot:extension>
+          <p>{{ doc._id }}</p>
         </template>
       </v-toolbar>
-      <v-card-title>
-        Title
-      </v-card-title>
       <v-card-text>
-          <DoctypeWebfeed  v-if="doc['@type'] == 'webFeed'" />
-          <!-- 
-        <div v-if="doc.type == 'note' ">
-          Another component {{ doc.description }}
-        </div>
-          -->
-        <p>ID: <span>{{ doc._id}}</span></p>
+        <DoctypeBookmark v-if="doc['@type'] == 'webPage'" />
+        <MainDeleteButton 
+          :document-id="doc._id"
+          :is-deleted="doc._deleted"
+        />
       </v-card-text>
       <v-card-actions>
-        <v-spacer />
         <v-btn
           text
           color="secondary"
@@ -46,6 +41,7 @@
         >
           Close
         </v-btn>
+        <v-spacer />
       </v-card-actions>
     </v-card>
   </v-dialog>
@@ -54,23 +50,26 @@
 <script>
 import pouchMixin from "@/mixins/pouchMixin";
 import itemDetailedMixin from "@/mixins/itemDetailedMixin";
-//import DoctypeWebfeed from "@/components/documentviewer/DoctypeWebfeed";
-//import DoctypeWebfeed from "@/components/documentviewer/DoctypeWebfeed";
-import DoctypeWebfeed from "@/components/documentviewer/DoctypeWebfeed.vue";
+import MainDeleteButton from "@/components/MainDeleteButton.vue";
+import DoctypeBookmark from "@/components/documentviewer/DoctypeBookmark.vue";
 
 export default {
   name: "DocumentViewer",
   components: {
-    DoctypeWebfeed
+    DoctypeBookmark,
+    MainDeleteButton
   },
   mixins: [pouchMixin, itemDetailedMixin],
   data: () => ({}),
   computed: {
-    /* Gives maximum call stack error
-    doc() {
-      return this.doc;
+    infomaticator() {
+      let n;
+      const d = this.doc;
+      if (d['@type'] == 'webFeed') {
+        n = 'Feed'
+      }
+      return n
     },
-    */
     dialog: {
       get() {
         return this.$store.getters.dialogDocumentViewer;

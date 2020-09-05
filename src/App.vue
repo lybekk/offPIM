@@ -76,6 +76,7 @@
       dark
       hide-on-scroll
       elevate-on-scroll
+      extended
     >
       <v-progress-linear
         :active="loading"
@@ -103,30 +104,22 @@
             :key="i"
             :to="{ name: tab.to, params: tab.params }"
           >
-            {{ tab.name }}
+            <v-icon 
+              v-if="isSmallScreen" 
+              v-text="tab.icon" 
+            />
+            <span
+              v-else 
+              v-text="tab.name" 
+            />
           </v-tab>
         </v-tabs>
-        <v-fab-transition>
-          <v-btn
-            v-show="!$store.getters.buttonFormNewHidden"
-            color="secondary"
-            fab
-            bottom
-            right
-            absolute
-            @click="openNewEntryForm"
-          >
-            <v-icon>mdi-plus</v-icon>
-          </v-btn>
-        </v-fab-transition>
       </template>
     </v-app-bar>
-    <v-scroll-y-transition mode="out-in">
+    <v-fade-transition mode="out-in">
       <router-view />
-    </v-scroll-y-transition>
-    <!-- KEEP: Work in progress
+    </v-fade-transition>
     <NewDocButtons />
-    -->
     <v-snackbar
       v-model="snackbar.visible"
       :timeout="snackbar.timeout"
@@ -150,7 +143,8 @@ import DatabaseConnectionDialog from "@/components/app/DatabaseConnectionDialog.
 import RawDocumentViewer from "@/components/app/RawDocumentViewer.vue";
 import DocumentViewer from "@/components/app/DocumentViewer.vue";
 import LocalWhiteboard from "@/components/app/LocalWhiteboard.vue";
-//import NewDocButtons from "@/components/app/NewDocButtons.vue";
+import NewDocButtons from "@/components/app/NewDocButtons.vue";
+import formatMixin from '@/mixins/formatMixin'
 
 import offPIMDesignDoc from "@/components/designdocs/offpim_design_doc.json";
 import MangoDesignDoc from "@/components/designdocs/mango_indexes.json";
@@ -164,8 +158,9 @@ export default {
     RawDocumentViewer,
     DocumentViewer,
     LocalWhiteboard,
-    //NewDocButtons
+    NewDocButtons
   },
+  mixins: [formatMixin],
   computed: {
     drawer: {
       get() {
