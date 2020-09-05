@@ -88,12 +88,20 @@ export default {
       this.setDocField(key, currentDate.toISOString());
     },
 
+    /**
+     * Generic doc property setter. If statement necessary for document viewer reactivity.
+     * @param {*} key 
+     * @param {*} value 
+     */
     setDocField: async function (key, value) {
       let id = this.doc._id;
       let freshDoc = await this.getDoc(id);
       freshDoc[key] = value;
       await this.putDoc(freshDoc);
       this.$store.dispatch("refreshDoc", id);
+      if (this.$store.getters.dialogDocumentViewer) {
+        this.$store.commit("setSelectedDoc", freshDoc);
+      }
     },
   }
 };

@@ -31,13 +31,15 @@
         </v-list>
       </v-sheet>
     </v-navigation-drawer>
-    <v-container fluid>
+    <v-container 
+      :fluid="isSmallScreen"
+      :class="isSmallScreen ? 'pa-0' : ''"
+    >
       <v-skeleton-loader
         :loading="this.$store.getters.loaderState"
         transition="scroll-y-reverse-transition"
         type="list-item-avatar-two-line"
       >
-        <!-- class="mx-auto" removed -->
         <v-data-iterator
           ref="contactsDataIterator"
           :items="contactList"
@@ -55,16 +57,18 @@
               dark
               color="primary darken-1"
               elevation="1"
+              extended
             >
-              <v-text-field
-                v-model="search"
-                clearable
-                hide-details
-                solo-inverted
-                flat
-                prepend-inner-icon="mdi-magnify"
-                label="Filter list"
-              />
+              <v-btn
+                class="ma-2"
+                color="secondary"
+                @click="drawer = !drawer"
+              >
+                <v-icon left>
+                  mdi-tag
+                </v-icon>
+                <span>Tags</span>
+              </v-btn>
               <v-chip
                 v-if="filterByTag"
                 class="ma-2"
@@ -79,27 +83,6 @@
                 </v-avatar>
                 {{ filterByTag }}
               </v-chip>
-              <v-spacer />
-              <v-select
-                v-model="sortBy"
-                flat
-                solo-inverted
-                hide-details
-                :items="keys"
-                prepend-inner-icon="mdi-sort-variant"
-                label="Sort by"
-              />
-              <v-spacer />
-              <v-btn
-                class="ma-2"
-                color="secondary"
-                @click="drawer = !drawer"
-              >
-                <v-icon left>
-                  mdi-tag
-                </v-icon>
-                <span>Tags</span>
-              </v-btn>
               <v-spacer />
               <v-menu>
                 <template v-slot:activator="{ on }">
@@ -123,6 +106,29 @@
                   </v-list-item>
                 </v-list>
               </v-menu>
+              <template v-slot:extension>
+                <v-text-field
+                  v-model="search"
+                  class="ma-2 pb-2"
+                  clearable
+                  hide-details
+                  solo-inverted
+                  flat
+                  prepend-inner-icon="mdi-magnify"
+                  label="Filter list"
+                />
+                <v-spacer />
+                <v-select
+                  v-model="sortBy"
+                  class="ma-2 pb-2"
+                  flat
+                  solo-inverted
+                  hide-details
+                  :items="keys"
+                  prepend-inner-icon="mdi-sort-variant"
+                  label="Sort by"
+                />
+              </template>
             </v-toolbar>
           </template>
           <template v-slot:default="props">
@@ -144,6 +150,7 @@
 <script>
 import ContactsItem from "@/components/contacts/ContactsItem.vue";
 import ContactsItemDetailed from "@/components/contacts/ContactsItemDetailed.vue";
+import formatMixin from '@/mixins/formatMixin'
 import pouchMixin from "@/mixins/pouchMixin";
 var vCardsJS = require('vcards-js');
 import { saveAs } from 'file-saver';
@@ -152,9 +159,9 @@ export default {
   name: "Contacts",
   components: {
     ContactsItem,
-    ContactsItemDetailed
+    ContactsItemDetailed,
   },
-  mixins: [pouchMixin],
+  mixins: [pouchMixin, formatMixin],
   data: () => ({
     drawer: false,
     tagList: [],

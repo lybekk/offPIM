@@ -4,7 +4,7 @@
     scrollable
     :inset="$vuetify.breakpoint.mdAndUp"
   >
-    <v-card>
+    <v-card height="85vh">
       <v-card-title>
         <v-tabs
           v-model="activeTab"

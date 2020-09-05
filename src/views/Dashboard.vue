@@ -55,12 +55,10 @@
         <v-col lg="6">
           <MetricsPriorities />
         </v-col>
-        <!-- TODO: Replace with Vue's own progress-->
-        <!--v-col(md="6"
-lg="3"
-)
-chart-tasks-today-->
-        <v-col lg="2">
+        <v-col 
+          cols="12" 
+          sm="6"
+        >
           <v-card
             v-if="this.$store.getters.getTasksAggregate.initiated &amp;&amp; taskProgress.visible"
             flat

@@ -1,86 +1,75 @@
 <template>
-  <v-dialog
-    v-model="dialog"
-    scrollable
-    max-width="400px"
-  >
-    <template v-slot:activator="{ on }">
-      <span
-        :class="[status == 'done' ? 'subheading success--text' : 'subheading font-weight-regular']"
-        v-on="on"
-        v-text="titleFormatted"
-      />
-    </template>
-    <v-card>
-      <v-card-title><span class="headline">Edit title</span></v-card-title>
-      <v-card-text>
-        <v-container>
-          <v-text-field
-            v-model="value"
-            autofocus
-            label="Title"
-            @change="setTaskField"
-          />
-        </v-container>
-      </v-card-text>
-    </v-card>
-  </v-dialog>
+  <div style="width:80%;">
+    <v-text-field
+      v-if="editable"
+      v-model="value"
+      autofocus
+      label="Edit title"
+      @change="setTaskField"
+      @blur="editable = false"
+    />
+    <span
+      v-else
+      :class="[status == 'done' ? 'subheading success--text' : 'subheading font-weight-regular']"
+      @click="editable = true"
+      v-text="titleFormatted"
+    />
+  </div>
 </template>
 
 <script>
-import pouchMixin from '@/mixins/pouchMixin'
+import pouchMixin from "@/mixins/pouchMixin";
 
 export default {
-  name: 'TasksItemsTitle',
-  components: {
-  },
+  name: "TasksItemsTitle",
+  components: {},
   mixins: [pouchMixin],
   props: {
     id: {
       type: String,
-      default: '',
+      default: "",
     },
     title: {
       type: String,
-      default: '',
+      default: "",
     },
     status: {
       type: String,
-      default: '',
-    }
+      default: "",
+    },
   },
   data: () => ({
-    dialog:false,
-    newValue: null
+    dialog: false,
+    newValue: null,
+    editable: false,
   }),
   computed: {
     value: {
-        get () {
-          return this.title
-        },
-        set (val) {
-          this.newValue = val;
-        }
+      get() {
+        return this.title;
+      },
+      set(val) {
+        this.newValue = val;
+      },
     },
     titleFormatted() {
       let t = this.title;
       if (t == null || t.length == 0) {
-          t = "No title";
+        t = "No title";
       }
-      return t
-    }
+      return t;
+    },
   },
   methods: {
     setTaskField: async function () {
       await this.setFieldGeneric({
         _id: this.id,
-        field: 'title',
-        value: this.newValue
+        field: "title",
+        value: this.newValue,
       });
       this.dialog = false;
-      this.$emit('set-doc')
+      this.$emit("set-doc");
     },
-  }
+  },
 };
-
 </script>

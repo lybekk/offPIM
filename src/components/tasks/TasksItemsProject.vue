@@ -2,8 +2,9 @@
     v-dialog(v-model="dialog" scrollable max-width="600px" :fullscreen="$vuetify.breakpoint.smAndDown")
       template(v-slot:activator="{ on }")
         v-list-item(@click="")
+          v-list-item-icon(@click="editable = true")
+            v-icon mdi-format-list-checks
           v-list-item-content(v-on="on")
-            v-list-item-title Project
             v-list-item-subtitle(v-text="projectName")
       v-card
         v-card-title Set project

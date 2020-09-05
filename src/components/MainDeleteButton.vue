@@ -49,11 +49,14 @@ export default {
     documentId: {
       type: String,
       default: null,
+    },
+    isDeleted: {
+      type: Boolean,
+      default: false,
     }
   },
   data: () => ({
     trashIconClicked: false,
-    isDeleted: false
   }),
   computed: {},
   methods: {
@@ -64,8 +67,7 @@ export default {
       this.toggleTrashIcon();
       this.deleteDoc(id);
       this.$store.commit("setGenericStateBooleanFalse", "dialogItemDetailed");
-      this.isDeleted = true;
-
+      this.$store.commit("hideDocumentViewer");
       let doc = await this.getDoc(id, true);
       doc._deleted = true;
       this.$store.commit("refreshDoc", doc);

@@ -8,9 +8,9 @@
     >
       <ProjectList />
     </v-navigation-drawer>
-    <v-scroll-x-transition mode="out-in">
+    <v-scroll-y-transition mode="out-in">
       <router-view />
-    </v-scroll-x-transition>
+    </v-scroll-y-transition>
   </v-main>
 </template>
 
@@ -22,9 +22,6 @@ export default {
   components: {
     ProjectList
   },
-  //props: {
-  //  source: String
-  //},
   data: () => ({
     icon: "justify",
     navTabs: [

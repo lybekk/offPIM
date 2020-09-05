@@ -182,8 +182,11 @@
                 inset
                 width="80%"
               />
-
-              <v-tabs background-color="primary">
+              <v-tabs
+                background-color="primary"
+                color="primary"
+                dark
+              >
                 <v-tab
                   v-for="field in ['due','start','end']"
                   :key="field"
@@ -297,7 +300,7 @@ export default {
     TasksItemsTags,
     TasksItemsPriority,
     ConvertTaskToNote,
-    FormDatetime
+    FormDatetime,
   },
   mixins: [pouchMixin],
   props: {
@@ -313,7 +316,7 @@ export default {
   data: () => ({
     doc: {
       title: "",
-      tags: []
+      tags: [],
     },
     fab: false,
     sheet: false,
@@ -325,7 +328,7 @@ export default {
     ],
   }),
   computed: {
-    isTaskClosed: function() {
+    isTaskClosed: function () {
       let s = this.doc.status;
       return {
         visible: ["done", "cancelled"].includes(s),
@@ -334,26 +337,29 @@ export default {
             ? "body-1 font-weight-regular success--text isDone"
             : s == "cancelled"
             ? "body-1 font-weight-regular error--text isDone"
-            : "text--primary subtitle-1 font-weight-medium"
+            : "text--primary subtitle-1 font-weight-medium",
       };
     },
 
-      activeFab () {
-        switch (this.doc.status) {
-          case 'done': return { icon: 'mdi-check' }
-          case 'cancelled': return { icon: 'mdi-close' }
-          default: return {}
-        }
-      },
+    activeFab() {
+      switch (this.doc.status) {
+        case "done":
+          return { icon: "mdi-check" };
+        case "cancelled":
+          return { icon: "mdi-close" };
+        default:
+          return {};
+      }
+    },
 
-    taskProgress: function() {
+    taskProgress: function () {
       const s = this.doc.status;
       const progress =
-        100 - 100 / this.statusList.findIndex(status => status === s);
+        100 - 100 / this.statusList.findIndex((status) => status === s);
       return s === "done" || s === "cancelled" ? 100 : progress;
     },
 
-    isOverdue: function() {
+    isOverdue: function () {
       let d = new Date();
       d.setDate(d.getDate() - 1);
       let d_today = new Date();
@@ -362,17 +368,17 @@ export default {
         return true;
       }
       return false;
-    }
+    },
   },
   mounted() {
     this.setDoc();
   },
   beforeDestroy() {},
   methods: {
-    setDoc: async function() {
+    setDoc: async function () {
       this.doc = await this.getDoc(this.docid);
     },
-    overdueAmount: function(due) {
+    overdueAmount: function (due) {
       let dDue = new Date(due);
       let dNow = new Date();
       let diff = dNow - dDue;
@@ -380,7 +386,7 @@ export default {
       let msg = hours + " hours ";
       return msg;
     },
-    setTaskStatus: async function(newStatus) {
+    setTaskStatus: async function (newStatus) {
       let doc = await window.db.get(this.doc._id);
       doc.status = newStatus;
       if (["done", "cancelled"].includes(newStatus)) {
@@ -392,41 +398,41 @@ export default {
         this.$store.dispatch("getTaskStatuses");
       }, 4000);
     },
-    getTaskStatus: function(id) {
+    getTaskStatus: function (id) {
       return this.$store.getters.getTaskStatus(id);
     },
-    postponeTask: async function(amount = 1) {
+    postponeTask: async function (amount = 1) {
       var currentDate = new Date();
       currentDate.setDate(currentDate.getDate() + amount);
       let newDate = currentDate.toISOString().slice(0, 10);
       let payload = {
         _id: this.docid,
         field: "due",
-        value: newDate
+        value: newDate,
       };
       await this.setFieldDate(payload);
       this.$store.commit("addPostponed", this.docid);
       this.setDoc();
       this.sheet = false;
     },
-    isPostponed: function(id) {
+    isPostponed: function (id) {
       let list = this.$store.getters.getPostponedTasks;
       if (list.includes(id)) {
         return true;
       }
       return false;
     },
-    isDeleted: function(id) {
+    isDeleted: function (id) {
       let list = this.$store.getters.getDeletedDocuments;
       if (list.includes(id)) {
         return true;
       }
       return false;
     },
-    color: function(status) {
+    color: function (status) {
       return this.$store.getters.getStatusColors[status];
-    }
-  }
+    },
+  },
 };
 </script>
 
