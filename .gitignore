@@ -1,3 +1,7 @@
+# Android (Capacitor)
+capacitor.config.json
+
+#
 .DS_Store
 node_modules
 /dist

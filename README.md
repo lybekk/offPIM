@@ -267,6 +267,15 @@ PWA Service workers may need 24 hours to update to the newest version automatica
 ### Sponsoring
 Using, and downloading [Brave Browser](https://brave.com/off167) from [this link](https://brave.com/off167) gets me a cup of coffee.
 
+### Android app (Capacitor)
+
+When building the app, add a file named `capacitor.config.json` in the root of offPIM's project folder.
+
+Example config:
+```json
+{"appId":"tech.lybekk.offpim","appName":"offPIM","bundledWebRuntime":false,"webDir":"/home/username/development/offPIM/dist/bundled"}
+```
+
 ## Design choices
 
 ### Name

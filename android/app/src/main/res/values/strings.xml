@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">offPIM</string>
+    <string name="title_activity_main">offPIM</string>
+    <string name="package_name">tech.lybekk.offpim</string>
+    <string name="custom_url_scheme">tech.lybekk.offpim</string>
+</resources>

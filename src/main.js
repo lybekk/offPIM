@@ -5,6 +5,8 @@ import store from './store'
 import vuetify from './plugins/vuetify';
 import './registerServiceWorker'
 
+import { Plugins } from '@capacitor/core';
+const { SplashScreen } = Plugins;
 
 import PouchDB from 'pouchdb-browser'
 import PouchDBFind from 'pouchdb-find'
@@ -19,8 +21,14 @@ window.remoteDB = null;
 Vue.config.productionTip = false
 
 new Vue({
-  router,
-  store,
-  vuetify,
-  render: h => h(App)
+    router,
+    store,
+    vuetify,
+    /**
+     * hide SplashScreen due to capacitor 
+     */
+    mounted() {
+        SplashScreen.hide()
+    },
+    render: h => h(App),
 }).$mount('#app')
