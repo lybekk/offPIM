@@ -1,6 +1,6 @@
 {
   "_id": "_design/offpim",
-  "version": 20200609,
+  "version": 20200903,
   "views": {
     "messages-tag-count": {
       "reduce": "_count",
@@ -64,6 +64,9 @@
     },
     "contacts-all": {
       "map": "function (doc) {\n  if (doc['@type'] == 'Person' || doc['@type'] == 'Organization') {\n    emit(doc._id);\n  }\n}"
+    },
+    "bookmarks": {
+      "map": "function (doc) {\n  if (doc[\"@type\"] == \"webPage\") {\n    emit(doc.name);\n  }\n}"
     }
   },
   "language": "javascript"

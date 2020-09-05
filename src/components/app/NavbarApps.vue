@@ -135,6 +135,10 @@ export default {
       {
         name: "themes",
         icon: "mdi-palette"
+      },
+      {
+        name: "bookmarks",
+        icon: "mdi-bookmark"
       }
     ]
   }),

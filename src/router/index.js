@@ -211,10 +211,10 @@ const routes = [{
         ]
     },
     {
-        path: '/reader',
-        name: 'reader',
+        path: '/bookmarks',
+        name: 'bookmarks',
         component: () =>
-            import ( /* webpackChunkName: "tools" */ '../views/Reader.vue')
+            import ( /* webpackChunkName: "bookmarks" */ '../views/Bookmarks.vue')
     },
 ]
 
