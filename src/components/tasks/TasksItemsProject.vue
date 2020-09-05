@@ -55,7 +55,12 @@ export default {
   name: "TasksItemsProject",
   components: {},
   mixins: [pouchMixin],
-  props: ["task"],
+  props: {
+    task: {
+      type: Object,
+      default: () => {},
+    }
+  },
   data: () => ({
     dialog: false,
     projectName: null,
