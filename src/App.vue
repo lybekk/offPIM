@@ -74,9 +74,7 @@
       app
       color="primary darken-2"
       dark
-      hide-on-scroll
       elevate-on-scroll
-      extended
     >
       <v-progress-linear
         :active="loading"
@@ -93,7 +91,10 @@
       <v-spacer />
       <LocalWhiteboard />
       <NavbarActions />
-      <template v-slot:extension>
+      <template 
+        v-if="$store.getters.appBarTabs.length"
+        v-slot:extension 
+      >
         <v-tabs
           align-with-title
           show-arrows
