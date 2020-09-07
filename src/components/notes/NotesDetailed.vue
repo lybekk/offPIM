@@ -4,6 +4,9 @@
     :inset="$vuetify.breakpoint.mdAndUp"
     scrollable
   >
+    <!-- 
+      INFO: This component is deprecated in favor of DocumentViewer DoctypeNote
+    -->
     <v-card>
       <v-card-text>
         <v-container>
@@ -59,9 +62,6 @@
         </v-btn>
       </v-card-actions>
     </v-card>
-    <!--
-      //- TODO: Implement another setDocField for arrays, like tags, with validation
-    -->
   </v-bottom-sheet>
 </template>
 

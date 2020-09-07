@@ -14,7 +14,16 @@
         dark
         flat
       >
-        <v-toolbar-title>{{ infomaticator }}</v-toolbar-title>
+        <v-toolbar-title>
+          <v-chip
+            v-if="doc.archived"
+            label
+            color="info"
+          >
+            Archived
+          </v-chip>
+          {{ infomaticator }}
+        </v-toolbar-title>
         <v-spacer />
         <v-btn
           icon
@@ -28,12 +37,21 @@
       </v-toolbar>
       <v-card-text>
         <DoctypeBookmark v-if="doc['@type'] == 'webPage'" />
+        <DoctypeNote v-if="doc.type == 'note'" />
         <MainDeleteButton 
           :document-id="doc._id"
           :is-deleted="doc._deleted"
         />
       </v-card-text>
       <v-card-actions>
+        <v-btn
+          text
+          color="primary"
+          @click="archiveDoc(doc._id)"
+        >
+          Archive
+        </v-btn>
+        <v-spacer />
         <v-btn
           text
           color="secondary"
@@ -48,25 +66,29 @@
 </template>
 
 <script>
-import pouchMixin from "@/mixins/pouchMixin";
-import itemDetailedMixin from "@/mixins/itemDetailedMixin";
-import MainDeleteButton from "@/components/MainDeleteButton.vue";
-import DoctypeBookmark from "@/components/documentviewer/DoctypeBookmark.vue";
+import pouchMixin from "@/mixins/pouchMixin"
+import itemDetailedMixin from "@/mixins/itemDetailedMixin"
+import MainDeleteButton from "@/components/MainDeleteButton.vue"
+import DoctypeBookmark from "@/components/documentviewer/DoctypeBookmark.vue"
+import DoctypeNote from "@/components/documentviewer/DoctypeNote.vue"
 
 export default {
   name: "DocumentViewer",
   components: {
     DoctypeBookmark,
+    DoctypeNote,
     MainDeleteButton
   },
   mixins: [pouchMixin, itemDetailedMixin],
   data: () => ({}),
   computed: {
     infomaticator() {
-      let n;
+      let n = '(Could not determine document type)';
       const d = this.doc;
       if (d['@type'] == 'webFeed') {
         n = 'Feed'
+      } else if (d.type == 'note') {
+        n = 'Note'
       }
       return n
     },

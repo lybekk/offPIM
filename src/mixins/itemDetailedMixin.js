@@ -48,7 +48,6 @@ export default {
   methods: {
 
     getDateOnly: function (value) {
-      //const d = this.doc[key];
       if (value) {
         return new Date(value).toISOString().substr(0, 10);
       } else {
@@ -98,10 +97,30 @@ export default {
       let freshDoc = await this.getDoc(id);
       freshDoc[key] = value;
       await this.putDoc(freshDoc);
-      this.$store.dispatch("refreshDoc", id);
+      this.refreshSelectedDoc(freshDoc)
+    },
+
+    refreshSelectedDoc: async function(freshDoc) {
+      this.$store.dispatch("refreshDoc", freshDoc._id);
       if (this.$store.getters.dialogDocumentViewer) {
         this.$store.commit("setSelectedDoc", freshDoc);
       }
     },
+
+    /**
+     * Marks a document as 'archived', excluding it from sync
+     * @param {String} id 
+     */
+    archiveDoc: async function(id) {
+      let freshDoc = await this.getDoc(id);
+      freshDoc.archived = true;
+      if (freshDoc.type == 'note') {
+        freshDoc.status = "done";
+        freshDoc.end = new Date().toISOString();
+      }
+      await this.putDoc(freshDoc);
+      this.refreshSelectedDoc(freshDoc)
+    },
+
   }
 };

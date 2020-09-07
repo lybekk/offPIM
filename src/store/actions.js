@@ -159,23 +159,31 @@ export default {
     },
 
     /**
-     * I.E. 'offpim/note-tag-count'
+     * I.E. 'offpim/note-tag-count'. Usually used for populating a sidenav etc.
      * @param {*} context 
      * @param {*} view 
      */
     async populateTagsList(context, view) {
+        const result = await context.dispatch('getTagsFromView', view);
+        context.commit('setTagList', result)
+    },
+
+    /**
+     * Support function for populateTagsList. Can be used to retrieve tags as object instead of populating Vuex.
+     * @param {*} context 
+     * @param {String} view 
+     */
+    async getTagsFromView(context, view) {
         try {
             var result = await window.db.query(view, {
                 group: true
             });
-            context.commit('setTagList', result)
+            return result
         } catch (error) {
             context.dispatch("infoBridge", {
                 text: error,
                 color: "error",
             });
         }
-
     },
-
 }

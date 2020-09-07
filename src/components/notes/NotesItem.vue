@@ -7,11 +7,11 @@
       :flat="isDeleted(doc._id)"
     >
       <v-card-title
-        @click="showItemDetailed"
+        @click="viewDocument(doc._id)"
       >
         {{ docTitle }}
       </v-card-title>
-      <v-card-text @click="showItemDetailed">
+      <v-card-text @click="viewDocument(doc._id)">
         {{ docDescription }}
       </v-card-text>
       <v-card-actions>

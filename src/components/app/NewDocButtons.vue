@@ -26,18 +26,20 @@
       </v-fab-transition>
     </template>
     <v-btn
+      v-for="(btn, i) in buttons"
+      :key="i"
       fab
       dark
       small
       color="secondary"
       class="new-doc-btn"
-      data-text="Bookmark"
-      @click="createDoc('bookmark')"
+      :data-text="btn.text"
+      @click="createDoc(btn.docType)"
     >
-      <v-icon>mdi-bookmark</v-icon>
+      <v-icon v-text="btn.icon" />
     </v-btn>
     <v-btn
-      v-for="(btn, i) in buttons"
+      v-for="(btn, i) in buttonsLegacy"
       :key="i"
       fab
       dark
@@ -63,15 +65,22 @@ export default {
   data: () => ({
     fab: false,
     buttons: [
+      {
+        text: 'Bookmark',
+        docType: 'bookmark',
+        icon: 'mdi-bookmark',
+      },
+      {
+        text: 'Note',
+        docType: 'note',
+        icon: 'mdi-note',
+      },
+    ],
+    buttonsLegacy: [
         {
             name: 'Task',
             to: 'formsNewTask',
             icon: 'mdi-check',
-        },
-        {
-            name: 'Note',
-            to: 'formsNewNote',
-            icon: 'mdi-pen',
         },
         {
             name: 'Log',
@@ -107,6 +116,21 @@ export default {
           name: '',
           url: null,
         },
+        note: {
+          title: "",
+          description: "",
+          tags: [],
+          productivity: true,
+          type: "note",
+          priority: 4,
+          status: "plan",
+          project: null,
+          due: null,
+          end: null,
+          context: null,
+          //created: "2020-08-22T16:55:14.263Z", Old model
+          start: new Date().toISOString(),
+        },
       };
 
       const newDoc = {
@@ -124,9 +148,9 @@ export default {
 .new-doc-btn::after {
   content: attr(data-text);
   position: absolute;
-  background-color: #ffffff6e;
-  color: teal;
-  left: -5rem;
+  background-color: teal;
+  color: white;
+  right: 3.4rem;
   z-index: 1001;
   padding: 0.4rem;
   border-radius: 10%;
