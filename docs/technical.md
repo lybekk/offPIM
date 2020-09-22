@@ -164,11 +164,8 @@ Logbook semi-adheres to [Schema.org/Event](https://schema.org/Event), simplifyin
     "startDate":"2020-12-31T09:00:00",
     "endDate":null,
     "keywords": ["conspiracy", "gunther"],
-    "created":"2019-12-31T00:00:00"
-    "additionalType": "logbook",
-
-      
-
+    "created":"2019-12-31T00:00:00",
+    "additionalType": "logbook"
 }
 ```
 

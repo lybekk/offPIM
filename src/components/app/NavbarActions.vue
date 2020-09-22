@@ -138,7 +138,11 @@ export default {
     setTimeout(() => {
       if (this.$store.getters.localSettings.liveSync) {
         this.syncDatabase();
-      }
+      } 
+      /**
+       * TODO:
+       * else if (this.$store.getters.localSettings.syncOnStartup)
+       */
     }, 5000);
   },
   methods: {

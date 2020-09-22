@@ -108,7 +108,6 @@ export default {
         const k = payload.key;
         const v = payload.value;
 
-
         let s = window.localStorage.getItem('offpimLocalSettings');
         if (s == null) {
             window.localStorage.setItem('offpimLocalSettings', JSON.stringify({}))
