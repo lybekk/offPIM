@@ -1,0 +1,56 @@
+@import "node_modules/nord/src/sass/nord.scss";
+
+/*
+ * Light
+ */
+
+$light-bg: $nord5 !important;
+$dark-bg: $nord0 !important;
+
+.theme--light.v-application {
+  background-color: $light-bg;
+  color: $nord3 !important;
+}
+
+.theme--light.v-text-field--filled > .v-input__control > .v-input__slot {
+  background-color: $nord4;
+}
+
+.theme--light.v-tabs-items,
+.theme--light.v-tabs > .v-tabs-bar,
+.theme--light.v-navigation-drawer,
+.theme--light.v-data-table {
+  background-color: $light-bg;
+}
+
+.theme--light.v-toolbar.v-sheet,
+.theme--light.v-card,
+.theme--light.v-sheet {
+  background-color: $nord6;
+  color: $nord3 !important;
+}
+
+.theme--light.v-list-item:not(.v-list-item--active):not(.v-list-item--disabled),
+.theme--light.v-list {
+  color: $nord3 !important;
+}
+
+/*
+ * Dark
+ */
+
+.theme--dark.v-application {
+  background-color: var(--v-background-base, #121212) !important;
+}
+
+.theme--dark.v-tabs-items,
+.theme--dark.v-tabs > .v-tabs-bar,
+.theme--dark.v-navigation-drawer,
+.theme--dark.v-data-table {
+  background-color: $dark-bg;
+}
+
+.theme--dark.v-sheet,
+.theme--dark.v-card {
+  background-color: $nord1; 
+}
