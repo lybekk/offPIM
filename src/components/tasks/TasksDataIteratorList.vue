@@ -19,7 +19,6 @@
         <v-toolbar
           class="mb-1"
           dark
-          color="primary darken-1"
         >
           <v-text-field
             v-model="search"

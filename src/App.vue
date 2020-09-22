@@ -1,11 +1,10 @@
 <template>
-  <v-app id="inspire">
+  <v-app id="main">
     <v-navigation-drawer
       v-model="drawer"
       app
       :expand-on-hover="$vuetify.breakpoint.lgAndUp"
-      dark
-      color="primary darken-3"
+      color="primary "
     >
       <v-list
         dense
@@ -72,8 +71,7 @@
     </v-navigation-drawer>
     <v-app-bar
       app
-      color="primary darken-2"
-      dark
+      color="primary"
       elevate-on-scroll
     >
       <v-progress-linear
@@ -98,7 +96,7 @@
         <v-tabs
           align-with-title
           show-arrows
-          active-class="primary darken-1 text--white"
+          active-class="primary darken-1"
         >
           <v-tab
             v-for="(tab, i) in $store.getters.appBarTabs"
@@ -275,3 +273,7 @@ export default {
   }
 };
 </script>
+
+<style lang="scss">
+@import './assets/styles/main.scss';
+</style>

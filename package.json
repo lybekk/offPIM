@@ -35,6 +35,7 @@
         "lunr": "^2.3.8",
         "minify-css-string": "^1.0.0",
         "nano": "^8.2.2",
+        "nord": "^0.2.1",
         "pouchdb": "^7.2.1",
         "pouchdb-authentication": "^1.1.3",
         "pouchdb-browser": "^7.2.1",

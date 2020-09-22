@@ -61,7 +61,10 @@
         small
         @click="addTag(tag)"
       >
-        <v-icon left>
+        <v-icon 
+          x-small
+          left
+        >
           mdi-plus
         </v-icon>
         {{ tag }}

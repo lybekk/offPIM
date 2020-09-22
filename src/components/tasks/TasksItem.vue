@@ -182,11 +182,7 @@
                 inset
                 width="80%"
               />
-              <v-tabs
-                background-color="primary"
-                color="primary"
-                dark
-              >
+              <v-tabs dark>
                 <v-tab
                   v-for="field in ['due','start','end']"
                   :key="field"

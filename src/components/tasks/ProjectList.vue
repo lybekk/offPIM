@@ -1,10 +1,9 @@
 <template>
   <v-sheet>
-    <v-sheet class="pa-4 primary lighten-2">
+    <v-sheet class="pa-4 primary">
       <v-text-field
         v-model="filter"
         label="Filter projects"
-        dark
         flat
         solo-inverted
         hide-details

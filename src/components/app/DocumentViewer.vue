@@ -11,7 +11,6 @@
     >
       <v-toolbar
         color="primary"
-        dark
         flat
       >
         <v-toolbar-title>
