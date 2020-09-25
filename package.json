@@ -31,7 +31,7 @@
         "core-js": "^3.6.5",
         "debug": "^4.2.0",
         "file-saver": "^2.0.2",
-        "leaflet": "^1.6.0",
+        "leaflet": "^1.7.1",
         "lunr": "^2.3.8",
         "minify-css-string": "^1.0.0",
         "nano": "^8.2.2",
