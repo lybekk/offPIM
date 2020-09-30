@@ -18,7 +18,6 @@
       <template v-slot:header>
         <v-toolbar
           class="mb-1"
-          dark
         >
           <v-text-field
             v-model="search"

@@ -8,7 +8,6 @@
               <v-btn
                 outlined
                 block
-                color="primary"
                 @click="createContact(newPerson)"
               >
                 <v-icon>mdi-account</v-icon>
@@ -19,7 +18,6 @@
               <v-btn
                 outlined
                 block
-                color="primary"
                 @click="createContact(newOrganization)"
               >
                 <v-icon>mdi-domain</v-icon>

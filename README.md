@@ -230,18 +230,23 @@ Index optmizations are done now and then (tips welcome).
 
 
 ### Compiles and hot-reloads for development
-```
+```bash
 npm run serve
 or
 electron:serve
 ```
 
 ### Compiles and minifies for production
-```
+```bash
 npm run build
 or
 npm run electron:build
 ```
+
+### Build for Android
+1. Build web assets with `npm run capacitor:build:android`
+2. Build in Android Studio- `Build/Build Bundle` or `Generate Signed Bundle`
+3. Find the finished build in `offPIM/android/app/release/app-release.aab`
 
 ## Customization
 

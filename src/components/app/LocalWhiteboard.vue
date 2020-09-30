@@ -78,6 +78,5 @@ export default {
 <style scoped>
 .whiteboard {
   line-height: normal;
-  font-family: cursive;
 }
 </style>

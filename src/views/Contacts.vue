@@ -54,9 +54,6 @@
           <template v-slot:header>
             <v-toolbar
               class="mb-1"
-              dark
-              color="primary darken-1"
-              elevation="1"
               extended
             >
               <v-btn

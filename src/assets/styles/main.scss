@@ -7,6 +7,10 @@
 $light-bg: $nord5 !important;
 $dark-bg: $nord0 !important;
 
+.theme--light.v-application textarea {
+  caret-color: $dark-bg;
+}
+
 .theme--light.v-application {
   background-color: $light-bg;
   color: $nord3 !important;
@@ -26,7 +30,7 @@ $dark-bg: $nord0 !important;
 .theme--light.v-toolbar.v-sheet,
 .theme--light.v-card,
 .theme--light.v-sheet {
-  background-color: $nord6;
+  background-color: $nord5;
   color: $nord3 !important;
 }
 
@@ -53,4 +57,8 @@ $dark-bg: $nord0 !important;
 .theme--dark.v-sheet,
 .theme--dark.v-card {
   background-color: $nord1; 
+}
+
+.theme--dark.v-application textarea {
+  caret-color: $light-bg;
 }

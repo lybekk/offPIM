@@ -12,8 +12,8 @@ module.exports = {
     },
     pwa: {
         name: 'offPIM - Offline-first Personal Information Management',
-        themeColor: '#0d2933', // Toolbar color
-        msTileColor: '#009688',
+        themeColor: '#e5e9f0', // Toolbar color
+        msTileColor: '#e5e9f0',
         appleMobileWebAppCapable: 'yes',
         appleMobileWebAppStatusBarStyle: 'teal',
         manifestOptions: {
@@ -21,7 +21,7 @@ module.exports = {
             short_name: "offPIM",
             description: 'A tool trying to offer a wayt to organize your information and present it in a practical way.',
             display: 'standalone',
-            background_color: '#253e49', // Usen on splash screen
+            background_color: '#e5e9f0', // Usen on splash screen
             share_target: { /* Work in progress */
                 action: "/#/new/task",
                 method: "GET",
