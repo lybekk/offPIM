@@ -6,7 +6,8 @@
 >
 >Or on the desktop. Supports Windows <img src="assets/img/logo_windows.png" alt="Windows" width="16">, 
 >Mac <img src="assets/img/logo_mac.png" alt="Mac OS" width="16">, 
->and Linux <img src="assets/img/logo_linux.png" alt="Linux" width="16">
+>Linux <img src="assets/img/logo_linux.png" alt="Linux" width="16">, 
+>and Android <a href='https://play.google.com/store/apps/details?id=tech.lybekk.offpim&pcampaignid=pcampaignidMKT-Other-global-all-co-prtnr-py-PartBadge-Mar2515-1'><img alt='Get it on Google Play' src='https://play.google.com/intl/en_us/badges/static/images/badges/en_badge_web_generic.png'/></a>
 
 *Quick access*
 [offpim.app](https://offpim.app/)
@@ -58,24 +59,27 @@ In an age where everything is about collaboration and sharing... This is a count
 ## <a id="gettingstarted" />Getting started
 Getting offPIM up and running can be done in several ways.
 
-*Three flavors are currently available*
+*Four flavors are currently available*
 
 * **Official app online**
-    1. Visit [offpim.app](https://offpim.app)
+    1. Visit [offpim.app](https://offpim.app).
 * **Desktop-app (Electron)**
-    1. [Download the app for your operating system](#downloads)
+    1. [Download the app for your operating system](#downloads).
     *Windows*
-    2. Double-click offpim_desktop.exe to install
+    2. Double-click offpim_desktop.exe to install.
     3. Open the app from the start menu.
     *Linux*
-    2. Make it executable `$ chmod a+x path-to-file/offpim_desktop.AppImage`
-    3. and run! `$ ./path-to-file/offpim_desktop.AppImage`
+    2. Double click the downloaded AppImage file. If that doesn't work, try the steps below.
+        1. Make it executable `$ chmod a+x path-to-file/offpim_desktop.AppImage`.
+        2. and run! `$ ./path-to-file/offpim_desktop.AppImage`.
     *Mac*
-    2. Currently no app for Mac OS
+    2. Currently no app for Mac OS.
     **Note:** "offPIM-Electron" is currently only tested on Windows(10) and Linux(Ubuntu).
+* **Android**
+    1. [Download the app from Google Play Store](https://play.google.com/store/apps/details?id=tech.lybekk.offpim).
 * **Self-hosted static bundle (SPA)**
     1. [Download](#downloads) and unzip contents in any directory (even root) on any HTTP-server.
-    **Note:** Suitable for placing on a private VPS served by Apache, or any other http-server (I.E. python http.server or Node.js http.createServer)
+    **Note:** Suitable for placing on a private VPS served by Apache, or any other http-server (I.E. python http.server or Node.js http.createServer).
 * **(Alternative) Self-hosted static bundle (SPA)**
     1. [Download](#downloads) and unzip contents in any directory on your computer. As long as a browser is available, offPIM will run.
 
@@ -186,6 +190,7 @@ with socketserver.TCPServer((HOST, PORT), Handler) as httpd:
         <img src="assets/img/logo_self_hosted.png" alt="Self-hosted" width="32">
         Self-hosted
     </a>
+    <a href='https://play.google.com/store/apps/details?id=tech.lybekk.offpim&pcampaignid=pcampaignidMKT-Other-global-all-co-prtnr-py-PartBadge-Mar2515-1'><img alt='Get it on Google Play' src='https://play.google.com/intl/en_us/badges/static/images/badges/en_badge_web_generic.png'/></a>
 </div>
 
 **Note:** *The downloadable versions may be a bit behind the [offpim.app](https://offpim.app) version. A better way to build and distribute is on the drawing board*
