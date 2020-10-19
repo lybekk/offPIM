@@ -7,7 +7,7 @@
 >Or on the desktop. Supports Windows <img src="assets/img/logo_windows.png" alt="Windows" width="16">, 
 >Mac <img src="assets/img/logo_mac.png" alt="Mac OS" width="16">, 
 >Linux <img src="assets/img/logo_linux.png" alt="Linux" width="16">, 
->and Android <a href='https://play.google.com/store/apps/details?id=tech.lybekk.offpim&pcampaignid=pcampaignidMKT-Other-global-all-co-prtnr-py-PartBadge-Mar2515-1'><img alt='Get it on Google Play' src='https://play.google.com/intl/en_us/badges/static/images/badges/en_badge_web_generic.png'/></a>
+>and Android <a href='https://play.google.com/store/apps/details?id=tech.lybekk.offpim&pcampaignid=pcampaignidMKT-Other-global-all-co-prtnr-py-PartBadge-Mar2515-1'><img alt='Get it on Google Play' src='https://play.google.com/intl/en_us/badges/static/images/badges/en_badge_web_generic.png' style="width: 31%;"/></a>
 
 *Quick access*
 [offpim.app](https://offpim.app/)
@@ -190,7 +190,7 @@ with socketserver.TCPServer((HOST, PORT), Handler) as httpd:
         <img src="assets/img/logo_self_hosted.png" alt="Self-hosted" width="32">
         Self-hosted
     </a>
-    <a href='https://play.google.com/store/apps/details?id=tech.lybekk.offpim&pcampaignid=pcampaignidMKT-Other-global-all-co-prtnr-py-PartBadge-Mar2515-1'><img alt='Get it on Google Play' src='https://play.google.com/intl/en_us/badges/static/images/badges/en_badge_web_generic.png'/></a>
+    <a href='https://play.google.com/store/apps/details?id=tech.lybekk.offpim&pcampaignid=pcampaignidMKT-Other-global-all-co-prtnr-py-PartBadge-Mar2515-1'><img alt='Get it on Google Play' src='https://play.google.com/intl/en_us/badges/static/images/badges/en_badge_web_generic.png' style="width: 31%;"/></a>
 </div>
 
 **Note:** *The downloadable versions may be a bit behind the [offpim.app](https://offpim.app) version. A better way to build and distribute is on the drawing board*
@@ -340,7 +340,6 @@ Creators and maintainers of:
 * [Vuetify - Vue JS component framework](https://vuetifyjs.com/en/)
 * [Electron](https://www.electronjs.org/)
 * [Lunr.js](https://lunrjs.com/)
-* [Nano - NPM library for CouchDB](https://www.npmjs.com/package/nano)
 * And a ton others
 
 ## License
