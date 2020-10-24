@@ -25,7 +25,7 @@
     "main": "background.js",
     "dependencies": {
         "@capacitor/android": "^2.0.0",
-        "@capacitor/cli": "^2.0.0",
+        "@capacitor/cli": "^2.4.2",
         "@capacitor/core": "^2.0.0",
         "chart.js": "^2.9.3",
         "core-js": "^3.6.5",
