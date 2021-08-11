@@ -27,7 +27,7 @@
         "@capacitor/android": "^2.0.0",
         "@capacitor/cli": "^2.0.0",
         "@capacitor/core": "^2.0.0",
-        "chart.js": "^2.9.3",
+        "chart.js": "^2.9.4",
         "core-js": "^3.6.5",
         "debug": "^4.2.0",
         "file-saver": "^2.0.2",
