@@ -10,7 +10,7 @@
 >and Android <a href='https://play.google.com/store/apps/details?id=tech.lybekk.offpim&pcampaignid=pcampaignidMKT-Other-global-all-co-prtnr-py-PartBadge-Mar2515-1'><img alt='Get it on Google Play' src='https://play.google.com/intl/en_us/badges/static/images/badges/en_badge_web_generic.png' style="width: 31%;"/></a>
 
 *Quick access*
-[offpim.app](https://offpim.app/)
+[offpim.netlify.app](https://offpim.netlify.app)
 
 ![offPIM architecture diagram](assets/img/offPIM_diagram.svg)
 
@@ -62,7 +62,7 @@ Getting offPIM up and running can be done in several ways.
 *Four flavors are currently available*
 
 * **Official app online**
-    1. Visit [offpim.app](https://offpim.app).
+    1. Visit [offpim.netlify.app](https://offpim.netlify.app).
 * **Desktop-app (Electron)**
     1. [Download the app for your operating system](#downloads).
     *Windows*
@@ -83,9 +83,9 @@ Getting offPIM up and running can be done in several ways.
 * **(Alternative) Self-hosted static bundle (SPA)**
     1. [Download](#downloads) and unzip contents in any directory on your computer. As long as a browser is available, offPIM will run.
 
-### The very easy way - Use now - Official [offpim.app](https://offpim.app)
+### The very easy way - Use now - Official [offpim.netlify.app](https://offpim.netlify.app)
 
-[Use a live version of offPIM](https://offpim.app/) (or use it permanently, as it works just as it will anywhere else). You may close the browser and tabs. Your data will still be stored in your browser.
+[Use a live version of offPIM](https://offpim.netlify.app) (or use it permanently, as it works just as it will anywhere else). You may close the browser and tabs. Your data will still be stored in your browser.
 
 | Host        | Build status    |
 | ----------- |:-------------:|
@@ -193,7 +193,7 @@ with socketserver.TCPServer((HOST, PORT), Handler) as httpd:
     <a href='https://play.google.com/store/apps/details?id=tech.lybekk.offpim&pcampaignid=pcampaignidMKT-Other-global-all-co-prtnr-py-PartBadge-Mar2515-1'><img alt='Get it on Google Play' src='https://play.google.com/intl/en_us/badges/static/images/badges/en_badge_web_generic.png' style="width: 31%;"/></a>
 </div>
 
-**Note:** *The downloadable versions may be a bit behind the [offpim.app](https://offpim.app) version. A better way to build and distribute is on the drawing board*
+**Note:** *The downloadable versions may be a bit behind the [offpim.netlify.app](https://offpim.netlify.app) version. A better way to build and distribute is on the drawing board*
 
 ### Requirements
 
@@ -271,7 +271,7 @@ Contributions in any form will be appreciated.
 * Tips regarding security considerations
 * Donations, of course
 
-Commits to github will be instantly reflected on [offpim.app](https://offpim.app).
+Commits to github will be instantly reflected on [offpim.netlify.app](https://offpim.netlify.app).
 PWA Service workers may need 24 hours to update to the newest version automatically. A manual cache refresh will force download the newest version.
 
 ### Sponsoring
