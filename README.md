@@ -1,8 +1,13 @@
 # offPIM
 
-<strong style="color:goldenrod">
-Note: offPIM is not under active development. However, the repo will stay up, and pull requests or forks are welcome :)
+<p>
+<strong style="background-color: var(--mdc-theme-secondary); color: whitesmoke; padding: .6rem; border-radius: 4px;">
+Note:
 </strong>
+offPIM is not under active development. 
+<br/> However, the repo will stay up, and pull requests or forks are welcome :)
+</p>
+
 
 ---
 
