@@ -1,13 +1,19 @@
 # offPIM
 
->offPIM - A PIM - A Personal information management system
+<strong style="color:goldenrod">
+Note: offPIM is not under active development. However, the repo will stay up, and pull requests or forks are welcome :)
+</strong>
+
+---
+
+> offPIM - A PIM - A Personal information management system
 >
->Use as a Progressive Web App (PWA).
+> Use as a Progressive Web App (PWA).
 >
->Or on the desktop. Supports Windows <img src="assets/img/logo_windows.png" alt="Windows" width="16">, 
->Mac <img src="assets/img/logo_mac.png" alt="Mac OS" width="16">, 
->Linux <img src="assets/img/logo_linux.png" alt="Linux" width="16">, 
->and Android <a href='https://play.google.com/store/apps/details?id=tech.lybekk.offpim&pcampaignid=pcampaignidMKT-Other-global-all-co-prtnr-py-PartBadge-Mar2515-1'><img alt='Get it on Google Play' src='https://play.google.com/intl/en_us/badges/static/images/badges/en_badge_web_generic.png' style="width: 31%;"/></a>
+> Or on the desktop. Supports Windows <img src="assets/img/logo_windows.png" alt="Windows" width="16">, 
+> Mac <img src="assets/img/logo_mac.png" alt="Mac OS" width="16">, 
+> Linux <img src="assets/img/logo_linux.png" alt="Linux" width="16">, 
+> and Android <a href='https://play.google.com/store/apps/details?id=tech.lybekk.offpim&pcampaignid=pcampaignidMKT-Other-global-all-co-prtnr-py-PartBadge-Mar2515-1'><img alt='Get it on Google Play' src='https://play.google.com/intl/en_us/badges/static/images/badges/en_badge_web_generic.png' style="width: 31%;"/></a>
 
 *Quick access*
 [offpim.netlify.app](https://offpim.netlify.app)
