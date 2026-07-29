@@ -21,7 +21,7 @@ offPIM is not under active development.
 > and Android <a href='https://play.google.com/store/apps/details?id=tech.lybekk.offpim&pcampaignid=pcampaignidMKT-Other-global-all-co-prtnr-py-PartBadge-Mar2515-1'><img alt='Get it on Google Play' src='https://play.google.com/intl/en_us/badges/static/images/badges/en_badge_web_generic.png' style="width: 31%;"/></a>
 
 *Quick access*
-[offpim.netlify.app](https://offpim.netlify.app)
+[offpim.lybekk.tech](https://offpim.lybekk.tech)
 
 ![offPIM architecture diagram](assets/img/offPIM_diagram.svg)
 
@@ -72,8 +72,8 @@ Getting offPIM up and running can be done in several ways.
 
 *Four flavors are currently available*
 
-* **Official app online**
-    1. Visit [offpim.netlify.app](https://offpim.netlify.app).
+* **Official online app**
+    1. Visit [offpim.lybekk.tech](https://offpim.lybekk.tech).
 * **Desktop-app (Electron)**
     1. [Download the app for your operating system](#downloads).
     *Windows*
@@ -94,13 +94,9 @@ Getting offPIM up and running can be done in several ways.
 * **(Alternative) Self-hosted static bundle (SPA)**
     1. [Download](#downloads) and unzip contents in any directory on your computer. As long as a browser is available, offPIM will run.
 
-### The very easy way - Use now - Official [offpim.netlify.app](https://offpim.netlify.app)
+### The very easy way - Use now - Official [offpim.lybekk.tech](https://offpim.lybekk.tech)
 
-[Use a live version of offPIM](https://offpim.netlify.app) (or use it permanently, as it works just as it will anywhere else). You may close the browser and tabs. Your data will still be stored in your browser.
-
-| Host        | Build status    |
-| ----------- |:-------------:|
-| Netlify     | [![Netlify Status](https://api.netlify.com/api/v1/badges/ac368203-f0ac-4934-9fc2-dc4e68bb3d1d/deploy-status)](https://app.netlify.com/sites/offpim/deploys) |
+[Use a live version of offPIM](https://offpim.lybekk.tech) (or use it permanently, as it works just as it will anywhere else). You may close the browser and tabs. Your data will still be stored in your browser.
 
 * **PS:** Your data never leaves your browser, as it uses [PouchDB](https://pouchdb.com/), an in-browser database. The data entered into offPIM will never touch the server it's hosted on, as all code is downloaded to the browser and executed locally, including form submission.
 * **PS2:** The downside to this however, is that the data will disappear if the browser cache/data gets deleted during an upgrade or the like. Remember to back up and/or synchronize regularly, as is crucial for all valuable data.
@@ -204,7 +200,7 @@ with socketserver.TCPServer((HOST, PORT), Handler) as httpd:
     <a href='https://play.google.com/store/apps/details?id=tech.lybekk.offpim&pcampaignid=pcampaignidMKT-Other-global-all-co-prtnr-py-PartBadge-Mar2515-1'><img alt='Get it on Google Play' src='https://play.google.com/intl/en_us/badges/static/images/badges/en_badge_web_generic.png' style="width: 31%;"/></a>
 </div>
 
-**Note:** *The downloadable versions may be a bit behind the [offpim.netlify.app](https://offpim.netlify.app) version. A better way to build and distribute is on the drawing board*
+**Note:** *The downloadable versions may be a bit behind the [offpim.lybekk.tech](https://offpim.lybekk.tech) version. A better way to build and distribute is on the drawing board*
 
 ### Requirements
 
@@ -282,7 +278,7 @@ Contributions in any form will be appreciated.
 * Tips regarding security considerations
 * Donations, of course
 
-Commits to github will be instantly reflected on [offpim.netlify.app](https://offpim.netlify.app).
+Commits to github will be instantly reflected on [offpim.lybekk.tech](https://offpim.lybekk.tech).
 PWA Service workers may need 24 hours to update to the newest version automatically. A manual cache refresh will force download the newest version.
 
 ### Sponsoring
